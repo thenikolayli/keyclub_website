@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+button {
+    cursor: pointer;
+}
+
+@theme {
+    --font-playfair: "Playfair Display", serif;
+    --color-reddish: #4b4b47
+}
+
+body {
+    font-family: var(--font-playfair);
+}
+
+h1 {
+    @apply text-3xl;
+}
+
+ul {
+    @apply text-left text-3xl;
+}
+
+a {
+    @apply hover:underline;
+}
+
+/** {*/
+/*    border: 1px solid black;*/
+/*}*/
