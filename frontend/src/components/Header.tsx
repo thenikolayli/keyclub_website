@@ -40,9 +40,9 @@ const Header = () => {
                 Key Club
             </header>
 
-            <ul class={"flex space-x-[2rem] text-reddish items-center mt-4 text-2xl"}>
+            <ul class={"flex space-x-[1rem] text-reddish items-center mt-4 text-2xl"}>
                 <a href="/">Home</a>
-                <a href="/#about">About</a>
+                <a href="/about">About</a>
                 <a href="/events">Events</a>
                 <a href="/districtproject">District Project</a>
                 <a href="/membership">Membership</a>

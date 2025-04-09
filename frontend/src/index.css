@@ -18,6 +18,10 @@ h1 {
     @apply text-3xl;
 }
 
+header {
+    @apply font-semibold;
+}
+
 ul {
     @apply text-left text-3xl;
 }
@@ -29,3 +33,8 @@ a {
 /** {*/
 /*    border: 1px solid black;*/
 /*}*/
+
+.text-black-outline {
+    -webkit-text-stroke: 2px black;
+    paint-order: stroke fill;
+}
