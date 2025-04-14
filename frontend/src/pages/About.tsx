@@ -1,8 +1,5 @@
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
-import OfficerPhoto from "../components/OfficerPhoto.tsx";
-import gsap from "gsap";
-import kiwanis from "../assets/about/kiwanis.jpg";
 
 import lex_png from "../assets/about/lex.png";
 import clarrise_png from "../assets/about/clarrise.png";
@@ -13,56 +10,190 @@ import ellie_png from "../assets/about/ellie.png";
 import nikolay_png from "../assets/about/nikolay.png";
 import killian_png from "../assets/about/killian.png";
 
-import charlie_png from "../assets/about/charlie2.png";
 import {onMount} from "solid-js";
+import {animate, createTimeline, onScroll, stagger, utils} from "animejs";
+import kiwanis from "../assets/about/kiwanis.jpg";
 
 const About = () => {
-
     onMount(() => {
-        gsap.set(".pnw-bg", {
+        document.title = "About"
+        utils.set(".pnw-bg", {
             transformOrigin: "center left",
             scaleX: "100%"
         })
-        gsap.set(".kc-bg", {
+        utils.set(".kc-bg", {
             transformOrigin: "center left",
             scaleX: "100%"
+        })
+
+        animate(".section-1", {
+            backgroundColor: "#000000",
+            ease: "outSine",
+            autoplay: onScroll({
+                // debug: true,
+                target: ".section-1",
+                enter: "top top",
+                leave: "top 25vh",
+                sync: true,
+                repeat: false
+            })
+        })
+        animate(".intro-text", {
+            color: "#FFFFFF",
+            ease: "outSine",
+            autoplay: onScroll({
+                // debug: true,
+                target: ".section-1",
+                enter: "top top",
+                leave: "top 25vh",
+                sync: true,
+                repeat: false
+            })
+        })
+
+
+        utils.set(".cards", {
+            x: "-18rem"
+        })
+        utils.set(".cards-info", {
+            x: "-100%"
+        })
+
+        utils.$(".cards").forEach((card) => {
+            const timeline = createTimeline({
+                autoplay: false,
+                defaults: {
+                    ease: "outQuad",
+                    duration: 1000,
+                }
+            });
+            timeline.add(card, {
+                x: "2rem"
+            }, 0)
+            timeline.add(card.querySelectorAll(".cards-info"), {
+                x: "0%",
+                delay: stagger(250)
+            }, 400)
+
+            onScroll({
+                // debug: true,
+                target: card,
+                enter: "center top",
+                onEnter: () => timeline.play()
+            })
         })
     })
 
     const animate_button = (start: boolean, bg: string) => {
-        gsap.to(bg, {
+        animate(bg, {
             transformOrigin: "center left",
-            scaleX: start ? "0%" : "100%",
-            duration: .4,
-            ease: "power2.out",
+            scaleX: start ? 0 : 1,
+            duration: 300,
+            ease: "outQuad",
         })
     }
 
     return (
         <>
             <Header/>
-            <section class={"w-full min-h-screen p-[2rem] flex flex-col items-stretch justify-center"}>
-                <header class={"text-6xl font-semibold text-center mb-[2rem]"}>MEET THE OFFICERS!</header>
-                <div
-                    class={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 space-y-[2rem] rounded-[2rem] flex-1 bg-[#d1d1d1] p-[2rem]"}>
-                    <OfficerPhoto img_src={lex_png} name={"Lex Padua"} role={"President"}
-                                  email={"alexmariepadua19@gmail.com"}/>
-                    <OfficerPhoto img_src={clarrise_png} name={"Clarrise Song"} role={"Vice President"}
-                                  email={"clarissesong18@gmail.com"}/>
-                    <OfficerPhoto img_src={annabelle_png} name={"Annabelle Ho"} role={"Treasurer"}
-                                  email={"annabelle.zt.ho@gmail.com"}/>
-                    <OfficerPhoto img_src={ravindu_png} name={"Ravindu Marasinghe"} role={"Secretary"}
-                        email={"ravindu2008@icloud.com"}/>
-                    <OfficerPhoto img_src={allyson_png} name={"Allyson Chun"} role={"Bulletin Editor"}
-                                  email={"allysonhw96@gmail.com"}/>
-                    <OfficerPhoto img_src={ellie_png} name={"Ellie Nguyen"} role={"Bulletin Editor"}
-                                  email={"ellienguyen882@gmail.com"}/>
-                    <OfficerPhoto img_src={nikolay_png} name={"Nikolay Li"} role={"Webmaster"}
-                                  email={"nikolay.li2008@gmail.com"} img2={charlie_png}/>
-                    <OfficerPhoto img_src={killian_png} name={"Killian Bates"} role={"Historian"}
-                                  email={"killianj1010@outlook.com"}/>
+
+            <section class={"section-1 w-full h-fit text-white"}>
+                <div class="relative spacer w-full h-[75vh] flex flex-col items-center justify-center text-center">
+                    <header class={"intro-text text-black text-7xl"}>MEET THE OFFICERS</header>
+                    <h1 class="intro-text text-black mt-[2rem]">(scroll)</h1>
                 </div>
+                <section class="space-y-[10rem] mx-auto w-fit pr-[3rem] overflow-hidden">
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={lex_png} alt="Lex Padua"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">President</h1>
+                            <h1 class="cards-info">Lex Padua</h1>
+                            <h1 class="cards-info text-xl!">alexmariepadua19@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={clarrise_png} alt="Lex Padua"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Vice President</h1>
+                            <h1 class="cards-info">Clarrise Song</h1>
+                            <h1 class="cards-info text-xl!">clarissesong18@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={annabelle_png} alt="Annabelle Ho"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Treasurer</h1>
+                            <h1 class="cards-info">Annabelle Ho</h1>
+                            <h1 class="cards-info text-xl!">annabelle.zt.ho@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={ravindu_png} alt="Ravindu Marasinghe"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Secretary</h1>
+                            <h1 class="cards-info">Ravindu Marasinghe</h1>
+                            <h1 class="cards-info text-xl!">ravindu2008@icloud.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={allyson_png} alt="Allyson Chun"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Editor</h1>
+                            <h1 class="cards-info">Allyson Chun</h1>
+                            <h1 class="cards-info text-xl!">allysonhw96@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={ellie_png} alt="Ellie Nguyen"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Editor</h1>
+                            <h1 class="cards-info">Ellie Nguyen</h1>
+                            <h1 class="cards-info text-xl!">ellienguyen882@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={nikolay_png} alt="Nikolay Li"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Webmaster</h1>
+                            <h1 class="cards-info">Nikolay Li</h1>
+                            <h1 class="cards-info text-xl!">nikolay.li2008@gmail.com</h1>
+                        </div>
+                    </div>
+
+                    <div class="cards w-fit h-fit] flex">
+                        <div class="p-[1rem] bg-white z-10">
+                            <img class={"size-[16rem]"} src={killian_png} alt="Killian Bates"/>
+                        </div>
+                        <div class={"w-fit ml-[1rem] overflow-hidden"}>
+                            <h1 class="cards-info text-5xl! font-semibold">Secretary</h1>
+                            <h1 class="cards-info">Killian Bates</h1>
+                            <h1 class="cards-info text-xl!">killianj1010@outlook.com</h1>
+                        </div>
+                    </div>
+                </section>
             </section>
+            <div class="relative w-full h-[75vh] bg-black"/>
 
             <section class={"w-full h-screen p-[2rem] flex flex-col"}>
                 <section class={"grid grid-cols-3"}>
@@ -142,8 +273,17 @@ const About = () => {
                         </header>
                         <h1 class="mt-8 w-full xl:w-[75%]">
                             JHS Key Club is sponsored by the Kiwanis of Mill Creek.
-                            Kiwanis is an international community of clubs in which is dedicated to serving the community and the lives of the children around it.
+                            Kiwanis is an international community of clubs in which is dedicated to serving the
+                            community and the lives of the children around it.
                         </h1>
+
+                        <a class={"p-[1rem] bg-black text-white text-xl my-[1rem]"} href="https://www.kiwanis.org/">
+                            Learn More About Kiwanis
+                        </a>
+
+                        <a class={"p-[1rem] bg-[#0866ff] text-white text-xl"} href="https://www.facebook.com/Kiwanisofmillcreek/">
+                            Mill Creek Kiwanis Facebook
+                        </a>
                     </div>
                 </div>
                 <img class={"w-1/2 h-full object-cover"} src={kiwanis} alt="Mill Creek Kiwanis"/>
@@ -151,7 +291,8 @@ const About = () => {
 
             <section class="w-full p-[2rem] text-center">
                 <header class={"text-6xl"}>MORE WEBSITES</header>
-                <h1 class={"mt-[1rem] mb-[2rem]"}>Check out our district websites to learn more or catch up with the buzz!</h1>
+                <h1 class={"mt-[1rem] mb-[2rem]"}>Check out our district websites to learn more or catch up with the
+                    buzz!</h1>
 
                 <div class="flex text-white text-4xl mx-auto w-fit space-x-[2rem]">
                     <a

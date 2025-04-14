@@ -1,20 +1,22 @@
 import header_jpg from "../assets/header.jpg"
 import {VsGlobe} from "solid-icons/vs";
 import {onMount} from "solid-js";
-import gsap from "gsap";
 // @ts-ignore
 import {setLocale} from "../paraglide/runtime";
+import {animate, utils} from "animejs";
 
 const Header = () => {
     onMount(() => {
-        gsap.set(".language-select", {y: "-100%"})
+        utils.set(".language-select", {
+            y: "-100%"
+        })
     })
 
     const show_language_select = (start: boolean) => {
-        gsap.to(".language-select", {
+        animate(".language-select", {
             y: start ? "0%" : "-100%",
-            duration: .4,
-            ease: "power2.out"
+            duration: 300,
+            ease: "outQuad"
         })
     }
 
