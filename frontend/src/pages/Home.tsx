@@ -1,13 +1,15 @@
-import Header from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
+import {Header} from "../components/Header.tsx";
+import {Footer} from "../components/Footer.tsx";
 // @ts-ignore
 import {m} from "../paraglide/messages.js"
 import cover_jpg from "../assets/home/cover.jpg"
 import home_gif from "../assets/home/gif.webm"
 import committees_jpg from "../assets/home/committees.jpg"
 import remind_jpg from "../assets/home/remind.jpg"
+import {onMount} from "solid-js";
 
-const Home = () => {
+export const Home = () => {
+    onMount(() => document.title = "Home")
 
     return (
         <>
@@ -109,5 +111,3 @@ const Home = () => {
         </>
     )
 }
-
-export default Home

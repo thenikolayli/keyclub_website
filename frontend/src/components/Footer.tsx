@@ -1,7 +1,7 @@
 import {FaBrandsDiscord, FaBrandsInstagram, FaBrandsTiktok, FaBrandsYoutube} from "solid-icons/fa";
 import {FiLink} from "solid-icons/fi";
 
-const Footer = () => {
+export const Footer = () => {
 
     return (
         <footer class={"w-full h-fit p-[2rem] bg-black text-white flex flex-col items-center space-y-[1rem]"}>
@@ -19,5 +19,3 @@ const Footer = () => {
         </footer>
     )
 }
-
-export default Footer;

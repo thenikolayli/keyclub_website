@@ -1,5 +1,5 @@
-import Header from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
+import {Header} from "../components/Header.tsx";
+import {Footer} from "../components/Footer.tsx";
 
 import lex_png from "../assets/about/lex.png";
 import clarrise_png from "../assets/about/clarrise.png";
@@ -14,7 +14,7 @@ import {onMount} from "solid-js";
 import {animate, createTimeline, onScroll, stagger, utils} from "animejs";
 import kiwanis from "../assets/about/kiwanis.jpg";
 
-const About = () => {
+export const About = () => {
     onMount(() => {
         document.title = "About"
         utils.set(".pnw-bg", {
@@ -326,5 +326,3 @@ const About = () => {
         </>
     )
 }
-
-export default About
