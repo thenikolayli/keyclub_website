@@ -5,6 +5,7 @@ import {About} from "./pages/About.tsx";
 import {Events} from "./pages/Events.tsx";
 import {DistrictProject} from "./pages/DistrictProject.tsx";
 import {Membership} from "./pages/Membership.tsx";
+import {ContactUs} from "./pages/ContactUs.tsx";
 
 export const App = () => {
 
@@ -16,6 +17,7 @@ export const App = () => {
                 <Route path={"/events"} component={Events}/>
                 <Route path={"/districtproject"} component={DistrictProject} />
                 <Route path={"/membership"} component={Membership} />
+                <Route path={"/contact"} component={ContactUs} />
             </Router>
         </UtilContextProvider>
     )
