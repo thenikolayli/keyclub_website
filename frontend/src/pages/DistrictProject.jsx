@@ -1,5 +1,5 @@
-import {Header} from "../components/Header.tsx";
-import {Footer} from "../components/Footer.tsx";
+import {Header} from "../components/Header.jsx";
+import {Footer} from "../components/Footer.jsx";
 import sead from "../assets/districtproject/sead.jpg";
 import sead_logo from "../assets/districtproject/sead_logo.png";
 import {onMount} from "solid-js";

@@ -1,29 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-kcyellow: #fed450;
+    --color-kcblack: #231f20;
+}
+
+@font-face {
+    font-family: abril;
+    font-style: normal;
+    src: url("./assets/fonts/abril-display-regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: century-gothic;
+    font-style: normal;
+    src: url("./assets/fonts/centurygothic.ttf") format("opentype");
+}
+
+@font-face {
+    font-family: century-gothic-bold;
+    font-style: normal;
+    src: url("./assets/fonts/centurygothic_bold.otf") format("opentype");
+}
 
 button {
     cursor: pointer;
 }
 
-@theme {
-    --font-playfair: "Playfair Display", serif;
-    --color-reddish: #4b4b47
-}
-
 body {
-    font-family: var(--font-playfair);
-}
-
-h1 {
-    @apply text-3xl;
+    @apply font-[century-gothic];
 }
 
 header {
     @apply font-semibold;
-}
-
-ul {
-    @apply text-left text-3xl;
 }
 
 a {

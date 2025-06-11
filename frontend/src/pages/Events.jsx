@@ -1,5 +1,5 @@
-import {Header} from "../components/Header.tsx";
-import {Footer} from "../components/Footer.tsx";
+import {Header} from "../components/Header.jsx";
+import {Footer} from "../components/Footer.jsx";
 import {FiArrowUp} from "solid-icons/fi";
 
 export const Events = () => {

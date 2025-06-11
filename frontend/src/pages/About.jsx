@@ -1,5 +1,5 @@
-import {Header} from "../components/Header.tsx";
-import {Footer} from "../components/Footer.tsx";
+import {Header} from "../components/Header.jsx";
+import {Footer} from "../components/Footer.jsx";
 
 import lex_png from "../assets/about/lex.png";
 import clarrise_png from "../assets/about/clarrise.png";
@@ -11,85 +11,83 @@ import nikolay_png from "../assets/about/nikolay.png";
 import killian_png from "../assets/about/killian.png";
 
 import {onMount} from "solid-js";
-import {animate, createTimeline, onScroll, stagger, utils} from "animejs";
+import gsap from "gsap";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
 import kiwanis from "../assets/about/kiwanis.jpg";
+
+gsap.registerPlugin(ScrollTrigger)
 
 export const About = () => {
     onMount(() => {
         document.title = "About"
-        utils.set(".pnw-bg", {
+
+        gsap.set(".pnw-bg", {
             transformOrigin: "center left",
             scaleX: "100%"
         })
-        utils.set(".kc-bg", {
+        gsap.set(".kc-bg", {
             transformOrigin: "center left",
             scaleX: "100%"
         })
-
-        animate(".section-1", {
-            backgroundColor: "#000000",
-            ease: "outSine",
-            autoplay: onScroll({
-                // debug: true,
-                target: ".section-1",
-                enter: "top top",
-                leave: "top 25vh",
-                sync: true,
-                repeat: false
-            })
-        })
-        animate(".intro-text", {
-            color: "#FFFFFF",
-            ease: "outSine",
-            autoplay: onScroll({
-                // debug: true,
-                target: ".section-1",
-                enter: "top top",
-                leave: "top 25vh",
-                sync: true,
-                repeat: false
-            })
-        })
-
-
-        utils.set(".cards", {
+        gsap.set(".cards", {
             x: "-18rem"
         })
-        utils.set(".cards-info", {
+        gsap.set(".cards-info", {
             x: "-100%"
         })
 
-        utils.$(".cards").forEach((card) => {
-            const timeline = createTimeline({
-                autoplay: false,
-                defaults: {
-                    ease: "outQuad",
-                    duration: 1000,
-                }
-            });
-            timeline.add(card, {
-                x: "2rem"
-            }, 0)
-            timeline.add(card.querySelectorAll(".cards-info"), {
-                x: "0%",
-                delay: stagger(250)
-            }, 400)
+        const intro_timeline = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".section-1",
+                start: "top top",
+                end: "+=50%",
+                scrub: 1,
+                once: true,
+                // markers: true,
+            },
+            defaults: {
+                ease: "sine"
+            }
+        })
 
-            onScroll({
-                // debug: true,
-                target: card,
-                enter: "center top",
-                onEnter: () => timeline.play()
+        intro_timeline.to(".section-1", {
+            backgroundColor: "#000000",
+        })
+        intro_timeline.to(".intro-text", {
+            color: "#FFFFFF",
+        })
+
+
+        gsap.utils.toArray(".cards").forEach((card) => {
+            const percard_timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    end: "bottom 50%",
+                    scrub: 1,
+                    once: true,
+                },
+                defaults: {
+                    ease: "power2.out"
+                }
             })
+
+            percard_timeline.to(card, {
+                x: "2rem"
+            })
+            percard_timeline.to(card.querySelectorAll(".cards-info"), {
+                x: "0%",
+                stagger: .2,
+            }, ".4")
         })
     })
 
-    const animate_button = (start: boolean, bg: string) => {
-        animate(bg, {
+    const animate_button = (start, bg) => {
+        gsap.to(bg, {
             transformOrigin: "center left",
-            scaleX: start ? 0 : 1,
-            duration: 300,
-            ease: "outQuad",
+            scaleX: start ? 0 : "100%",
+            duration: .3,
+            ease: "power2.out",
         })
     }
 
@@ -193,7 +191,7 @@ export const About = () => {
                     </div>
                 </section>
             </section>
-            <div class="relative w-full h-[75vh] bg-black"/>
+            <div class="relative w-full h-[20vh] bg-black"/>
 
             <section class={"w-full h-screen p-[2rem] flex flex-col"}>
                 <section class={"grid grid-cols-3"}>

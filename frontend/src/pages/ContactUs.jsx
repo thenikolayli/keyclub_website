@@ -1,38 +1,70 @@
 import {createSignal, onMount} from "solid-js";
-import {Header} from "../components/Header.tsx";
+import {Header} from "../components/Header.jsx";
 import contact_cover from "../assets/contactus/contact.jpg";
-import {Footer} from "../components/Footer.tsx";
+import {Footer} from "../components/Footer.jsx";
 import axios from "axios";
+import gsap from "gsap";
+import SplitText from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
 
 export const ContactUs = () => {
     const [first_name, set_first_name] = createSignal("")
     const [last_name, set_last_name] = createSignal("")
     const [email, set_email] = createSignal("")
     const [message, set_message] = createSignal("")
+    const [can_send, set_can_send] = createSignal(true)
 
-    onMount(() => document.title = "Contact Us")
+    onMount(() => {
+        document.title = "Contact Us"
+        gsap.set(".sent-text", {y: "-150%"})
+    })
 
-    const send_message = (event: any) => {
+    const send_message = (event) => {
         event.preventDefault();
+        if (!can_send()) return
+        set_can_send(false)
 
-        try {
-            const response = axios({
-                method: 'POST',
-                url: '/api/message',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                data: {
-                    first_name: first_name(),
-                    last_name: last_name(),
-                    contact: email(),
-                    message: message()
-                }
-            })
-            console.log(response)
-        } catch (error: any) {
-            console.log(error)
-        }
+        const text_animation = gsap.timeline({
+            defaults: {
+                duration: .2,
+                ease: "power2.out",
+            }
+        })
+        let split_text = SplitText.create(".send-button")
+        split_text.chars.reverse()
+        text_animation.to(split_text.chars, {
+            y: "150%",
+            stagger: .05
+        })
+        let split_text_sent = SplitText.create(".sent-text")
+        split_text_sent.chars.reverse()
+        text_animation.to(split_text_sent.chars, {
+            y: "0%",
+            stagger: .05
+        })
+
+
+        // try {
+        //     const response = axios({
+        //         method: 'POST',
+        //         url: '/api/message',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         data: {
+        //             first_name: first_name(),
+        //             last_name: last_name(),
+        //             contact: email(),
+        //             message: message()
+        //         }
+        //     })
+        //     console.log(response)
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+        set_can_send(true)
     }
 
     return (
@@ -48,11 +80,11 @@ export const ContactUs = () => {
                 </div>
 
                 <section class={"p-[6rem] flex flex-col flex-1"}>
-                    <header class={"text-7xl"}>Let's Chat!</header>
 
                     <form
                         onsubmit={send_message}
-                        class={"flex flex-col flex-1"}>
+                        class={"flex flex-col flex-1 w-full xl:w-[65%] mx-auto"}>
+                        <header class={"text-7xl"}>Let's Chat!</header>
                         <div class="grid grid-cols-3 gap-[2rem] w-full mt-[2rem]">
                             <div class={"w-full"}>
                                 <h1 class="text-gray-600 mb-[.25rem]">First Name</h1>
@@ -79,7 +111,8 @@ export const ContactUs = () => {
                                     oninput={(event) => set_email(event.target.value)}
                                     type="text"
                                     class={"p-[1rem] text-2xl w-full border-[.2rem] border-black"}
-                                    required/>
+                                    // required
+                                />
                             </div>
                         </div>
 
@@ -89,11 +122,15 @@ export const ContactUs = () => {
                                 value={message()}
                                 oninput={(event) => set_message(event.target.value)}
                                 class={"p-[1rem] text-2xl w-full border-[.2rem] border-black flex resize-y overflow-hidden"}
-                                required
+                                // required
                             />
                         </div>
 
-                        <button type={"submit"} class={"relative flex self-end mt-[2rem] w-fit text-4xl bg-[#ffde71] p-[1rem] px-[6rem] rounded-full hover:shadow-lg transition duration-300"}>Send</button>
+                        <button type={"submit"}
+                                class={"send-button relative flex self-end mt-[2rem] w-[12rem] h-[4rem] text-4xl bg-[#ffde71] rounded-full hover:shadow-lg transition duration-300"}>
+                            {/*<h1 class={"sent-text text-4xl! relative"}>Sent</h1>*/}
+                            {/*<h1 class={"send-text text-4xl! relative"}>Send</h1>*/}
+                        </button>
                     </form>
 
                 </section>
