@@ -1,4 +1,4 @@
-import smtplib
+import smtplib, json, random
 from email.message import EmailMessage
 
 from fastapi import APIRouter, status
@@ -17,10 +17,12 @@ router = APIRouter(prefix="", tags=["api"])
 keyclub_email = getenv("KEYCLUB_EMAIL")
 app_password = getenv("APP_PASSWORD")
 
-SCOPES = getenv("API_SCOPES")
-credentials = Credentials.from_service_account_file("key.json", scopes=SCOPES)
+SCOPES = json.loads(getenv("API_SCOPES"))
+PHOTOS_FOLDER_ID = getenv("PHOTOS_FOLDER_ID")
+credentials = Credentials.from_service_account_file("../key.json", scopes=SCOPES)
 service = build("drive", "v3", credentials=credentials)
-
+folder_mimeType = 'application/vnd.google-apps.folder'
+image_mimeTypes = ["image/jpeg", "image/png", "image/webp", "image/heif"]
 
 
 @router.post("/message")
@@ -36,3 +38,40 @@ async def message(message: Message):
         smtp.send_message(email)
 
     return JSONResponse("Message Sent", status_code=status.HTTP_200_OK)
+
+@router.get("/update_photos")
+async def update_photos():
+    global PHOTOS_FOLDER_ID
+
+    photo_urls = get_photos_recursive(PHOTOS_FOLDER_ID)
+    with open("photo_urls.json", "w") as file:
+        json.dump(photo_urls, file)
+    return JSONResponse("Photos Updated", status_code=status.HTTP_200_OK)
+
+@router.get("/get_photos")
+async def get_photos(count: int = 20):
+    photo_list = []
+
+    with open("photo_urls.json", "r") as file:
+        photo_urls = json.load(file)
+
+        while len(photo_list) < count:
+            photo = random.choice(photo_urls)
+            if not photo in photo_list:
+                photo_list.append(photo)
+    return photo_list
+
+def get_photos_recursive(folder_id):
+    image_file_ids = []
+    result = service.files().list(
+        q=f"'{folder_id}' in parents and trashed = false",
+        pageSize=1000
+    ).execute()
+
+    for file in result["files"]:
+        if file["mimeType"] in image_mimeTypes:
+            image_file_ids.append(f"https://drive.google.com/thumbnail?id={file["id"]}&sz=w1000")  # adds image file id to the list
+        elif file["mimeType"] == folder_mimeType:
+            image_file_ids.extend(
+                get_photos_recursive(file["id"]))  # adds the return of the function for each subfolder id
+    return image_file_ids
