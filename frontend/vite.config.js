@@ -7,6 +7,10 @@ export default defineConfig({
     solid(),
     tailwindcss()
   ],
+  build: {
+    outDir: "./build",
+  },
+  base: process.env.VITE_DOCKER ? "/static/" : "/",
   server: {
     port: 3000,
     proxy: {

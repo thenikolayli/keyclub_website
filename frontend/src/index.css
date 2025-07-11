@@ -20,7 +20,7 @@
 @font-face {
     font-family: century-gothic-bold;
     font-style: normal;
-    src: url("./assets/fonts/centurygothic_bold.otf") format("opentype");
+    src: url("./assets/fonts/centurygothic_bold.ttf") format("opentype");
 }
 
 button {

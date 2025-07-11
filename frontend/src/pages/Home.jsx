@@ -10,77 +10,78 @@ import SplitText from "gsap/SplitText";
 
 gsap.registerPlugin(SplitText);
 export const Home = () => {
-    onMount(() => {
-        document.title = "Home"
-
-        const timeline = gsap.timeline({
-            defaults: {
-                ease: "power2.out",
-                delay: .5
-            }
-        })
-
-        const intro1 = SplitText.create(".intro1").words
-        const intro2 = SplitText.create(".intro2").words
-
-        timeline.fromTo(intro1, {
-            opacity: 0,
-            yPercent: 50
-        }, {
-            opacity: 1,
-            yPercent: 0,
-            duration: .7,
-        }, 0)
-
-        timeline.fromTo(intro2, {
-            opacity: 0,
-            yPercent: 50
-        }, {
-            opacity: 1,
-            yPercent: 0,
-            duration: .7
-        }, .8)
-
-        timeline.fromTo(".intro3", {
-            opacity: 0,
-            yPercent: 50
-        }, {
-            opacity: 1,
-            yPercent: 0,
-            duration: .7
-        }, 1.6)
-
-        timeline.fromTo(".intro4", {
-            opacity: 0,
-        }, {
-            opacity: 1,
-            duration: 1
-        }, 2.6)
-
-
-        gsap.set(".slide", {
-            position: "absolute"
-        })
-
-        gsap.to(".slide", {
-            y: () => -innerHeight,
-            stagger: .5,
-            ease: "power2.out",
-            scrollTrigger: {
-                trigger: ".slides",
-                start: "top top",
-                end: () => "+=" + innerHeight * 6,
-                scrub: .7   ,
-                // markers: true,
-                pin: true
-            }
-        })
-    })
+    // onMount(() => {
+    //     document.title = "Home"
+    //
+    //     const timeline = gsap.timeline({
+    //         defaults: {
+    //             ease: "power2.out",
+    //             delay: .5
+    //         }
+    //     })
+    //
+    //     const intro1 = SplitText.create(".intro1").words
+    //     const intro2 = SplitText.create(".intro2").words
+    //
+    //     timeline.fromTo(intro1, {
+    //         opacity: 0,
+    //         yPercent: 50
+    //     }, {
+    //         opacity: 1,
+    //         yPercent: 0,
+    //         duration: .7,
+    //     }, 0)
+    //
+    //     timeline.fromTo(intro2, {
+    //         opacity: 0,
+    //         yPercent: 50
+    //     }, {
+    //         opacity: 1,
+    //         yPercent: 0,
+    //         duration: .7
+    //     }, .8)
+    //
+    //     timeline.fromTo(".intro3", {
+    //         opacity: 0,
+    //         yPercent: 50
+    //     }, {
+    //         opacity: 1,
+    //         yPercent: 0,
+    //         duration: .7
+    //     }, 1.6)
+    //
+    //     timeline.fromTo(".intro4", {
+    //         opacity: 0,
+    //     }, {
+    //         opacity: 1,
+    //         duration: 1
+    //     }, 2.6)
+    //
+    //
+    //     gsap.set(".slide", {
+    //         position: "absolute"
+    //     })
+    //
+    //     gsap.to(".slide", {
+    //         y: () => -innerHeight,
+    //         stagger: .5,
+    //         ease: "power2.out",
+    //         scrollTrigger: {
+    //             trigger: ".slides",
+    //             start: "top top",
+    //             end: () => "+=" + innerHeight * 6,
+    //             scrub: .7   ,
+    //             // markers: true,
+    //             pin: true
+    //         }
+    //     })
+    // })
 
     return (
         <>
+            <Header/>
             <section class={"w-full h-screen flex flex-col"}>
-                <Header/>
+
                 <div class={"relative flex-1"}>
                     <img class={"h-full w-full object-cover"} src={cover_jpg} alt="Cover image"/>
 

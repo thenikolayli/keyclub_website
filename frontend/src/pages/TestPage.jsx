@@ -1,9 +1,10 @@
-import {onMount} from "solid-js";
+import {Header} from "../components/Header.jsx";
 
 export const TestPage = () => {
     return (
         <>
-            fsg
+            <Header />
+            <section class={"w-full h-screen bg-kcyellow"}></section>
         </>
     )
 }

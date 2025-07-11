@@ -1,22 +1,25 @@
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
 import {FiArrowUp} from "solid-icons/fi";
+import {onMount} from "solid-js";
 
 export const Events = () => {
+    onMount(() => {
+        document.title = "Events";
+    })
 
-    // @ts-ignore
     return (
         <>
-            <section class={"w-full h-screen flex flex-col items-center"}>
-                <Header/>
-                <header class={"text-7xl"}>EVENTS</header>
+            <Header/>
+            <section class={"w-full h-screen min-h-screen flex flex-col items-center"}>
+                <header class={"text-7xl mb-4"}>EVENTS</header>
 
-                <div class={"my-auto"}>
+                <div class={"h-full w-full lg:w-[70%] flex flex-col items-center justify-center p-4"}>
                     <iframe
                         src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FLos_Angeles&showPrint=0&showTz=0&showCalendars=0&src=ZjIzOGY1NzgyYWIwNjg5M2FhMGQ0MzM3YWNhZjBkZjg5ZDU3YTI4ZDI0NTk1OGMyZGIyNzc0Mjc5OWNlMzgzNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23F4511E"
-                        style="border-width:0" width="814" height="600" frameborder="0" scrolling="no">
+                        class={"h-full w-full"}>
                     </iframe>
-                    <h1 class="ml-[1rem] text-lg! flex flex-col items-left">
+                    <h1 class="ml-4 mt-2 text-lg flex flex-col items-left self-start">
                         <FiArrowUp class={"size-[1.25em]"}/>
                         Click this button to add it <br/>
                         to your Google calendar!

@@ -10,6 +10,7 @@ import {TestPage} from "./pages/TestPage.jsx";
 import Lenis from "lenis";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import gsap from "gsap";
+import {Gallery} from "./pages/Gallery.jsx";
 
 export const App = () => {
     const lenis = new Lenis();
@@ -29,6 +30,7 @@ export const App = () => {
                 <Route path={"/districtproject"} component={DistrictProject} />
                 <Route path={"/membership"} component={Membership} />
                 <Route path={"/contact"} component={ContactUs} />
+                <Route path={"/gallery"} component={Gallery} />
                 <Route path={"/test"} component={TestPage} />
             </Router>
         </UtilContextProvider>
