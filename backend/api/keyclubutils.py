@@ -1,14 +1,19 @@
-# collection of utility functions used to automatically log events and meetings
+# collection of utility functions used to automatically log events and meetings and check volunteer hours
 
 from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
 from os import getenv
-import json
+import asyncio
 
 load_dotenv()
 
-SPREADSHEET_ID = getenv("HOURS_SPREADSHEET_ID")
-SPREADSHEET_RANGES = json.loads(getenv("HOURS_SPREADSHEET_RANGE"))
+spreadsheet_id = getenv("HOURS_SPREADSHEET_ID")
+names_col = getenv("NAMES_COL")
+nicknames_col = getenv("NICKNAMES_COL")
+year_col = getenv("YEAR_COL")
+term_hours_col = getenv("TERM_HOURS_COL")
+all_hours_col = getenv("ALL_HOURS_COL")
+spreadsheet_ranges = [names_col, nicknames_col]
 
 # function that takes in a Google Docs/Sheets url and returns the document_id
 def url_to_id(url):
@@ -19,6 +24,9 @@ def url_to_id(url):
             return url.split("document_id=")[1]
         except IndexError:
             return url
+
+
+# ------------------EVENT LOGGING API STUFF------------------
 
 # function that returns cell values for ranges from the FIRST sheet on the spreadsheet
 def fetch_sheet_data(document_id, ranges, sheets_service):
@@ -33,8 +41,8 @@ def fetch_sheet_data(document_id, ranges, sheets_service):
     sheet_title = sheet_metadata.get("sheets")[0].get("properties").get("title")  # gets first sheet title, data is read from the first sheet
 
     # format ranges to read cells from
-    for cell_range in ranges:  # formats ranges
-        cell_range = f"{sheet_title}!{cell_range}"
+    for i in range(len(ranges)):
+        ranges[i] = f"{sheet_title}!{ranges[i]}"
 
     # read cells and return what was read
     try:
@@ -154,6 +162,30 @@ def write_docs_data(document_id, ranges, values, docs_service):
 
     return result
 
+# finds first empty column without an event
+def find_empty_col(spreadsheet_id, sheets_service, meeting_title):
+    # finding next empty column in the hours spreadsheet to log the event
+    event_list = fetch_sheet_data(document_id=spreadsheet_id, ranges=[f"K1:ZZ1"],
+                                  sheets_service=sheets_service)
+    if event_list.get("error"):  # if there was an error fetching sheet data
+        return {"error": event_list.get("error")}
+    event_list = event_list.get("data")[0][0]
+    empty_event_number = event_list.index("") + 11  # gets first empty col and adds 11 to offset info cols
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    column = ""
+
+    # if event is already in the spreadsheet, quit
+    if meeting_title in event_list:
+        return {"error": f"{meeting_title} is already in spreadsheet"}
+
+    # accounts for columns that have two letters
+    if empty_event_number > len(alphabet):
+        column = alphabet[empty_event_number // len(alphabet) - (
+                empty_event_number % len(alphabet) == 0) - 1]  # find the first letter and add it
+    column += alphabet[empty_event_number % len(alphabet) - 1]  # add the second letter
+
+    return {"column": column}
+
 # function that takes in a url to a key club sign up google doc, hours multiplier, and credentials
 # and logs the event in the hours spreadsheet, and returns a dictionary of volunteers who were and were not logged
 def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
@@ -203,37 +235,29 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         if write_docs_result.get("error"):
             return {"error": write_docs_result.get("error")}
 
-    # finding next empty column in the hours spreadsheet to log the event
-    event_list = fetch_sheet_data(document_id=SPREADSHEET_ID, ranges=[f"K1:ZZ1"], sheets_service=sheets_service)
-    if event_list.get("error"):  # if there was an error fetching sheet data
-        return {"error": event_list.get("error")}
-    event_list = event_list.get("data")[0][0]
-    empty_event_number = event_list.index("") + 11 # gets first empty col and adds 11 to offset info cols
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    column = ""
+    column = find_empty_col(spreadsheet_id, sheets_service, event_title)
 
-    # if event is already in the spreadsheet, quit
-    if event_title in event_list:
-        return {"error": f"{event_title} is already in spreadsheet"}
-
-    # accounts for columns that have two letters
-    if empty_event_number > len(alphabet):
-        column = alphabet[empty_event_number // len(alphabet) - (empty_event_number % len(alphabet) == 0) - 1] # find the first letter and add it
-    column += alphabet[empty_event_number % len(alphabet) - 1] # add the second letter
+    if column.get("error"):
+        return {"error": column.get("error")}
+    column = column.get("column")
 
     # find ranges and values and log
-    all_rows = fetch_sheet_data(document_id=SPREADSHEET_ID,
-                                ranges=[SPREADSHEET_RANGES[0], SPREADSHEET_RANGES[1]],
-                                sheets_service=sheets_service).get("data")
+    all_rows = fetch_sheet_data(
+        document_id=spreadsheet_id,
+        ranges=[spreadsheet_ranges[0], spreadsheet_ranges[1]],
+        sheets_service=sheets_service
+    ).get("data")
 
-    nickname_rows = all_rows[1] # nickname rows
+    nicknames = all_rows[1] # nickname rows
     fullnames = all_rows[0] # full name rows
 
     # goes through the list of nicknames and creates full names by combining nickname and last name
-    for i in range(1, len(nickname_rows)):
-        if nickname_rows[i]:
-            nickname = f"{fullnames[i][0].split(', ')[0].lower().capitalize().strip()}, {nickname_rows[i][0].lower().capitalize().strip()}"
-            nickname_rows[i] = [nickname]
+    for i in range(len(nicknames)):
+        if nicknames[i]:
+            nickname = f"{fullnames[i][0].split(', ')[0].strip()}, {nicknames[i][0].strip()}"
+            nicknames[i] = nickname.lower()
+    for i in range(len(fullnames)):
+        fullnames[i] = fullnames[i][0].lower()
 
     # ranges and values to log in the spreadsheet
     volunteer_ranges = [f"{column}1:{column}1"]
@@ -243,25 +267,24 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
 
     # preps ranges and values to write to for the hours spreadsheet
     for name in event_volunteers:
-        try:
-            # splits first and last name
-            first, last = name.split(" ")
-            # tries full names then nicknames
-            try:
-                row = fullnames.index([", ".join([last.capitalize(), first.capitalize()])])
-            except:
-                row = nickname_rows.index([", ".join([last.capitalize(), first.capitalize()])])
+        first, last = name.split(" ")
+        fullname = f"{last}, {first}"
 
-            # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
-            volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
-            volunteer_values.append(float(event_volunteers.get(name).get("hours")) * hours_multiplier)
-            volunteer_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
-        except:
-            # saves volunteer to not logged if they could not be logged
+        # if fullname is not in fullnames or nicknames, skip and add to unlogged
+        if fullname in fullnames:
+            row = fullnames.index(fullname)
+        elif fullname in nicknames:
+            row = nicknames.index(fullname)
+        else:
             volunteer_not_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
+            continue
+
+        volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
+        volunteer_values.append(float(event_volunteers.get(name).get("hours")) * hours_multiplier)
+        volunteer_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=SPREADSHEET_ID,
+    write_sheet_result = write_sheet_data(document_id=spreadsheet_id,
                                           ranges=volunteer_ranges,
                                           values=volunteer_values,
                                           sheets_service=sheets_service)
@@ -287,7 +310,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
         event_data = fetch_sheet_data(document_id=document_id,
                                       ranges=[f"{first_name_col}:{first_name_col}",
                                               f"{last_name_col}:{last_name_col}"],
-                                      sheet_service=sheets_service)  # fetches meeting data
+                                      sheets_service=sheets_service)  # fetches meeting data
         if event_data.get("error"):  # if there was an error fetching sheet data
             return {"error": event_data.get("error")}
 
@@ -302,7 +325,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
     else: # if last name col not given, assume first name col contains full names
         event_data = fetch_sheet_data(document_id=document_id,
                                       ranges=[f"{first_name_col}:{first_name_col}"],
-                                      sheet_service=sheets_service)
+                                      sheets_service=sheets_service)
         if event_data.get("error"):
             return {"error": event_data.get("error")}
 
@@ -314,40 +337,27 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
             if not name[0].lower().strip() in event_volunteers: # filter out duplicates (if people filled out the attendance form more than once)
                 event_volunteers.update({name[0].lower().strip(): {"hours": round(meeting_length / 60, 2)}})
 
-    # finding next empty column in the hours spreadsheet to log the event
-    event_list = fetch_sheet_data(document_id=SPREADSHEET_ID, ranges=[f"K1:ZZ1"],
-                                  sheet_service=sheets_service)
-    if event_list.get("error"):  # if there was an error fetching sheet data
-        return {"error": event_list.get("error")}
-    event_list = event_list.get("data")[0][0]
-    empty_event_number = event_list.index("") + 11  # gets first empty col and adds 11 to offset info cols
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    column = ""
-
-    # if event is already in the spreadsheet, quit
-    if meeting_title in event_list:
-        return {"error": f"{meeting_title} is already in spreadsheet"}
-
-    # accounts for columns that have two letters
-    if empty_event_number > len(alphabet):
-        column = alphabet[empty_event_number // len(alphabet) - (
-                    empty_event_number % len(alphabet) == 0) - 1]  # find the first letter and add it
-    column += alphabet[empty_event_number % len(alphabet) - 1]  # add the second letter
+    column = find_empty_col(spreadsheet_id, sheets_service, meeting_title)
+    if column.get("error"):
+        return {"error": column.get("error")}
+    column = column.get("column")
 
     # find ranges and values and log
-    all_rows = fetch_sheet_data(document_id=SPREADSHEET_ID,
-                                ranges=[SPREADSHEET_RANGES[0],
-                                        SPREADSHEET_RANGES[1]],
-                                sheet_service=sheets_service).get("data")
+    all_rows = fetch_sheet_data(document_id=spreadsheet_id,
+                                ranges=[spreadsheet_ranges[0],
+                                        spreadsheet_ranges[1]],
+                                sheets_service=sheets_service).get("data")
 
-    nickname_rows = all_rows[1]  # nickname rows
+    nicknames = all_rows[1]  # nickname rows
     fullnames = all_rows[0]  # full name rows
 
     # goes through the list of nicknames and creates full names by combining nickname and last name
-    for i in range(1, len(nickname_rows)):
-        if nickname_rows[i]:
-            nickname = f"{fullnames[i][0].split(', ')[0].lower().capitalize().strip()}, {nickname_rows[i][0].lower().capitalize().strip()}"
-            nickname_rows[i] = [nickname]
+    for i in range(len(nicknames)):
+        if nicknames[i]:
+            nickname = f"{fullnames[i][0].split(', ')[0].strip()}, {nicknames[i][0].strip()}"
+            nicknames[i] = nickname.lower()
+    for i in range(len(fullnames)):
+        fullnames[i] = fullnames[i][0].lower()
 
     # ranges and values to log in the spreadsheet
     volunteer_ranges = [f"{column}1:{column}1"]
@@ -357,28 +367,28 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
 
     # preps ranges and values to write to for the hours spreadsheet
     for name in event_volunteers:
-        try:
-            # splits first and last name
-            first, last = name.split(" ")
-            # tries full names then nicknames
-            try:
-                row = fullnames.index([", ".join([last.capitalize(), first.capitalize()])])
-            except:
-                row = nickname_rows.index([", ".join([last.capitalize(), first.capitalize()])])
+        first, last = name.split(" ")
+        fullname = f"{last}, {first}"
 
-            # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
-            volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
-            volunteer_values.append(event_volunteers.get(name).get("hours"))
-            volunteer_logged.update({name: event_volunteers.get(name).get("hours")})
-        except:
-            # saves volunteer to not logged if they could not be logged
+        if fullname in fullnames:
+            row = fullnames.index(fullname)
+        elif fullname in nicknames:
+            row = nicknames.index(fullname)
+        else:
             volunteer_not_logged.update({name: event_volunteers.get(name).get("hours")})
+            continue
+
+        # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
+        volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
+        volunteer_values.append(event_volunteers.get(name).get("hours"))
+        volunteer_logged.update({name: event_volunteers.get(name).get("hours")})
+
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=SPREADSHEET_ID,
+    write_sheet_result = write_sheet_data(document_id=spreadsheet_id,
                                           ranges=volunteer_ranges,
                                           values=volunteer_values,
-                                          sheet_service=sheets_service)
+                                          sheets_service=sheets_service)
     if write_sheet_result.get("error"):
         return {"error": write_sheet_result.get("error")}
 
@@ -387,3 +397,72 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
             "logged": volunteer_logged,
             "not_logged": volunteer_not_logged,
             "event_title": meeting_title}
+
+
+# ------------------CHECK HOURS API STUFF------------------
+
+# updates the hours list by fetching hours from the spreadsheet
+async def update_hours_list(names_hours_list, service):
+    global names_col, nicknames_col, year_col, term_hours_col, all_hours_col
+
+    names_hours_list.clear()
+
+    names_hours_data_request = await asyncio.to_thread(
+        service.spreadsheets().values().batchGet,
+        spreadsheetId=spreadsheet_id,
+        ranges=[names_col, nicknames_col, year_col, term_hours_col, all_hours_col]
+    )
+    names_hours_data = names_hours_data_request.execute()
+    nicknames_len = len(names_hours_data["valueRanges"][1]["values"])
+    loop_range = len(names_hours_data["valueRanges"][2]["values"])
+
+    for i in range(loop_range):
+        last, first = names_hours_data["valueRanges"][0]["values"][i][0].split(", ")
+        print(first, last, i)
+
+        full_name = f"{first.lower()} {last.lower()}"
+        if i >= nicknames_len or names_hours_data["valueRanges"][1]["values"][i] == []:
+            nickname = ""
+        else:
+            nickname = names_hours_data["valueRanges"][1]["values"][i][0].lower()
+        year = names_hours_data["valueRanges"][2]["values"][i][0].lower()
+        term_hours = float(names_hours_data["valueRanges"][3]["values"][i][0])
+        all_hours = float(names_hours_data["valueRanges"][4]["values"][i][0])
+
+        names_hours_list.append({
+            "name": full_name,
+            "nickname": nickname,
+            "year": year,
+            "term_hours": term_hours,
+            "all_hours": all_hours
+        })
+
+# gets the hours for a person based on their name
+def get_hours(names_hours_list, name):
+    if len(names_hours_list) == 0:
+        return None
+
+    name = name.lower()
+
+    for value in names_hours_list:
+        if name in value["name"] or name in value["nickname"]:
+            return value
+    return None
+
+
+# i will add this later, maybe...
+
+# returns top five people for a year in terms of hours, ex: sophomore
+# def get_year_ranking(names_hours_list, year):
+#     if len(names_hours_list) == 0:
+#         return None
+#
+#     year = year.lower()
+#     year_ranking = [each for each in names_hours_list if each["year"] == year]
+#
+#     for i in range(len(year_ranking)):
+#         for j in range(i + 1, len(year_ranking)):
+#             if year_ranking[i]["all_hours"] < year_ranking[j]["all_hours"]:
+#                 year_ranking[i], year_ranking[j] = year_ranking[j], year_ranking[i]
+#
+#     return year_ranking[0:5]

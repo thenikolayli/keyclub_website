@@ -1,13 +1,16 @@
-import smtplib, json, random, urllib, os
+import smtplib, json, random, os
 from concurrent.futures import ThreadPoolExecutor
 from email.message import EmailMessage
 from pathlib import Path
+from urllib import request as urllib_request
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
 from backend.api.models import Message, EventLoggedRequestModel, MeetingLoggedRequestModel
 from backend.api.keyclubutils import log_event, log_meeting
+from backend.api.keyclubutils import update_hours_list as update_hours_util
+from backend.api.keyclubutils import get_hours as get_hours_util
 from os import getenv
 from dotenv import load_dotenv
 from datetime import datetime
@@ -21,16 +24,18 @@ load_dotenv()
 router = APIRouter(prefix="", tags=["api"])
 keyclub_email = getenv("KEYCLUB_EMAIL")
 app_password = getenv("APP_PASSWORD")
+api_key = getenv("API_KEY")
 
 scopes = json.loads(getenv("API_SCOPES"))
 photos_folder_id = getenv("PHOTOS_FOLDER_ID")
+photos_path = "backend/photos" # because of absolute imports, youre supposed to run this from the parent directory
 keyjson_path = str((Path(__file__).parent / "../key.json").resolve())
 folder_mimeType = 'application/vnd.google-apps.folder'
 image_mimeTypes = ["image/jpeg", "image/png", "image/webp", "image/heif"]
-api_key = getenv("API_KEY")
+names_hours_list = []
 
 credentials = Credentials.from_service_account_file(keyjson_path, scopes=scopes)
-service = build("drive", "v3", credentials=credentials)
+drive_service = build("drive", "v3", credentials=credentials)
 sheets_service = build("sheets", "v4", credentials=credentials)
 docs_service = build("docs", "v1", credentials=credentials)
 
@@ -57,7 +62,7 @@ async def message(email_message: Message):
 
 def get_photos_recursive(folder_id):
     image_file_ids = []
-    result = service.files().list(
+    result = drive_service.files().list(
         q=f"'{folder_id}' in parents and trashed = false",
         pageSize=1000
     ).execute()
@@ -71,7 +76,7 @@ def get_photos_recursive(folder_id):
     return image_file_ids
 
 def download_photo(url, index):
-    urllib.request.urlretrieve(url, f"photos/photo_{index}.png")
+    urllib_request.urlretrieve(url, f"{photos_path}/photo_{index}.png")
 
 # downloads all photos from the google drive
 @router.get("/update_photos")
@@ -79,8 +84,8 @@ async def update_photos():
     global photos_folder_id
 
     # deletes old photos
-    for file in os.listdir("photos"):
-        file_path = os.path.join("photos", file)
+    for file in os.listdir(photos_path):
+        file_path = os.path.join(photos_path, file)
         os.remove(file_path)
 
     # downloads new photos
@@ -97,7 +102,7 @@ async def update_photos():
 # returns an array of random photo urls
 @router.get("/get_photos")
 async def get_photos(count: int = 20):
-    file_list = [each for each in os.listdir("photos") if os.path.isfile(os.path.join("photos", each))]
+    file_list = [each for each in os.listdir(photos_path) if os.path.isfile(os.path.join(photos_path, each))]
     photo_list = []
 
     while len(photo_list) < count:
@@ -191,3 +196,22 @@ async def keyclub_log_meeting(meeting_data: MeetingLoggedRequestModel):
 
     await save_event_to_db(log_meeting_response)
     return JSONResponse(log_meeting_response, status_code=status.HTTP_200_OK)
+
+# ------------------CHECK HOURS API STUFF------------------
+
+@router.get("/update_hours")
+async def update_hours():
+    global names_hours_list, sheets_service
+    await update_hours_util(names_hours_list, sheets_service)
+
+    return JSONResponse("hours updated!", status_code=status.HTTP_200_OK)
+
+@router.get("/get_hours")
+async def get_hours(name: str):
+    global names_hours_list
+    hours = get_hours_util(names_hours_list, name)
+
+    if hours:
+        print(hours)
+        return JSONResponse(hours, status_code=status.HTTP_200_OK)
+    return JSONResponse("hours not found", status_code=status.HTTP_404_NOT_FOUND)
