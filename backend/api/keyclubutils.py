@@ -418,7 +418,7 @@ async def update_hours_list(names_hours_list, service):
 
     for i in range(loop_range):
         last, first = names_hours_data["valueRanges"][0]["values"][i][0].split(", ")
-        print(first, last, i)
+        # print(first, last, i)
 
         full_name = f"{first.lower()} {last.lower()}"
         if i >= nicknames_len or names_hours_data["valueRanges"][1]["values"][i] == []:

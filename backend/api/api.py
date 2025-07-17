@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from email.message import EmailMessage
 from pathlib import Path
 from urllib import request as urllib_request
+from datetime import datetime, timezone, timedelta
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
@@ -33,6 +34,7 @@ keyjson_path = str((Path(__file__).parent / "../key.json").resolve())
 folder_mimeType = 'application/vnd.google-apps.folder'
 image_mimeTypes = ["image/jpeg", "image/png", "image/webp", "image/heif"]
 names_hours_list = []
+hours_last_updated = 0
 
 credentials = Credentials.from_service_account_file(keyjson_path, scopes=scopes)
 drive_service = build("drive", "v3", credentials=credentials)
@@ -201,10 +203,19 @@ async def keyclub_log_meeting(meeting_data: MeetingLoggedRequestModel):
 
 @router.get("/update_hours")
 async def update_hours():
-    global names_hours_list, sheets_service
+    global names_hours_list, sheets_service, hours_last_updated
     await update_hours_util(names_hours_list, sheets_service)
+    utc_time = datetime.now(timezone(timedelta(hours=-5)))
+    hours_last_updated = utc_time.timestamp()
+    print("hours updated!")
 
     return JSONResponse("hours updated!", status_code=status.HTTP_200_OK)
+
+@router.get("/hours_last_updated")
+async def update_hours_last_updated():
+    global hours_last_updated
+
+    return JSONResponse(hours_last_updated, status_code=status.HTTP_200_OK)
 
 @router.get("/get_hours")
 async def get_hours(name: str):
