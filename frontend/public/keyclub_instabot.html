@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Instabot Login</title>
+</head>
+<body>
+
+<h1>How to use the auth flow:</h1>
+<ol>
+    <li>Click the login button below and log into the jhskeyclubreminds facebook and the jhskeyclubreminds instagram</li>
+    <li>If the login was successful, a token will appear.</li>
+    <li>Copy the token and paste it into the env file of the keyclub_instabot and restart the container.</li>
+    <li>Do this every 55 days.</li>
+</ol>
+
+<fb:login-button
+        config_id="1442827326756044"
+        onlogin="checkLoginState();">
+</fb:login-button>
+
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '1057250033226344',
+            cookie     : true,
+            xfbml      : true,
+            version    : 'v23.0'
+        });
+
+        FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+
+
+    function checkLoginState() {
+        window.FB.getLoginStatus(function(response) {
+            console.log(response)
+
+            if (response.status === "connected") {
+                const token = response.authResponse.accessToken
+
+                cosole.log(token)
+
+                fetch(``)
+            }
+        });
+    }
+</script>
+</body>
+</html>

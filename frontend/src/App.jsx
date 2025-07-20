@@ -31,7 +31,7 @@ export const App = () => {
                 <Route path={"/membership"} component={Membership} />
                 <Route path={"/contact"} component={ContactUs} />
                 <Route path={"/gallery"} component={Gallery} />
-                <Route path={"/test"} component={TestPage} />
+                {/*<Route path={"/test"} component={TestPage} />*/}
             </Router>
         </UtilContextProvider>
     )
