@@ -16,6 +16,7 @@ from os import getenv
 from dotenv import load_dotenv
 from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
+import requests
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -26,6 +27,9 @@ router = APIRouter(prefix="", tags=["api"])
 keyclub_email = getenv("KEYCLUB_EMAIL")
 app_password = getenv("APP_PASSWORD")
 api_key = getenv("API_KEY")
+
+fb_app_id = "1057250033226344"
+fb_app_secret = getenv("FB_APP_SECRET")
 
 scopes = json.loads(getenv("API_SCOPES"))
 photos_folder_id = getenv("PHOTOS_FOLDER_ID")
@@ -226,3 +230,23 @@ async def get_hours(name: str):
         print(hours)
         return JSONResponse(hours, status_code=status.HTTP_200_OK)
     return JSONResponse("hours not found", status_code=status.HTTP_404_NOT_FOUND)
+
+# ------------------INSTABOT API STUFF------------------
+
+# takes a fb short lived user token, returns a long-lived fb user token
+@router.get("/get_ll_token") # ll means long-lived, sl means short-lived
+async def get_ll_token(sl_token: str):
+    result = requests.get(
+        "https://graph.facebook.com/v23.0/oauth/access_token",
+        {
+            "grant_type": "fb_exchange_token",
+            "client_id":  fb_app_id,
+            "client_secret": fb_app_secret,
+            "fb_exchange_token": sl_token,
+        }
+    )
+
+    if result.status_code == 200:
+        return JSONResponse(result.json(), status_code=status.HTTP_200_OK)
+
+    return JSONResponse("There was an issue", status_code=status.HTTP_400_BAD_REQUEST)

@@ -20,6 +20,11 @@
         onlogin="checkLoginState();">
 </fb:login-button>
 
+<h1 id="api_response"></h1>
+<button hidden id="api_response_button">Click to copy long-lived token</button>
+<h1 id="expires_in"></h1>
+<button hidden id="expires_in_button">Click to copy expires in</button>
+
 <script>
     window.fbAsyncInit = function() {
         FB.init({
@@ -49,13 +54,33 @@
 
             if (response.status === "connected") {
                 const token = response.authResponse.accessToken
-
-                cosole.log(token)
-
-                fetch(``)
+                fetch(`/api/get_ll_token?sl_token=${token}`).then(response => {
+                    if (!response.ok) {
+                        document.getElementById("api_response").innerText = "there was an issue getting the long-lived token"
+                        return
+                    }
+                    return response.json()
+                }).then(data => {
+                    document.getElementById("api_response").innerText = data["access_token"]
+                    document.getElementById("api_response_button").hidden = false
+                    document.getElementById("expires_in").innerText = data["expires_in"]
+                    document.getElementById("expires_in_button").hidden = false
+                })
             }
         });
     }
+
+    document.getElementById("api_response_button").addEventListener("click", () => {
+        const text = document.getElementById('api_response').innerText
+
+        navigator.clipboard.writeText(text)
+    })
+
+    document.getElementById("expires_in_button").addEventListener("click", () => {
+        const text = document.getElementById('expires_in').innerText
+
+        navigator.clipboard.writeText(text)
+    })
 </script>
 </body>
 </html>
