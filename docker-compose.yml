@@ -2,14 +2,14 @@ services:
   keyclub_backend:
     build: ./backend
     volumes:
-      - keyclub_photos:/app/photos
+      - keyclub_photos:/backend/photos
     env_file:
       - .env
     expose:
       - 8000
     networks:
       - local
-    command: pipenv run uvicorn main:app --port 8000 --host 0.0.0.0
+    command: pipenv run uvicorn backend.main:app --port 8000 --host 0.0.0.0
   keyclub_frontend:
     build: ./frontend
     volumes:

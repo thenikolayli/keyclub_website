@@ -1,7 +1,7 @@
 FROM node:alpine AS build
 
-COPY . /app
-WORKDIR /app
+COPY . /frontend
+WORKDIR /frontend
 
 ENV VITE_DOCKER="true"
 RUN npm i && npm run build
@@ -9,5 +9,5 @@ RUN npm i && npm run build
 FROM nginx:alpine AS main
 
 # copies static files and nginx configuration
-COPY --from=build /app/build /static
+COPY --from=build /frontend/build /static
 COPY nginx.conf /etc/nginx/nginx.conf
