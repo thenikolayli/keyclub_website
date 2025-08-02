@@ -1,4 +1,5 @@
 .idea
-key.json
 .env
+backend/key.json
 backend/photo_urls.json
+backend/event_log.json

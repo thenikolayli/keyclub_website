@@ -16,28 +16,14 @@ services:
       - keyclub_photos:/photos
     depends_on:
       - keyclub_backend
-#    expose:
-#      - 80
     networks:
       - local
     # V for testing only V
     ports:
       - 80:80
-  keyclub_mongo:
-    image: mongo
-    # V for data persistence
-    volumes:
-      - db_data:/data/db
-#    expose:
-#      - 27017
-    ports:
-      - 27017:27017
-    networks:
-      - local
 
 volumes:
   keyclub_photos:
-  db_data:
 
 networks:
   local:

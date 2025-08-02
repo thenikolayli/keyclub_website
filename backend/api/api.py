@@ -1,12 +1,11 @@
 import smtplib, json, random, os
 from concurrent.futures import ThreadPoolExecutor
 from email.message import EmailMessage
-from pathlib import Path
 from urllib import request as urllib_request
-from datetime import datetime, timezone, timedelta
+from datetime import timezone, timedelta
 
 from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse
 
 from backend.api.models import Message, EventLoggedRequestModel, MeetingLoggedRequestModel
 from backend.api.keyclubutils import log_event, log_meeting
@@ -15,8 +14,6 @@ from backend.api.keyclubutils import get_hours as get_hours_util
 from os import getenv
 from dotenv import load_dotenv
 from datetime import datetime
-from motor.motor_asyncio import AsyncIOMotorClient
-import requests
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -31,11 +28,12 @@ api_key = getenv("API_KEY")
 scopes = json.loads(getenv("API_SCOPES"))
 photos_folder_id = getenv("PHOTOS_FOLDER_ID")
 photos_path = "backend/photos" # because of absolute imports, youre supposed to run this from the parent directory
-keyjson_path = str((Path(__file__).parent / "../key.json").resolve())
+keyjson_path = "backend/key.json"
 folder_mimeType = 'application/vnd.google-apps.folder'
 image_mimeTypes = ["image/jpeg", "image/png", "image/webp", "image/heif"]
 names_hours_list = []
 hours_last_updated = 0
+event_log_file = "backend/event_log.json"
 
 credentials = Credentials.from_service_account_file(keyjson_path, scopes=scopes)
 drive_service = build("drive", "v3", credentials=credentials)
@@ -118,16 +116,9 @@ async def get_photos(count: int = 20):
 
 # ------------------EVENT LOGGING API STUFF------------------
 
-# gets a collection from the database (look up how mongodb stores files and how their filesystem works)
-async def get_collection(collection_name):
-    client = AsyncIOMotorClient(getenv("MONGO_URI"))
-    db = client["main"] # theres only one database
-    collection = db[collection_name]
-
-    return collection
-
 # saves an event or meeting to the database
 async def save_event_to_db(response):
+    global event_log_file
     # creates db entry
     title = response.get("event_title")
     hours_logged = 0
@@ -146,14 +137,19 @@ async def save_event_to_db(response):
             hours_not_logged += data
             people_attended += 1
 
-    events_logged_collection = await get_collection("events_logged")
-    await events_logged_collection.insert_one({
+    with open(event_log_file, mode="r") as file:
+        event_log = json.load(file)
+
+    event_log.append({
         "timestamp": datetime.now(),
         "title": title,
         "hours_logged": hours_logged,
         "hours_not_logged": hours_not_logged,
         "people_attended": people_attended,
     })
+
+    with open(event_log_file, mode="w") as file:
+        json.dump(event_log, file)
 
 @router.post("/log_event")
 async def keyclub_log_event(event_data: EventLoggedRequestModel):

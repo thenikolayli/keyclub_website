@@ -1,26 +1,13 @@
-from pydantic import BaseModel
-from datetime import datetime
+# models for how data is requested
 
+from pydantic import BaseModel
+
+# message request model
 class Message(BaseModel):
     first_name: str
     last_name: str
     contact: str # email or phone number
     message: str
-
-# models that represents a logged event in key club
-# how an event is saved in the database
-class EventLoggedModel(BaseModel):
-    timestamp: datetime
-    title: str
-    hours_logged: float
-    hours_not_logged: float
-    people_attended: int
-
-# how an event is patched/updated in the database
-class EventLoggedPatchModel(BaseModel):
-    id: str
-    field: str
-    value: str
 
 # info needed to log an event
 class EventLoggedRequestModel(BaseModel):
