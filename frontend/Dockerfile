@@ -3,7 +3,6 @@ FROM node:alpine AS build
 COPY . /frontend
 WORKDIR /frontend
 
-ENV VITE_DOCKER="true"
 RUN npm i && npm run build
 
 FROM nginx:alpine AS main

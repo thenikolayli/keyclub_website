@@ -4,10 +4,10 @@ import {Footer} from "../components/Footer.jsx";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import axios from "axios";
+import {A} from "@solidjs/router";
 
 const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-gsap.registerPlugin(ScrollTrigger);
 export const Gallery = () => {
     const [photo_urls, set_photo_urls] = createSignal([])
     const [featured_image, set_featured_image] = createSignal("")
@@ -180,6 +180,10 @@ export const Gallery = () => {
         }
     }
 
+    onCleanup(() => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    })
+
     return (
         <>
             <section class={"superwrapper overflow-hidden flex flex-col items-center"}>
@@ -220,10 +224,10 @@ export const Gallery = () => {
                         ))
                     ))}
                 </section>
-                <h1 class={"text-black text-center text-4xl my-4"}><a class={"cursor-pointer underline"} onclick={() => {
+                <h1 class={"text-black text-center text-4xl my-4"}><A class={"cursor-pointer underline"} onclick={() => {
                     location.reload()
                     scrollTo(0, 0)
-                }}>Refresh</a> the page, it's different every time!</h1>
+                }}>Refresh</A> the page, it's different every time!</h1>
                 <Footer/>
             </section>
 

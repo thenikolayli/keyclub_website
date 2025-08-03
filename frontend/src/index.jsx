@@ -7,5 +7,7 @@ import {Router} from "@solidjs/router";
 const root = document.getElementById('root')
 
 render(() => (
-    <App/>
+    <Router>
+        <App/>
+    </Router>
 ), root)

@@ -1,12 +1,8 @@
 import {createEffect, createSignal, onMount} from "solid-js";
 import {Header} from "../components/Header.jsx";
-import contact_cover from "../assets/contactus/contact.jpg";
 import {Footer} from "../components/Footer.jsx";
 import axios from "axios";
 import gsap from "gsap";
-import SplitText from "gsap/SplitText";
-
-gsap.registerPlugin(SplitText);
 
 export const ContactUs = () => {
     const [first_name, set_first_name] = createSignal("")
@@ -98,19 +94,19 @@ export const ContactUs = () => {
             <Header/>
             <section class="w-full min-h-screen flex flex-col">
                 <div class={"relative w-full h-[30rem] flex flex-col items-center justify-center"}>
-                    <header class={"text-white text-6xl lg:text-7xl"}>
+                    <header class={"text-white text-4xl"}>
                         CONTACT US
                     </header>
-                    <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover"} src={contact_cover}
+                    <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover"} src="/contactus/contact.jpg"
                          alt="Contact Us Cover"/>
                 </div>
 
                 <form
                     onsubmit={send_message}
                     class={"flex flex-col w-full md:w-[80%] xl:w-[65%] mx-auto my-16 px-12"}>
-                    <header class={"text-7xl"}>Let's Chat!</header>
+                    <header class={"text-4xl"}>Let's Chat!</header>
 
-                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-12 text-3xl">
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-12 text-2xl">
 
                         <div class={"relative border-b-3 border-kcyellow"}
                              onmouseenter={() => animate_input(first_name, ".first-name", true)}
@@ -144,7 +140,7 @@ export const ContactUs = () => {
                         </div>
                     </div>
 
-                    <div class={"w-full mt-8 text-3xl"}>
+                    <div class={"w-full mt-8 text-2xl"}>
                         <h1 class="mb-1">Message *</h1>
                         <textarea
                             value={message()}
@@ -160,8 +156,8 @@ export const ContactUs = () => {
                             onmouseenter={() => button_animation(true)}
                             onmouseleave={() => button_animation(false)}
                     >
-                        <h1 class={"button-text text-4xl text-kcblack z-10"}>Send</h1>
-                        <h1 class={"button-text-2 text-4xl text-kcblack z-10 absolute"}>Sent!</h1>
+                        <h1 class={"button-text text-2xl text-kcblack z-10"}>Send</h1>
+                        <h1 class={"button-text-2 text-2xl text-kcblack z-10 absolute"}>Sent!</h1>
                         <div class="button-background absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></div>
                     </button>
                 </form>

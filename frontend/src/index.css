@@ -8,19 +8,19 @@
 @font-face {
     font-family: abril;
     font-style: normal;
-    src: url("./assets/fonts/abril-display-regular.otf") format("opentype");
+    src: url("/fonts/abril-display-regular.otf") format("opentype");
 }
 
 @font-face {
     font-family: century-gothic;
     font-style: normal;
-    src: url("./assets/fonts/centurygothic.ttf") format("opentype");
+    src: url("/fonts/centurygothic.ttf") format("opentype");
 }
 
 @font-face {
     font-family: century-gothic-bold;
     font-style: normal;
-    src: url("./assets/fonts/centurygothic_bold.ttf") format("opentype");
+    src: url("/fonts/centurygothic_bold.ttf") format("opentype");
 }
 
 button {

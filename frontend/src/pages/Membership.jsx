@@ -1,15 +1,9 @@
 import {onMount} from "solid-js";
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
-import membeship_cover from "../assets/membership/membership_cover.jpg";
-import members_1 from "../assets/membership/members1.png";
-import members_2 from "../assets/membership/members2.png";
-import members_3 from "../assets/membership/members3.png";
-
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
 
-gsap.registerPlugin(SplitText);
 export const Membership = () => {
     onMount(() => {
         document.title = "Membership"
@@ -34,16 +28,16 @@ export const Membership = () => {
             <Header/>
             <section class={"w-full min-h-screen text-center text-2xl"}>
                 <div class={"relative w-full h-[30rem] flex flex-col items-center justify-center"}>
-                    <header class={"header-text text-white text-6xl lg:text-7xl"}>
+                    <header class={"header-text text-white text-4xl"}>
                         REGISTRATION IS CLOSED
                     </header>
-                    <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover"} src={membeship_cover}
+                    <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover"} src="/membership/membership_cover.jpg"
                          alt="Membership Cover"/>
                 </div>
 
                 <section class={"hidden md:block text-xl lg:text-2xl"}>
                     <section class="flex w-full h-[50vh] items-center p-4">
-                        <img class={"object-contain h-full w-[40%]"} src={members_1} alt="Members 1"/>
+                        <img class={"object-contain h-full w-[40%]"} src="/membership/members1.png" alt="Members 1"/>
                         <div class={"w-[60%] px-8"}>
                             <header class={"text-4xl mb-8"}>Be a Keyutie</header>
                             <h1>
@@ -67,11 +61,11 @@ export const Membership = () => {
                                 Check back next year!
                             </h1>
                         </div>
-                        <img class={"object-contain h-full w-[40%]"} src={members_2} alt="Members 2"/>
+                        <img class={"object-contain h-full w-[40%]"} src="/membership/members2.png" alt="Members 2"/>
                     </section>
 
                     <section class="flex w-full h-[50vh] items-center p-4">
-                        <img class={"object-contain h-full w-[40%]"} src={members_3} alt="Members 3"/>
+                        <img class={"object-contain h-full w-[40%]"} src="/membership/members3.png" alt="Members 3"/>
                         <div class={"w-[60%] px-8"}>
                             <header class={"text-4xl mb-8"}>Stay in the Hive</header>
                             <h1>
@@ -91,7 +85,7 @@ export const Membership = () => {
 
                 <section class={"block md:hidden p-4"}>
                     <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src={members_1} alt="Members 1"/>
+                        <img class={"object-contain w-[80%]"} src="/membership/members1.png" alt="Members 1"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Be a Keyutie</header>
                             <h1>
@@ -107,7 +101,7 @@ export const Membership = () => {
                     </div>
 
                     <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src={members_2} alt="Members 2"/>
+                        <img class={"object-contain w-[80%]"} src="/membership/members2.png" alt="Members 2"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Pay Dues</header>
                             <h1>
@@ -119,7 +113,7 @@ export const Membership = () => {
                     </div>
 
                     <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src={members_3} alt="Members 3"/>
+                        <img class={"object-contain w-[80%]"} src="/membership/members3.png" alt="Members 3"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Stay in the Hive</header>
                             <h1>

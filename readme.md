@@ -39,11 +39,12 @@ Here are the instructions on how to do various things.
 /frontend> npm run dev
 ```
 
-## Responsive design progress
-- [ ] Home
+## Phone design progress
+- [x] Home
 - [x] About
 - [x] Events
 - [ ] District Project
+- [ ] Hour Checker
 - [x] Membership
-- [x] Gallery
+- [ ] Gallery
 - [x] Contact Us

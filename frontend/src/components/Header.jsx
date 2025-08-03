@@ -1,4 +1,3 @@
-import keyclub_horizontal_logo from "../assets/keyclub_horizontal_black.png";
 import {createEffect, createSignal, onCleanup, onMount} from "solid-js";
 import {FiArrowDown} from "solid-icons/fi";
 import {A} from "@solidjs/router"
@@ -34,10 +33,10 @@ export const Header = () => {
         <>
             <section class={"relative header w-full z-30"}>
                 <div class={"relative w-full h-full top-0 left-0 z-30 p-4 flex flex-col items-center bg-white"}>
-                    <header class={"mb-2"}>
-                        <img class={"h-[4rem]"} src={keyclub_horizontal_logo} alt="Key Club Logo"/>
+                    <a class={"mb-2"} href={"/"}>
+                        <img class={"h-[4rem] object-contain"} src="/keyclub_horizontal_black.png" alt="Key Club Logo"/>
                         <h1 class={"text-4xl text-black/70"}>Henry M. Jackson High School</h1>
-                    </header>
+                    </a>
 
                     <ul class={"hidden lg:flex lg:space-x-8 xl:space-x-16 items-center mt-6 text-2xl"}>
                         <A class={"hover:underline"} href="/">Home</A>
