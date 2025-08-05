@@ -1,8 +1,10 @@
-import {createEffect, createSignal, onMount} from "solid-js";
+import {createSignal, onMount} from "solid-js";
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
 import axios from "axios";
 import gsap from "gsap";
+import {ResponsiveInput} from "../components/ResponsiveInput.jsx";
+import {ResponsiveButton} from "../components/ResponsiveButton.jsx";
 
 export const ContactUs = () => {
     const [first_name, set_first_name] = createSignal("")
@@ -10,45 +12,15 @@ export const ContactUs = () => {
     const [email, set_email] = createSignal("")
 
     const [message, set_message] = createSignal("")
-
     const [can_send, set_can_send] = createSignal(true)
 
     onMount(() => {
         document.title = "Contact Us"
-        gsap.set(".button-text-2", {yPercent: 120})
-    })
-
-    // hover animation
-    const button_animation = (start) => {
-        gsap.to(".button-background", {
-            transformOrigin: "top center",
-            scaleY: start ? 0 : 1,
-            ease: "power2.out",
-            duration: .1
-        })
-    }
-
-    const animate_input = (field, selector, is_mouse_inside) => {
-        gsap.to(selector, {
-            scale: field() !== "" || is_mouse_inside ? .8 : 1,
-            y: field() !== "" || is_mouse_inside ? "-80%" : 1,
-            opacity: field() !== "" || is_mouse_inside ? .8 : 1,
-            ease: "power2.out",
-            transformOrigin: "top left",
-            duration: .2
-        })
-    }
-
-    // animates text when typing and cursor not inside input
-    createEffect(() => {
-        animate_input(first_name, ".first-name", false)
-        animate_input(last_name, ".last-name", false)
-        animate_input(email, ".email", false)
     })
 
     const send_message = (event) => {
-        event.preventDefault();
-        if (!can_send()) return
+        event.preventDefault()
+        if (!can_send()) return;
         set_can_send(false)
 
         try {
@@ -70,21 +42,7 @@ export const ContactUs = () => {
             console.log(error)
         }
 
-        // sent animation
-        const timeline = gsap.timeline()
-        timeline.to(".button-text", {
-            yPercent: -120,
-            duration: .2,
-            ease: "power2.out",
-        }, 0)
-        timeline.to(".button-text-2", {
-            yPercent: 0,
-            duration: .2,
-            ease: "power2.out",
-        }, 0)
-
         setTimeout(() => {
-            timeline.reverse()
             set_can_send(true)
         }, 2000)
     }
@@ -101,43 +59,12 @@ export const ContactUs = () => {
                          alt="Contact Us Cover"/>
                 </div>
 
-                <form
-                    onsubmit={send_message}
+                <form onSubmit={send_message}
                     class={"flex flex-col w-full md:w-[80%] xl:w-[65%] mx-auto my-16 px-12"}>
-                    <header class={"text-4xl"}>Let's Chat!</header>
-
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-12 text-2xl">
-
-                        <div class={"relative border-b-3 border-kcyellow"}
-                             onmouseenter={() => animate_input(first_name, ".first-name", true)}
-                             onmouseleave={() => animate_input(first_name, ".first-name", false)}
-                        >
-                            <input class={"outline-none relative z-10"} type="text" value={first_name()}
-                                   oninput={(event) => set_first_name(event.target.value)}
-                            />
-                            <h1 class={"first-name absolute top-0 left-0"}>First Name</h1>
-                        </div>
-
-                        <div class={"relative border-b-3 border-kcyellow"}
-                             onmouseenter={() => animate_input(last_name, ".last-name", true)}
-                             onmouseleave={() => animate_input(last_name, ".last-name", false)}
-                        >
-                            <input class={"outline-none relative z-10"} type="text" value={last_name()}
-                                   oninput={(event) => set_last_name(event.target.value)}
-                            />
-                            <h1 class={"last-name absolute top-0 left-0"}>Last Name</h1>
-                        </div>
-
-                        <div class={"relative border-b-3 border-kcyellow"}
-                             onmouseenter={() => animate_input(email, ".email", true)}
-                             onmouseleave={() => animate_input(email, ".email", false)}
-                        >
-                            <input class={"outline-none relative z-10"} type="text" value={email()}
-                                   oninput={(event) => set_email(event.target.value)}
-                                // required
-                            />
-                            <h1 class={"email absolute top-0 left-0"}>Email *</h1>
-                        </div>
+                        <ResponsiveInput value={first_name} set_value={set_first_name} text={"First Name"}/>
+                        <ResponsiveInput value={last_name} set_value={set_last_name} text={"Last Name"}/>
+                        <ResponsiveInput value={email} set_value={set_email} text={"Email *"}/>
                     </div>
 
                     <div class={"w-full mt-8 text-2xl"}>
@@ -147,19 +74,10 @@ export const ContactUs = () => {
                             oninput={(event) => set_message(event.target.value)}
                             class={"p-4 text-2xl w-full border-3 border-kcyellow resize-y overflow-hidden outline-none"}
                             rows={10}
-                            // required
                         />
                     </div>
 
-                    <button type={"submit"}
-                            class={"relative flex self-end p-2 px-8 mt-8 border-3 border-kcyellow overflow-hidden"}
-                            onmouseenter={() => button_animation(true)}
-                            onmouseleave={() => button_animation(false)}
-                    >
-                        <h1 class={"button-text text-2xl text-kcblack z-10"}>Send</h1>
-                        <h1 class={"button-text-2 text-2xl text-kcblack z-10 absolute"}>Sent!</h1>
-                        <div class="button-background absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></div>
-                    </button>
+                    <ResponsiveButton init_text={"Send"} clicked_text={"Sent!"} on_click={send_message} can_send={can_send}/>
                 </form>
             </section>
             <Footer/>

@@ -20,7 +20,7 @@ export const ResponsiveInput = (props) => {
 
     // animates text when typing and cursor not inside input
     createEffect(() => {
-        animate_input(value, text_ref, false)
+        animate_input(false)
     })
 
     return (
