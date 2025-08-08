@@ -58,7 +58,7 @@ export const TestPage = () => {
             set_last_updated(last_update)
         } catch (error) {
             console.error(error)
-            set_last_updated("never... (error fetching last update)")
+            set_last_updated("Never... (error fetching last update)")
         }
     })
 
@@ -155,10 +155,10 @@ export const TestPage = () => {
         <>
             <Header />
 
-            <section class={"relative w-full h-screen min-h-screen flex flex-col items-center p-4"}>
+            <section class={"relative w-full h-screen min-h-screen flex flex-col items-center"}>
                 <header class={"text-7xl mb-4"}>HOURS</header>
 
-                <div ref={wrapper_ref} class={"w-full py-8 text-xl mt-8"}>
+                <div ref={wrapper_ref} class={"w-full p-8 text-xl mt-8"}>
                     <h1 class={"text-3xl text-center w-full"}>{header()}</h1>
 
                     <div class={"container relative w-full mt-8"}>
@@ -189,11 +189,10 @@ export const TestPage = () => {
                     <ResponsiveButton init_text={"Check hours"} clicked_text={"..."} on_click={check_hours} can_send={can_send} />
                 </form>
 
-                <div class={"container absolute bottom-8 w-full text-center p-4"}>
+                <div class={"container absolute bottom-8 w-full text-center"}>
                     <h1>Hours were last updated on {last_updated()}</h1>
                 </div>
             </section>
-
             <Footer/>
 
         </>

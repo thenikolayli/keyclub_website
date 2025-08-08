@@ -1,60 +1,33 @@
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
-import {createSignal, onMount} from "solid-js";
-import SplitText from "gsap/SplitText";
-import gsap from "gsap";
-import {A} from "@solidjs/router";
-import {ResponsiveButton} from "../components/ResponsiveButton.jsx";
+import sead from "../assets/districtproject/sead.jpg";
+import sead_logo from "../assets/districtproject/sead_logo.png";
+import {onMount} from "solid-js";
 
 export const DistrictProject = () => {
-    let htext_ref
-    const [can_send, set_can_send] = createSignal(true)
-
-    onMount(() => {
-        document.title = "District Project"
-
-        const header_text = SplitText.create(htext_ref).words
-
-        gsap.fromTo(header_text, {
-            yPercent: 50,
-            opacity: 0,
-        }, {
-            yPercent: 0,
-            opacity: 1,
-            stagger: 1/5,
-            duration: .5,
-            delay: .5,
-            ease: "power2.out",
-        })
-    })
-
-
+    onMount(() => document.title = "District Project")
     return (
         <>
-            <Header/>
-            <section class="w-full h-screen">
-                <div class={"relative w-full h-[30vh] flex flex-col items-center justify-center"}>
-                    <header ref={htext_ref} class={"text-white text-4xl"}>
-                        DISTRICT PROJECT
-                    </header>
-                    <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover brightness-50"}
-                         src="/districtproject/cover.jpg" alt="cover image"/>
+            <section class="w-full h-screen flex flex-col">
+                <Header/>
+                <div class="relative flex flex-1 p-[2rem] text-white">
+                    <div>
+                        <header class={"text-6xl"}>The SEAD: End Youth Houselessness Initiative</header>
+                        <h1 class={"text-2xl! mt-[1rem] leading-10"}>
+                            The 2024-2025 PNW District Project is The SEAD: End Youth Houselessness Initiative.
+                            SEAD stands for Support, Empower, Act, and Destigmatize.
+                            Chosen by last year's District Governor, Isabella Baldisseri, and approved by the District Board, the SEAD Initiative aims to guide Key Clubbers in serving their community by addressing the widespread pattern of Youth Houselessness within the PNW.
+                            Our goal for this District Project is to provide Key Clubbers and Kiwanians with resources, knowledge, and inspiration to make a direct impact locally.
+                            The District Project is not limited to specific organizations, so all Key Clubbers can find unique and impactful ways to serve.
+                            Some good ways to begin volunteering are hosting a food or collection drive, holding a fundraiser, and volunteering at shelters or food banks.
+                            As a District, we hope to raise $15,000 for local nonprofits addressing youth houselessness and serve 10,000 hours.
+                        </h1>
+                    </div>
+
+                    <img class={"size-[25rem] my-auto"} src={sead_logo} alt="SEAD Logo"/>
+
+                    <img class={"absolute top-0 left-0 -z-10 h-full w-full object-cover"} src={sead} alt="Cover image"/>
                 </div>
-
-                <h1 class={"p-4 w-full text-xl"}>
-                    <img class={"w-[45%] float-right"} src="/districtproject/logo.png" alt="logo"/>
-                    In 25-26 year, we’ve partnered with The Ronald McDonald House Charities!
-                    <br/><br/>
-                    The Ronald McDonald House Charities (RMHC) is a non-profit organization that supports families with
-                    sick children who need to travel for medical care. It provides a "home-away-from-home" through programs
-                    like <A class={"underline"} href="https://rmhc.org/our-core-programs/ronald-mcdonald-house-programs">Ronald McDonald Houses</A> and
-                    <A class={"underline"} href="https://rmhc.org/our-core-programs/ronald-mcdonald-family-room-programs">Family Rooms</A> near hospitals.
-                    <br/><br/>
-                    RMHC's mission is to strengthen families,
-                    promote healing, and ensure the best health outcomes for children by removing barriers to healthcare.
-
-                    <ResponsiveButton init_text={"Visit their website"} clicked_text={"..."} on_click={() => window.open("https://rmhc.org/", "_blank")} can_send={can_send}/>
-                </h1>
             </section>
             <Footer/>
         </>

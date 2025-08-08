@@ -209,7 +209,7 @@ export const Gallery = () => {
                         }], zone_count).map((each, index) => (
                             <button
                                 onmouseover={() => animate_image_hover(`image-${index}`, true)}
-                                onmouseout={() => animate_image_hover(`image-${index}`, false)}
+                                onmouseleave={() => animate_image_hover(`image-${index}`, false)}
                                 onclick={() => set_featured_image(photo_urls()[index])}
                                 class={"border-4 border-kcyellow text-black overflow-hidden"}
                                 style={{
