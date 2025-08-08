@@ -211,7 +211,7 @@ export const Gallery = () => {
                                 onmouseover={() => animate_image_hover(`image-${index}`, true)}
                                 onmouseleave={() => animate_image_hover(`image-${index}`, false)}
                                 onclick={() => set_featured_image(photo_urls()[index])}
-                                class={"border-4 border-kcyellow text-black overflow-hidden"}
+                                class={"border-3 border-kcyellow text-black overflow-hidden"}
                                 style={{
                                     "grid-column-start": `${each.x + 1}`,
                                     "grid-column": `span ${each.width} / span ${each.width}`,
@@ -229,14 +229,14 @@ export const Gallery = () => {
                         location.reload()
                         scrollTo(0, 0)
                     }}>Refresh
-                    </button>
+                    </button>&nbsp
                     the page, it's different every time!
                 </h1>
                 <Footer/>
             </section>
 
             <div ref={featured_ref}
-                class={"fixed z-30 max-w-full max-h-full inset-0 w-fit h-fit m-auto border-6 border-kcyellow overflow-hidden"}>
+                class={"fixed z-30 max-w-[80vw] max-h-[80vh] inset-0 w-fit h-fit m-auto border-3 border-kcyellow overflow-hidden"}>
                 <img class={"object-contain w-full h-full"} src={featured_image()} alt="Featured image"/>
             </div>
 

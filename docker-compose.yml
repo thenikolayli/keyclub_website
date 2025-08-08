@@ -4,6 +4,7 @@ services:
     volumes:
       - keyclub_photos:/backend/photos
       - ./key.json:/backend/key.json
+      - ./event_log.json:/backend/event_log.json
     env_file:
       - .env
     expose:
