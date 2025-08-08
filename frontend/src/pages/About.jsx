@@ -1,15 +1,18 @@
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
 import {horizontalLoop} from "../utils/HorizontalLoop.js"
-import {Match, onCleanup, onMount, Switch} from "solid-js";
+import {createSignal, Match, onCleanup, onMount, Switch} from "solid-js";
 import gsap from "gsap";
 import {A} from "@solidjs/router"
 import {FiArrowLeft, FiArrowRight, FiArrowUp, FiMail} from "solid-icons/fi";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import {ResponsiveButton} from "../components/ResponsiveButton.jsx";
 
 export const About = () => {
     let loop
     const partner_change = {duration: .8, ease: "power2.out"}
+    const [can_send, set_can_send] = createSignal(true)
+
     onMount(() => {
         document.title = "About"
 
@@ -294,15 +297,15 @@ export const About = () => {
                         <div class="absolute p-8 h-full z-10">
                             <img class={"h-[20%] object-contain"} src="/about/thirstproject_logo.png" alt="Logo"/>
 
-                            <h1 class={"text-md sm:text-2xl lg:text-3xl mt-8 sm:leading-10"}>
+                            <h1 class={"text-md sm:text-xl mt-8 sm:leading-10"}>
                                 Thirst Project hopes to educate the next generation by arming students with
                                 information
                                 about how they can be a part of social change,
                                 make a difference and encourage others to join in the effort.
-                            </h1>
 
-                            <A class={"absolute bottom-8 text-black bg-white p-4 px-8 text-xl mt-16"}
-                               href="https://thirstproject.org/" target={"_blank"}>Learn More</A>
+                                <A class={"float-right text-black bg-white mt-4 p-4 text-xl"}
+                                   href="https://thirstproject.org/" target={"_blank"}>Learn More</A>
+                            </h1>
                         </div>
 
                         <img class={"object-cover z-0 w-full h-full"} src="/about/thirstproject.png" alt="Thirst Project"/>
@@ -312,7 +315,7 @@ export const About = () => {
                         <div class="absolute p-8 h-full z-10">
                             <img class={"h-[20%] object-contain"} src="/about/unicef_logo.png" alt="Logo"/>
 
-                            <h1 class={"text-md sm:text-2xl lg:text-3xl mt-8 sm:leading-10"}>
+                            <h1 class={"text-md md:text-xl mt-8 sm:leading-6"}>
                                 UNICEF is the only organization of the United Nations dedicated exclusively to
                                 children.
                                 Working with other United Nations bodies, governments and non-governmental
@@ -320,10 +323,10 @@ export const About = () => {
                                 UNICEF helps to provide for children’s needs in more than 150 developing countries
                                 through community-based services in primary health care,
                                 basic education and safe water and sanitation.
-                            </h1>
 
-                            <A class={"absolute bottom-8 text-black bg-white p-4 px-8 text-xl mt-16"}
-                               href="https://www.unicef.org/" target={"_blank"}>Learn More</A>
+                                <A class={"float-right text-black bg-white mt-4 p-4 text-xl"}
+                                   href="https://www.unicef.org/" target={"_blank"}>Learn More</A>
+                            </h1>
                         </div>
 
                         <img class={"object-cover z-0 w-full h-full"} src="/about/unicef.jpg" alt="Unicef"/>
@@ -333,17 +336,17 @@ export const About = () => {
                         <div class="absolute p-8 h-full z-10">
                             <img class={"h-[20%] object-contain"} src="/about/erikaslighthouse_logo.png" alt="Logo"/>
 
-                            <h1 class={"text-md sm:text-2xl lg:text-3xl mt-8 sm:leading-10"}>
+                            <h1 class={"text-md md:text-xl mt-8 sm:leading-6"}>
                                 The mission of Erika's Lighthouse is to make sure no young person feels alone in
                                 their depression.
                                 This nonprofit organization encourages good mental health and strives to break down
                                 the stigma surrounding mental health issues.
                                 Erika's Lighthouse is dedicated to creating a community of empathy and education and
                                 has resources and programs for students and educators, grades 4-12.
-                            </h1>
 
-                            <A class={"absolute bottom-8 text-black bg-white p-4 px-8 text-xl mt-16"}
-                               href="https://erikaslighthouse.org/" target={"_blank"}>Learn More</A>
+                                <A class={"float-right text-black bg-white mt-4 p-4 text-xl"}
+                                   href="https://erikaslighthouse.org/" target={"_blank"}>Learn More</A>
+                            </h1>
                         </div>
 
                         <img class={"object-cover brightness-[.2] z-0 w-full h-full"} src="/about/erikaslighthouse.jpeg"
@@ -354,17 +357,17 @@ export const About = () => {
                         <div class="absolute p-8 h-full z-10">
                             <img class={"h-[20%] object-contain"} src="/about/schoolhouse_logo.png" alt="Logo"/>
 
-                            <h1 class={"text-md sm:text-2xl lg:text-3xl mt-8 sm:leading-10"}>
+                            <h1 class={"text-md md:text-xl mt-8 sm:leading-6"}>
                                 Want to make an impact and have fun while doing it? Looking for a service project
                                 that you can complete from the comfort of your bedroom?
                                 Key Club has partnered with Schoolhouse to bring free tutoring to thousands of
                                 learners across the world.
                                 If you're interested in learning something new, or you're interested in becoming a
                                 tutor yourself, sign up today!
-                            </h1>
 
-                            <A class={"absolute bottom-8 text-black bg-white p-4 px-8 text-xl mt-16"}
-                               href="https://schoolhouse.world/key-club" target={"_blank"}>Learn More</A>
+                                <A class={"float-right text-black bg-white mt-4 p-4 text-xl"}
+                                   href="https://schoolhouse.world/key-club" target={"_blank"}>Learn More</A>
+                            </h1>
                         </div>
 
                         <img class={"object-cover brightness-[1.2] z-0 w-full h-full"} src="/about/schoolhouse.png"
@@ -375,17 +378,17 @@ export const About = () => {
                         <div class="absolute p-8 h-full z-10">
                             <img class={"h-[20%] object-contain"} src="/about/collegewise_logo.png" alt="Logo"/>
 
-                            <h1 class={"text-md sm:text-2xl lg:text-3xl mt-8 sm:leading-10"}>
+                            <h1 class={"text-md md:text-xl mt-8 sm:leading-6"}>
                                 Collegewise helps identify the college that’s right for you, assists with the
                                 application process,
                                 and provides tutoring for ACT/SAT exams. While a paid subscription is available for
                                 those who wish to access it,
                                 every Key Club member has access to a suite of Collegewise resources on the Runway
                                 platform as a member benefit.
-                            </h1>
 
-                            <A class={"absolute bottom-8 text-black bg-white p-4 px-8 text-xl mt-16"}
-                               href="https://collegewise.com/" target={"_blank"}>Learn More</A>
+                                <A class={"float-right text-black bg-white mt-4 p-4 text-xl"}
+                                   href="https://collegewise.com/" target={"_blank"}>Learn More</A>
+                            </h1>
                         </div>
 
                         <img class={"object-cover z-0 w-full h-full"} src="/about/collegewise.jpg" alt="Collegewise"/>
@@ -393,19 +396,19 @@ export const About = () => {
 
                 </div>
 
-                <div class="flex text-black gap-8 mt-4">
-                    <button class={"border-1 rounded-xl"}
-                            onclick={() => loop.previous(partner_change)}
-                    >
-                        <FiArrowLeft class={"size-[4rem]"}/>
-                    </button>
-                    <button class={"border-1 rounded-xl"}
-                            onclick={() => loop.next(partner_change)}
-                    >
-                        <FiArrowRight class={"size-[4rem]"}/>
-                    </button>
-                </div>
-            </section>
+        <div class="flex text-black gap-8 mt-4">
+            <button class={"border-1 rounded-xl"}
+                    onclick={() => loop.previous(partner_change)}
+            >
+                <FiArrowLeft class={"size-[4rem]"}/>
+            </button>
+            <button class={"border-1 rounded-xl"}
+                    onclick={() => loop.next(partner_change)}
+            >
+                <FiArrowRight class={"size-[4rem]"}/>
+            </button>
+        </div>
+    </section>
 
             <section class={"w-full h-screen flex flex-col lg:flex-row"}>
                 <div
@@ -452,9 +455,9 @@ export const About = () => {
                     catch up with the
                     buzz!</h1>
 
-                <div class="flex flex-col md:flex-row items-center justify-center mx-auto gap-8 text-4xl">
-                    <A class={"bg-kcyellow p-4 px-8"} href="https://www.keyclub.org/">Key Club</A>
-                    <A class={"bg-[#c61165] text-white p-4 px-8"} href="https://pnwkeyclub.org/">PNW Key Club</A>
+                <div class="flex flex-col md:flex-row mx-auto text-4xl space-x-8">
+                    <ResponsiveButton bg_color={"kcpink"} init_text={"Key Club"} clicked_text={"..."} on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={can_send}/>
+                    <ResponsiveButton init_text={"PNW Key Club"} clicked_text={"..."} on_click={() => window.open("https://pnwkeyclub.org/", "_blank")} can_send={can_send}/>
                 </div>
             </section>
 

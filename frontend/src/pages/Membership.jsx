@@ -5,10 +5,12 @@ import gsap from "gsap";
 import SplitText from "gsap/SplitText";
 
 export const Membership = () => {
+    let htext_ref
+
     onMount(() => {
         document.title = "Membership"
 
-        const header_text = SplitText.create(".header-text").words
+        const header_text = SplitText.create(htext_ref).words
 
         gsap.fromTo(header_text, {
             yPercent: 50,
@@ -27,8 +29,8 @@ export const Membership = () => {
         <>
             <Header/>
             <section class={"w-full min-h-screen text-center text-2xl"}>
-                <div class={"relative w-full h-[30rem] flex flex-col items-center justify-center"}>
-                    <header class={"header-text text-white text-4xl"}>
+                <div class={"relative w-full h-[30vh] flex flex-col items-center justify-center"}>
+                    <header ref={htext_ref} class={"text-white text-4xl"}>
                         REGISTRATION IS CLOSED
                     </header>
                     <img class={"absolute -z-10 top-0 left-0 w-full h-full object-cover"} src="/membership/membership_cover.jpg"
@@ -40,7 +42,7 @@ export const Membership = () => {
                         <img class={"object-contain h-full w-[40%]"} src="/membership/members1.png" alt="Members 1"/>
                         <div class={"w-[60%] px-8"}>
                             <header class={"text-4xl mb-8"}>Be a Keyutie</header>
-                            <h1>
+                            <h1 class={"text-left"}>
                                 <span class="underline">Get an ASB card!</span> If you don't already have one, go to the
                                 ASB office for assistance.
                                 <br/><br/>
@@ -83,12 +85,13 @@ export const Membership = () => {
                     </section>
                 </section>
 
-                <section class={"block md:hidden p-4"}>
-                    <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src="/membership/members1.png" alt="Members 1"/>
+                <section class={"block md:hidden p-4 space-y-[10vh]"}>
+
+                    <div class={"w-full"}>
+                        <img class={"object-contain w-[80%] mx-auto"} src="/membership/members1.png" alt="Members 1"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Be a Keyutie</header>
-                            <h1>
+                            <h1 class={"text-left"}>
                                 <span class="underline">Get an ASB card!</span> If you don't already have one, go to the
                                 ASB office for assistance.
                                 <br/><br/>
@@ -100,11 +103,11 @@ export const Membership = () => {
                         </div>
                     </div>
 
-                    <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src="/membership/members2.png" alt="Members 2"/>
+                    <div class={"w-full"}>
+                        <img class={"object-contain w-[80%] mx-auto"} src="/membership/members2.png" alt="Members 2"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Pay Dues</header>
-                            <h1>
+                            <h1 class={"text-left"}>
                                 The official dues payments are closed.
                                 <br/><br/>
                                 Check back next year!
@@ -112,11 +115,11 @@ export const Membership = () => {
                         </div>
                     </div>
 
-                    <div class={"w-full h-screen flex flex-col items-center justify-center"}>
-                        <img class={"object-contain w-[80%]"} src="/membership/members3.png" alt="Members 3"/>
+                    <div class={"w-full"}>
+                        <img class={"object-contain w-[80%] mx-auto"} src="/membership/members3.png" alt="Members 3"/>
                         <div class={"w-full"}>
                             <header class={"text-4xl mb-8"}>Stay in the Hive</header>
-                            <h1>
+                            <h1 class={"text-left"}>
                                 Complete your annual hour requirement of <span class={"underline"}>25 hours</span>!
                                 <br/><br/>
                                 Attend <span class={"underline"}>50%</span> of the general meetings.
@@ -129,6 +132,7 @@ export const Membership = () => {
                             </h1>
                         </div>
                     </div>
+
                 </section>
             </section>
             <Footer/>

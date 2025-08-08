@@ -5,10 +5,9 @@ import gsap from "gsap";
 import {ResponsiveInput} from "../components/ResponsiveInput.jsx";
 import {ResponsiveButton} from "../components/ResponsiveButton.jsx";
 import axios from "axios";
-// import moment from "moment";
 import moment from "moment-timezone"
 
-export const TestPage = () => {
+export const HourChecker = () => {
     const at_goals = [0, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600]
     const yr_goals = [0, 10, 25, 50, 70, 100, 150, 200, 250, 300]
 
@@ -178,7 +177,7 @@ export const TestPage = () => {
                         <h1 class={"absolute w-full z-10 text-center font-bold"} ref={yr_hours_ref}>{yr_hours()}</h1>
                     </div>
                     <div class={"container relative w-full h-6 bg-gray-400"}>
-                    <div ref={yr_ref} class={"absolute left-0 top-0 h-full w-full bg-kcyellow"}></div>
+                        <div ref={yr_ref} class={"absolute left-0 top-0 h-full w-full bg-kcyellow"}></div>
                     </div>
 
                     <h1>{api_response()}</h1>

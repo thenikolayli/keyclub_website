@@ -13,6 +13,7 @@ import {SplitText} from "gsap/SplitText";
 import gsap from "gsap";
 import {Gallery} from "./pages/Gallery.jsx";
 import {createEffect, onMount} from "solid-js";
+import {HourChecker} from "./pages/HourChecker.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(SplitText);
@@ -26,11 +27,6 @@ export const App = () => {
         gsap.ticker.lagSmoothing(0)
     })
 
-    createEffect(() => {
-        location.pathname;
-        ScrollTrigger.refresh()
-    })
-
     return (
         <UtilContextProvider>
             <Route path={"/"} component={Home}/>
@@ -40,7 +36,8 @@ export const App = () => {
             <Route path={"/membership"} component={Membership} />
             <Route path={"/contact"} component={ContactUs} />
             <Route path={"/gallery"} component={Gallery} />
-            <Route path={"/test"} component={TestPage} />
+            <Route path={"/hours"} component={HourChecker} />
+            {/*<Route path={"/test"} component={TestPage} />*/}
         </UtilContextProvider>
     )
 }

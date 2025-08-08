@@ -1,4 +1,4 @@
-import {createMemo, createSignal, onCleanup, onMount} from "solid-js";
+import {createEffect, createMemo, createSignal, onCleanup, onMount} from "solid-js";
 import {Header} from "../components/Header.jsx";
 import {Footer} from "../components/Footer.jsx";
 import gsap from "gsap";
@@ -15,6 +15,9 @@ export const Gallery = () => {
     const zone_count = 20
     const [columns, set_columns] = createSignal(6)
     const [rows, set_rows] = createSignal(6)
+
+    let featured_ref
+    let background_ref
 
     const window_resize_handler = () => {
         if (innerWidth <= 640) {
@@ -36,40 +39,14 @@ export const Gallery = () => {
     }
 
     const animate_image_hover = (image_id, start) => {
+        console.log(start)
         gsap.to(`#${image_id}`, {
             transformOrigin: "center center",
             scale: start ? 1.3 : 1,
-            filter: start ? "blur(5px)" : "blur(0px)",
+            filter: start ? "blur(3px)" : "blur(0px)",
             duration: .3,
             ease: "power2.out"
         })
-    }
-
-    const feature_image = (image_src, start) => {
-        set_featured_image(image_src)
-        if (start) {
-            gsap.set(".featured", {
-                opacity: 0,
-                display: "block"
-            })
-
-            gsap.to(".featured", {
-                opacity: 1,
-                duration: .4,
-                ease: "power2.out"
-            })
-        } else {
-            gsap.to(".featured", {
-                opacity: 0,
-                duration: .4,
-                ease: "power2.out",
-                onComplete: () => {
-                    gsap.set(".featured", {
-                        display: "none",
-                    })
-                }
-            })
-        }
     }
 
     onMount(async () => {
@@ -92,10 +69,6 @@ export const Gallery = () => {
             transformOrigin: "center center"
         })
 
-        gsap.set(".featured", {
-            display: "none",
-        })
-
         const timeline = gsap.timeline({
             scrollTrigger: {
                 trigger: ".superwrapper",
@@ -111,7 +84,7 @@ export const Gallery = () => {
             duration: .7
         }, 0)
         timeline.to(".title", {
-            yPercent: -100,
+            yPercent: -140,
             duration: .7
         }, .05)
         timeline.to(".backdrop", {
@@ -184,13 +157,40 @@ export const Gallery = () => {
         ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     })
 
+    createEffect(() => {
+        if (featured_image() !== "") {
+            gsap.set([featured_ref, background_ref], {
+                display: "block",
+                opacity: 0
+            })
+            gsap.to([featured_ref, background_ref], {
+                opacity: 1,
+                duration: .5,
+                ease: "power2.out",
+            })
+        } else {
+            gsap.to([featured_ref, background_ref], {
+                opacity: 0,
+                duration: .2,
+                ease: "power2.out",
+                onComplete: () => {
+                    gsap.set([featured_ref, background_ref], {
+                        display: "none",
+                    })
+                }
+            })
+
+        }
+    })
+
     return (
         <>
             <section class={"superwrapper overflow-hidden flex flex-col items-center"}>
                 <div class={"relative z-20 w-full"}>
                     <Header/>
                 </div>
-                <header class={"title z-10 absolute text-kcyellow text-8xl md:text-[10rem] tracking-wide top-[12rem]"}>Gallery
+                <header
+                    class={"title z-10 absolute text-kcyellow text-8xl md:text-[10rem] tracking-wide top-[17rem]"}>Gallery
                 </header>
                 <section
                     class={"wrapper hidden xl:grid p-4 md:p-8 gap-4 md:gap-8 relative w-full h-[200vh] bg-white text-white overflow-hidden"}
@@ -208,10 +208,10 @@ export const Gallery = () => {
                             height: rows()
                         }], zone_count).map((each, index) => (
                             <button
-                                onmouseenter={() => animate_image_hover(`image-${index}`, true)}
-                                onmouseleave={() => animate_image_hover(`image-${index}`, false)}
-                                onclick={() => feature_image(photo_urls()[index], true)}
-                                class={"rounded-xl border-4 border-kcyellow text-black overflow-hidden"}
+                                onmouseover={() => animate_image_hover(`image-${index}`, true)}
+                                onmouseout={() => animate_image_hover(`image-${index}`, false)}
+                                onclick={() => set_featured_image(photo_urls()[index])}
+                                class={"border-4 border-kcyellow text-black overflow-hidden"}
                                 style={{
                                     "grid-column-start": `${each.x + 1}`,
                                     "grid-column": `span ${each.width} / span ${each.width}`,
@@ -224,21 +224,23 @@ export const Gallery = () => {
                         ))
                     ))}
                 </section>
-                <h1 class={"text-black text-center text-4xl my-4"}><A class={"cursor-pointer underline"} onclick={() => {
-                    location.reload()
-                    scrollTo(0, 0)
-                }}>Refresh</A> the page, it's different every time!</h1>
+                <h1 class={"text-black text-center text-4xl my-4"}>
+                    <button class={"cursor-pointer underline"} onclick={() => {
+                        location.reload()
+                        scrollTo(0, 0)
+                    }}>Refresh
+                    </button>
+                    the page, it's different every time!
+                </h1>
                 <Footer/>
             </section>
 
-            <button
-                class={"featured fixed w-full h-full p-4 top-0 left-0 backdrop-blur-xl z-50 flex items-center justify-center"}
-                onclick={() => feature_image(featured_image(), false)}
-            >
-                <div class={"max-w-full max-h-full h-[90%] mx-auto w-fit rounded-xl border-6 border-kcyellow overflow-hidden"}>
-                    <img class={"object-cover w-full h-full"} src={featured_image()} alt="Featured image"/>
-                </div>
-            </button>
+            <div ref={featured_ref}
+                class={"fixed z-30 max-w-full max-h-full inset-0 w-fit h-fit m-auto border-6 border-kcyellow overflow-hidden"}>
+                <img class={"object-contain w-full h-full"} src={featured_image()} alt="Featured image"/>
+            </div>
+
+            <button onclick={() => set_featured_image("")} ref={background_ref} class={"fixed z-20 top-0 left-0 backdrop-blur-sm w-screen h-screen cursor-default"}></button>
         </>
     )
 }

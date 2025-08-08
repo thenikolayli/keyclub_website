@@ -75,6 +75,7 @@ export const Home = () => {
         })
     })
 
+    // removes all ST animations to prevent bugs
     onCleanup(() => {
         ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     })
@@ -114,7 +115,7 @@ export const Home = () => {
                         <header class="text-4xl">
                             WHO ARE WE?
                         </header>
-                        <h1 class="mt-8 text-xl w-full">
+                        <h1 class="mt-8 text-xl w-full text-left">
                             Key Club is a student-led volunteering organization. Jackson High School is one of 13
                             schools in Division 21, currently standing as the club with the most members. Key Club
                             is a great opportunity for students to volunteer for their community and simultaneously
@@ -125,25 +126,96 @@ export const Home = () => {
             </section>
 
             <section class={"relative slides h-screen text-white bg-kcyellow"}>
-                <section class="relative p-2 top-0 w-full h-screen bg-kcblack border-3 border-kcyellow rounded-2xl">
-                    <header class={"text-3xl h-[5vh]"}>Committees</header>
 
-                    <h1 class={"text-5xl mt-4"}>
-                        Our Key Club has 4 committees
-                    </h1>
+                <section class="relative top-0 w-full h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
+                    <div class={"absolute top-0 left-0 w-full h-full z-10 p-2"}>
+                            <header class={"text-3xl h-[5vh]"}>COMMITTEES</header>
+
+                        <h1 class={"text-3xl mt-4"}>
+                            Our Key Club has 4 committees
+                            <br/> <br/>
+                            Committees are a great way to meet new people and gain more volunteer hours.
+                            Each committee is run by one or multiple committee chairs and they host their own meetings.
+                            <br/> <br/>
+                            Member and chair applications are currently closed.
+                        </h1>
+                    </div>
+
+                    <img class={"absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"}
+                         src="/home/committees_cover.jpg" alt="cover"/>
                 </section>
-                <section class="slide p-2 relative top-[107vh] w-full h-[93vh] bg-kcblack border-3 border-kcyellow rounded-2xl">
-                    <header class={"text-4xl h-[5vh]"}>Spirit</header>
+
+                <section class="slide relative top-[107vh] w-full h-[93vh] bg-kcblack border-3 border-kcyellow z-[12]">
+                    <div class={"absolute top-0 left-0 w-full h-full z-20 p-2"}>
+                        <header class={"text-3xl h-[5vh]"}>SPIRIT</header>
+
+                        <h1 class={"text-3xl mt-4"}>
+                            Spirit Co is focused on maintaining the spirit of Key Club!
+                            <br/> <br/>
+                            We learn chants and prepare members for the
+                            annual District Convention (DCON)!
+                        </h1>
+                    </div>
+
+                    <img class={"absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"}
+                         src="/home/spirit_cover.webp" alt="cover"/>
                 </section>
-                <section class="slide p-2 relative top-[114vh] w-full h-[86vh] bg-kcblack border-3 border-kcyellow rounded-2xl">
-                    <header class={"text-4xl h-[5vh]"}>Service</header>
+
+                <section class="slide relative top-[114vh] w-full h-[86vh] bg-kcblack border-3 border-kcyellow z-[13]">
+                    <div class={"absolute top-0 left-0 w-full h-full z-10 p-2"}>
+                        <header class={"text-3xl h-[5vh]"}>SERVICE</header>
+
+                        <h1 class={"text-3xl mt-4"}>
+                            Service Co are the standby volunteers of Key Club.
+                            <br/> <br/>
+                            We help out whenever we can and sign up for events with low volunteers.
+                            This committee is great for getting volunteer hours!
+                            <br/> <br/>
+                            Follow the JHS Key Club Reminds Instagram to
+                            receive reminders about events that need volunteers:
+                            <A href={"https://instagram.com/jhskeyclubreminds"} class={"flex items-center underline"}>
+                                <FaBrandsInstagram/> <span class={"ml-2"}>jhskeyclubreminds</span>
+                            </A>
+                        </h1>
+                    </div>
+
+                    <img class={"absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"}
+                         src="/home/service_cover.jpg" alt="cover"/>
                 </section>
-                <section class="slide p-2 relative top-[121vh] w-full h-[79vh] bg-kcblack border-3 border-kcyellow rounded-2xl">
-                    <header class={"text-4xl h-[5vh]"}>Decoration</header>
+
+                <section class="slide relative top-[121vh] w-full h-[79vh] bg-kcblack border-3 border-kcyellow z-[14]">
+                    <div class={"absolute top-0 left-0 w-full h-full z-10 p-2"}>
+                        <header class={"text-3xl h-[5vh]"}>DECORATION</header>
+
+                        <h1 class={"text-3xl mt-4"}>
+                            Decoration Co is the art club of Key Club.
+                            <br/> <br/>
+                            We create decorations (primarily posters) for events such as the Key Club Banquet and the Eggstravaganza.
+                        </h1>
+                    </div>
+
+                    <img class={"absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"}
+                         src="/home/deco_cover.jpg" alt="cover"/>
                 </section>
-                <section class="slide p-2 relative top-[128vh] w-full h-[72vh] bg-kcblack border-3 border-kcyellow rounded-2xl">
-                    <header class={"text-4xl h-[5vh]"}>Leadership</header>
+
+                <section class="slide relative top-[128vh] w-full h-[72vh] bg-kcblack border-3 border-kcyellow z-[15]">
+                    <div class={"absolute top-0 left-0 w-full h-full z-10 p-2"}>
+                        <header class={"text-3xl h-[5vh]"}>LEADERSHIP</header>
+
+                        <h1 class={"text-3xl mt-4"}>
+                            Leadership Co is the backbone of our Key Club.
+                            <br/> <br/>
+                            We reach out to the community to create and lead volunteer events.
+                            <br/> <br/>
+                            <span class={"w-full text-center"}>🚨 NOTE: </span>
+                            This committee is only for Sophomores and above. 🚨
+                        </h1>
+                    </div>
+
+                    <img class={"absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"}
+                         src="/home/leadership_cover.webp" alt="cover"/>
                 </section>
+
             </section>
 
             <section class={"w-full h-screen grid grid-cols-1 grid-rows-2"}>
@@ -154,7 +226,7 @@ export const Home = () => {
                         <header class="text-4xl">
                             FOLLOW OUR SOCIALS!
                         </header>
-                        <ul class="mt-8 text-2xl w-full flex flex-col items-center justify-center underline">
+                        <ul class="mt-8 text-2xl w-fit mx-auto underline">
                             <li class={"w-fit"}><A class={"flex items-center"} href="https://instagram.com/jhskeyclub21"
                                                    target={"_blank"}><FaBrandsInstagram/><span
                                 class={"ml-2"}>jhskeyclub21</span></A></li>

@@ -3,6 +3,7 @@ services:
     build: ./backend
     volumes:
       - keyclub_photos:/backend/photos
+      - ./key.json:/backend/key.json
     env_file:
       - .env
     expose:
