@@ -1,0 +1,24 @@
+<script>
+    import {onMount} from "svelte";
+    import Header from "$lib/components/Header.svelte";
+    import Footer from "$lib/components/Footer.svelte";
+
+    onMount(() => {
+        document.title = "Events"
+    })
+</script>
+
+<Header/>
+
+<section class="w-full h-screen min-h-screen flex flex-col items-center">
+    <header class="text-7xl mb-4">EVENTS</header>
+
+    <div class="h-full w-full lg:w-[70%] flex flex-col items-center justify-center p-4">
+        <iframe title=""
+                src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FLos_Angeles&showPrint=0&showTz=0&showCalendars=0&src=ZjIzOGY1NzgyYWIwNjg5M2FhMGQ0MzM3YWNhZjBkZjg5ZDU3YTI4ZDI0NTk1OGMyZGIyNzc0Mjc5OWNlMzgzNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23F4511E"
+                class="h-full w-full">
+        </iframe>
+    </div>
+</section>
+
+<Footer/>
