@@ -1,7 +1,7 @@
 <script>
     import gsap from "gsap";
 
-    let {value, text} = $props()
+    let {value, text, oninput} = $props()
     let text_element
 
     const animate_input = (is_mouse_inside) => {
@@ -21,12 +21,12 @@
     })
 </script>
 
-<div class={"relative border-b-3 border-kcyellow text-3xl"}
-     onmouseover={() => animate_input(true)} onfocus={() => null}
-     onmouseout={() => animate_input(false)} onblur={() => null}
+<div class="relative border-b-3 border-kcyellow text-3xl"
+     onmouseover={() => animate_input(true)} onfocus={() => animate_input(true)}
+     onmouseout={() => animate_input(false)} onblur={() => animate_input(false)}
 >
-    <input class={"outline-none relative z-10"} type="text" value={value}
-           oninput={(event) => value=event.target.value}
+    <input class="outline-none relative z-10" type="text" value={value}
+           oninput={oninput}
     />
-    <h1 bind:this={text_element} class={"first-name absolute top-0 left-0"}>{text}</h1>
+    <h1 bind:this={text_element} class="first-name absolute top-0 left-0">{text}</h1>
 </div>

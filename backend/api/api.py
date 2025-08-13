@@ -61,6 +61,7 @@ async def message(email_message: Message):
 
 # ------------------PHOTOS (WEBSITE GALLERY) API STUFF------------------
 
+# gets a list of photos from the google drive
 def get_photos_recursive(folder_id):
     image_file_ids = []
     result = drive_service.files().list(
@@ -76,6 +77,7 @@ def get_photos_recursive(folder_id):
                 get_photos_recursive(file["id"]))  # adds the return of the function for each subfolder id
     return image_file_ids
 
+# downloads a photo on the url
 def download_photo(url, index):
     urllib_request.urlretrieve(url, f"{photos_path}/photo_{index}.png")
 
@@ -108,7 +110,7 @@ async def get_photos(count: int = 20):
 
     while len(photo_list) < count:
         choice = random.choice(file_list)
-        photo_list.append(f"/photos/{choice}")
+        photo_list.append(f"/gallery/{choice}")
         file_list.remove(choice)
 
     return photo_list

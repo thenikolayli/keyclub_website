@@ -21,6 +21,7 @@
 		"@iconify/svelte": "^5.0.1",
 		"axios": "^1.11.0",
 		"gsap": "^3.13.0",
+		"moment-timezone": "^0.6.0",
 		"tailwindcss": "^4.1.11"
 	}
 }

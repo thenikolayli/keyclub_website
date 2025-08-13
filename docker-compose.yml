@@ -2,7 +2,7 @@ services:
   keyclub_backend:
     build: ./backend
     volumes:
-      - keyclub_photos:/backend/photos
+      - ./keyclub_photos:/backend/photos
       - ./key.json:/backend/key.json
       - ./event_log.json:/backend/event_log.json
     env_file:
@@ -14,18 +14,23 @@ services:
     command: pipenv run uvicorn backend.main:app --port 8000 --host 0.0.0.0
   keyclub_frontend:
     build: ./frontend
-    volumes:
-      - keyclub_photos:/photos
-    depends_on:
-      - keyclub_backend
+    expose:
+      - 3000
     networks:
       - local
-    # V for testing only V
+    command: node build
+  keyclub_proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./keyclub_photos:/gallery
+    depends_on:
+      - keyclub_backend
+      - keyclub_frontend
     ports:
       - 80:80
-
-volumes:
-  keyclub_photos:
+    networks:
+      - local
 
 networks:
   local:

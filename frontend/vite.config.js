@@ -3,11 +3,8 @@ import { defineConfig } from 'vite';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-	plugins: [sveltekit(), tailwindcss()],
-	server: {
-		port: 3000,
-		proxy: {
-			"/api": "localhost:8000",
-		}
-	}
+    plugins: [sveltekit(), tailwindcss()],
+    server: {
+        port: 3000
+    }
 });

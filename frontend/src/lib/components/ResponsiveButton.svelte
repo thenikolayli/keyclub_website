@@ -49,8 +49,8 @@
 
 <button onclick={on_click}
         class={"relative w-full p-2 px-8 mt-8 border-3 border-kcyellow overflow-hidden text-2xl text-kcblack"}
-        onmouseenter={() => button_animation(true)}
-        onmouseleave={() => button_animation(false)}
+        onmouseover={() => button_animation(true)} onfocus={() => button_animation(true)}
+        onmouseout={() => button_animation(false)} onblur={() => button_animation(false)}
 >
     <h1 bind:this={init_text_element} class={"relative z-10"}>{init_text}</h1>
     <h1 bind:this={clicked_text_element} class={"z-10 absolute inset-x-0 mx-auto"}>{clicked_text}</h1>
