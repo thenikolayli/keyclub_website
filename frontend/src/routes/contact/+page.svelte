@@ -77,9 +77,9 @@
     <form onSubmit={send_message}
           class="flex flex-col w-full md:w-[80%] xl:w-[65%] mx-auto my-16 px-12">
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-12 text-2xl">
-            <ResponsiveInput oninput={(event) => first_name=event.target.value} text="First Name"/>
-            <ResponsiveInput oninput={(event) => last_name=event.target.value} text="Last Name"/>
-            <ResponsiveInput oninput={(event) => email=event.target.value} text="Email *"/>
+            <ResponsiveInput oninput={(event) => first_name=event.target.value} getvalue={() => first_name} text="First Name"/>
+            <ResponsiveInput oninput={(event) => last_name=event.target.value} getvalue={() => last_name} text="Last Name"/>
+            <ResponsiveInput oninput={(event) => email=event.target.value} getvalue={() => email} text="Email *"/>
         </div>
 
         <div class="w-full mt-8 text-2xl">

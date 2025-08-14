@@ -52,7 +52,7 @@
         onmouseover={() => button_animation(true)} onfocus={() => button_animation(true)}
         onmouseout={() => button_animation(false)} onblur={() => button_animation(false)}
 >
-    <h1 bind:this={init_text_element} class={"relative z-10"}>{init_text}</h1>
-    <h1 bind:this={clicked_text_element} class={"z-10 absolute inset-x-0 mx-auto"}>{clicked_text}</h1>
+    <span bind:this={init_text_element} class={"relative z-10"}>{init_text}</span>
+    <span bind:this={clicked_text_element} class={"z-10 absolute inset-x-0 mx-auto"}>{clicked_text}</span>
     <div bind:this={bg_element} class="absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></div>
 </button>

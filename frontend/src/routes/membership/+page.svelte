@@ -27,7 +27,6 @@
 </script>
 
 <Header/>
-
 <section class="w-full min-h-screen text-center text-2xl">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
         <header bind:this={htext} class="text-white text-4xl">
@@ -43,7 +42,7 @@
             <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
             <div class="w-full">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
-                <h1 class="text-left ">
+                <p class="text-left ">
                     <span class="underline">Get an ASB card!</span> If you don't already have one, go to the
                     ASB office for assistance.
                     <br/><br/>
@@ -51,7 +50,7 @@
                     <br/><br/>
                     Participate in club events/socials, go to DCMs, and attend club
                     meetings. Requirements are listed below.
-                </h1>
+                </p>
             </div>
         </div>
 
@@ -59,11 +58,11 @@
             <img class="md:order-2 object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
             <div class="md:order-1 w-full">
                 <header class="text-4xl mb-8">Pay Dues</header>
-                <h1 class="text-left">
+                <p class="text-left">
                     The official dues payments are closed.
                     <br/><br/>
                     Check back next year!
-                </h1>
+                </p>
             </div>
         </div>
 
@@ -71,7 +70,7 @@
             <img class="object-contain w-[80%] mx-auto" src="/membership/members3.png" alt="Members 3"/>
             <div class="w-full">
                 <header class="text-4xl mb-8">Stay in the Hive</header>
-                <h1 class="text-left">
+                <p class="text-left">
                     Complete your annual hour requirement of <span class="underline">25 hours</span>!
                     <br/><br/>
                     Attend <span class="underline">50%</span> of the general meetings.
@@ -81,11 +80,10 @@
                     event.
                     Misbehavior or failure to show up to 3 events without advanced notice gets you suspended
                     from Key Club.
-                </h1>
+                </p>
             </div>
         </div>
 
     </section>
 </section>
-
 <Footer/>

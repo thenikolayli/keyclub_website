@@ -231,7 +231,6 @@
                         scrollTo(0, 0)
                     }}>Refresh
         </button>
-        &nbsp
         the page, it's different every time!
     </h1>
 </section>

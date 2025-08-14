@@ -20,10 +20,14 @@
         addEventListener("click", (event) => handle_click_outside(event))
 
         if (innerWidth > 768) {
-            const mdfvtext_center = mdfvtext.getBoundingClientRect().left + mdfvtext.offsetWidth/2
+            // const mdfvtext_center = mdfvtext.getBoundingClientRect().left + mdfvtext.offsetWidth/2
+            //
+            // gsap.set(forvolunteers, {
+            //     right: innerWidth - mdfvtext_center - forvolunteers.offsetWidth/2
+            // })
 
             gsap.set(forvolunteers, {
-                right: innerWidth - mdfvtext_center - forvolunteers.offsetWidth/2
+                right: 0
             })
         }
 
@@ -62,9 +66,10 @@
             <h1 class={"text-4xl text-gray-600"}>Henry M. Jackson High School</h1>
         </a>
 
-        <ul class={"hidden lg:flex lg:space-x-8 xl:space-x-16 items-center mt-6 text-2xl"}>
+        <ul class={"hidden md:flex md:justify-between text-lg lg:text-2xl w-full lg:w-[80%] mt-6"}>
             <li><a class={"hover:underline"} href="/">Home</a></li>
             <li><a class={"hover:underline"} href="/about">About</a></li>
+            <li><a class={"hover:underline"} href="/gallery">Gallery</a></li>
             <li><a class={"hover:underline"} href="/events">Events</a></li>
             <li><a class={"hover:underline"} href="/districtproject">District Project</a></li>
             <li><a class={"hover:underline"} href="/membership">Membership</a></li>
@@ -74,12 +79,12 @@
 
         <div class="flex justify-between mt-4 w-full px-4 space-x-8">
             <button onclick={() => popen=!popen} bind:this={pbutton}
-                    class={"lg:hidden text-xl w-1/2 p-2 bg-kcyellow"}>
+                    class={"md:hidden text-xl w-1/2 p-2 bg-kcyellow"}>
                 Pages
             </button>
 
             <button onclick={() => fvopen=!fvopen} bind:this={fvbutton}
-                    class={"lg:hidden text-xl w-1/2 p-2 bg-kcyellow"}>
+                    class={"md:hidden text-xl w-1/2 p-2 bg-kcyellow"}>
                 For Volunteers
             </button>
         </div>

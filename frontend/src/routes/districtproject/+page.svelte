@@ -38,7 +38,7 @@
              src="/districtproject/cover.jpg" alt="cover image"/>
     </div>
 
-    <h1 class="p-4 w-full md:w-1/2 mx-auto text-3xl">
+    <p class="p-4 w-full md:w-1/2 mx-auto text-3xl">
         <img style="width: 45%; float: right;" src="/districtproject/logo.png" alt="logo"/>
         In 25-26 year, we’ve partnered with The Ronald McDonald House Charities!
         <br/><br/>
@@ -51,6 +51,6 @@
         promote healing, and ensure the best health outcomes for children by removing barriers to healthcare.
 
         <ResponsiveButton init_text="Visit their website" clicked_text="..." on_click={() => window.open("https://rmhc.org/", "_blank")} can_send={can_send} />
-    </h1>
+    </p>
 </section>
 <Footer/>

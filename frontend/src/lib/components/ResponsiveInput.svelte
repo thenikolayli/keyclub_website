@@ -1,14 +1,14 @@
 <script>
     import gsap from "gsap";
 
-    let {value, text, oninput} = $props()
+    let {text, oninput, getvalue} = $props()
     let text_element
 
     const animate_input = (is_mouse_inside) => {
         gsap.to(text_element, {
-            scale: value !== "" || is_mouse_inside ? .8 : 1,
-            y: value !== "" || is_mouse_inside ? "-80%" : 1,
-            opacity: value !== "" || is_mouse_inside ? .8 : 1,
+            scale: getvalue() !== "" || is_mouse_inside ? .8 : 1,
+            y: getvalue() !== "" || is_mouse_inside ? "-80%" : 1,
+            opacity: getvalue() !== "" || is_mouse_inside ? .8 : 1,
             ease: "power2.out",
             transformOrigin: "top left",
             duration: .2
@@ -24,9 +24,10 @@
 <div class="relative border-b-3 border-kcyellow text-3xl"
      onmouseover={() => animate_input(true)} onfocus={() => animate_input(true)}
      onmouseout={() => animate_input(false)} onblur={() => animate_input(false)}
+     role="button" tabindex="0"
 >
-    <input class="outline-none relative z-10" type="text" value={value}
+    <input class="outline-none relative z-10 w-full" type="text" value={getvalue()}
            oninput={oninput}
     />
-    <h1 bind:this={text_element} class="first-name absolute top-0 left-0">{text}</h1>
+    <span bind:this={text_element} class="first-name absolute top-0 left-0">{text}</span>
 </div>

@@ -154,31 +154,31 @@
     <div bind:this={wrapper_element} class="w-full py-8 text-xl mt-8">
         <h1 class="text-3xl text-center w-full">{header}</h1>
         <div class="container relative w-full mt-8">
-            <h1 class="absolute left-0">{at_start}</h1>
-            <h1 class="absolute right-0">{at_end}</h1>
-            <h1 class="mx-auto w-fit">All Time Hours</h1>
-            <h1 class="absolute w-full z-10 text-center font-bold" bind:this={at_hours_element}>{at_hours}</h1>
+            <h3 class="absolute left-0">{at_start}</h3>
+            <h3 class="absolute right-0">{at_end}</h3>
+            <h2 class="mx-auto w-fit">All Time Hours</h2>
+            <h2 class="absolute w-full z-10 text-center font-bold" bind:this={at_hours_element}>{at_hours}</h2>
         </div>
         <div class="container relative w-full h-6 bg-gray-400">
             <div bind:this={at_element} class="absolute left-0 top-0 h-full w-full bg-kcyellow"></div>
         </div>
         <div class="container relative w-full mt-4">
-            <h1 class="absolute left-0">{yr_start}</h1>
-            <h1 class="absolute right-0">{yr_end}</h1>
-            <h1 class="mx-auto w-fit">Year Hours</h1>
-            <h1 class="absolute w-full z-10 text-center font-bold" bind:this={yr_hours_element}>{yr_hours}</h1>
+            <h3 class="absolute left-0">{yr_start}</h3>
+            <h3 class="absolute right-0">{yr_end}</h3>
+            <h2 class="mx-auto w-fit">Year Hours</h2>
+            <h2 class="absolute w-full z-10 text-center font-bold" bind:this={yr_hours_element}>{yr_hours}</h2>
         </div>
         <div class="container relative w-full h-6 bg-gray-400">
             <div bind:this={yr_element} class="absolute left-0 top-0 h-full w-full bg-kcyellow"></div>
         </div>
-        <h1>{api_response}</h1>
+        <p>{api_response}</p>
     </div>
     <form class="w-full mt-8 p-8" onsubmit={check_hours}>
-        <ResponsiveInput oninput={(event) => name=event.target.value} text={"Name"} />
+        <ResponsiveInput oninput={(event) => name=event.target.value} getvalue={() => name} text="Name" />
         <ResponsiveButton init_text="Check hours" clicked_text="..." on_click={check_hours} can_send={can_send} />
     </form>
     <div class={"container absolute bottom-8 w-full text-center p-4"}>
-        <h1>Hours were last updated on {last_updated}</h1>
+        <p>Hours were last updated on {last_updated}</p>
     </div>
 </section>
 <Footer/>

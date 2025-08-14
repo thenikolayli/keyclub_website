@@ -87,15 +87,15 @@
     <img class="h-full w-full object-cover brightness-50" src="/home/cover.webp" alt="Cover image"/>
 
     <div class="absolute inset-x-0 mx-auto top-[25%] z-10 text-white text-center px-8">
-        <h1 class="intro1 text-3xl">
+        <h2 class="intro1 text-3xl">
             we don't make keys...
-        </h1>
-        <h1 class="intro2 text-3xl">
+        </h2>
+        <h2 class="intro2 text-3xl">
             we make a
-        </h1>
-        <h1 class="intro3 text-5xl mt-2">
+        </h2>
+        <h2 class="intro3 text-5xl mt-2">
             difference!
-        </h1>
+        </h2>
         <h1 class="intro4 text-3xl mt-6">
             Henry M. Jackson High School Key Club
         </h1>
@@ -107,12 +107,12 @@
 
     <div class="w-full h-full flex flex-col items-center justify-center p-8">
         <header class="text-4xl md:text-7xl">WHO ARE WE?</header>
-        <h1 class="text-xl md:text-3xl mt-8 text-left">
+        <p class="text-xl md:text-3xl mt-8 text-left">
             Key Club is a student-led volunteering organization. Jackson High School is one of 13
             schools in Division 21, currently standing as the club with the most members. Key Club
             is a great opportunity for students to volunteer for their community and simultaneously
             make new friends within the division with students from other schools.
-        </h1>
+        </p>
     </div>
 </section>
 
@@ -122,14 +122,14 @@
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">COMMITTEES</header>
 
-            <h1 class="text-3xl mt-4">
+            <p class="text-3xl mt-4">
                 Our Key Club has 4 committees
                 <br/> <br/>
                 Committees are a great way to meet new people and gain more volunteer hours.
                 Each committee is run by one or multiple committee chairs and they host their own meetings.
                 <br/> <br/>
                 Member and chair applications are currently closed.
-            </h1>
+            </p>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -140,12 +140,12 @@
         <div class="absolute top-0 left-0 w-full h-full z-20 p-2">
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
-            <h1 class="text-3xl mt-4">
+            <p class="text-3xl mt-4">
                 Spirit Co is focused on maintaining the spirit of Key Club!
                 <br/> <br/>
                 We learn chants and prepare members for the
                 annual District Convention (DCON)!
-            </h1>
+            </p>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -156,7 +156,7 @@
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">SERVICE</header>
 
-            <h1 class="text-3xl mt-4">
+            <p class="text-3xl mt-4">
                 Service Co are the standby volunteers of Key Club.
                 <br/> <br/>
                 We help out whenever we can and sign up for events with low volunteers.
@@ -167,7 +167,7 @@
                 <a href="https://instagram.com/jhskeyclubreminds" class="flex items-center underline">
                     <Icon icon="fa7-brands:instagram" /> <span class="ml-2">jhskeyclubreminds</span>
                 </a>
-            </h1>
+            </p>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -178,11 +178,11 @@
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">DECORATION</header>
 
-            <h1 class="text-3xl mt-4">
+            <p class="text-3xl mt-4">
                 Decoration Co is the art club of Key Club.
                 <br/> <br/>
                 We create decorations (primarily posters) for events such as the Key Club Banquet and the Eggstravaganza.
-            </h1>
+            </p>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -193,14 +193,14 @@
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">LEADERSHIP</header>
 
-            <h1 class="text-3xl mt-4">
+            <p class="text-3xl mt-4">
                 Leadership Co is the backbone of our Key Club.
                 <br/> <br/>
                 We reach out to our community to create and lead volunteer events.
                 <br/> <br/>
                 <span class="w-full text-center">🚨 NOTE: </span>
                 This committee is only for Sophomores and above. 🚨
-            </h1>
+            </p>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -219,14 +219,17 @@
             </header>
             <ul class="mt-8 text-2xl w-fit underline">
                 <li class="w-fit"><a class="flex items-center" href="https://instagram.com/jhskeyclub21"
+                                     aria-label="Instagram"
                                      target="_blank"><Icon icon="fa7-brands:instagram" /><span
                         class="ml-2">jhskeyclub21</span></a></li>
                 <li class="w-fit"><a class="flex items-center"
                                      href="https://instagram.com/jhskeyclubreminds"
+                                     aria-label="Reminds Instagram"
                                      target="_blank"><Icon icon="fa7-brands:instagram" /><span
                         class="ml-2">jhskeyclubreminds</span></a></li>
                 <li class="w-fit"><a class="flex items-center"
                                      href="https://www.tiktok.com/@jhskeyclub21"
+                                     aria-label="Tiktok"
                                      target="_blank"><Icon icon="fa7-brands:tiktok" /><span
                         class="ml-2">jhskeyclub21</span></a></li>
             </ul>
