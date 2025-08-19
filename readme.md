@@ -16,10 +16,10 @@ to be able to manage and work with this effectively.
 
 ## What's what?
 Here's the explanations for what everything is
-- .env - environment variables (change some during production)
-- key.json - credentials for logging into the Key Club service account, it's the account that logs hours and sends emails and such
-- docker-compose.yml - learn about Docker and containerization
-- \_\_init__.py - im not sure myself, but it helps Python find files using absolute paths
+- `.env` - environment variables (change some during production)
+- `key.json` - credentials for logging into the Key Club service account, it's the account that logs hours and sends emails and such
+- `docker-compose.yml` - learn about Docker and containerization
+- `\_\_init__.py` - im not sure myself, but it helps Python find files using absolute paths
 
 ## How to run this???
 Here are the instructions on how to do various things.
@@ -39,12 +39,19 @@ Here are the instructions on how to do various things.
 /frontend> npm run dev
 ```
 
-## Phone design progress
-- [x] Home
-- [x] About
-- [x] Events
-- [ ] District Project
-- [ ] Hour Checker
-- [x] Membership
-- [ ] Gallery
-- [x] Contact Us
+## To do
+- [ ] Add password hashing
+- [ ] Add password checking
+- [ ] Admin accounts
+- [ ] Admin panel
+- [ ] Photo form review tab
+
+## How will photo forms work?
+- Refresh button to fetch new form responses
+- - Saved form responses to db as unresolved
+- - If it's already in the DB (based on name), skip it
+- Opening the form will show the info (full name, email, event name, and photos)
+- Then you can accept/reject it
+- Yk what else
+
+events will be saved in the db as well as photo forms

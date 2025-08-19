@@ -1,19 +1,8 @@
 # collection of utility functions used to automatically log events and meetings and check volunteer hours
 
 from googleapiclient.errors import HttpError
-from dotenv import load_dotenv
-from os import getenv
+import backend.config as config
 import asyncio
-
-load_dotenv()
-
-spreadsheet_id = getenv("HOURS_SPREADSHEET_ID")
-names_col = getenv("NAMES_COL")
-nicknames_col = getenv("NICKNAMES_COL")
-year_col = getenv("YEAR_COL")
-term_hours_col = getenv("TERM_HOURS_COL")
-all_hours_col = getenv("ALL_HOURS_COL")
-spreadsheet_ranges = [names_col, nicknames_col]
 
 # function that takes in a Google Docs/Sheets url and returns the document_id
 def url_to_id(url):
@@ -235,7 +224,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         if write_docs_result.get("error"):
             return {"error": write_docs_result.get("error")}
 
-    column = find_empty_col(spreadsheet_id, sheets_service, event_title)
+    column = find_empty_col(config.spreadsheet_id, sheets_service, event_title)
 
     if column.get("error"):
         return {"error": column.get("error")}
@@ -243,8 +232,8 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
 
     # find ranges and values and log
     all_rows = fetch_sheet_data(
-        document_id=spreadsheet_id,
-        ranges=[spreadsheet_ranges[0], spreadsheet_ranges[1]],
+        document_id=config.spreadsheet_id,
+        ranges=[config.spreadsheet_ranges[0], config.spreadsheet_ranges[1]],
         sheets_service=sheets_service
     ).get("data")
 
@@ -284,7 +273,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         volunteer_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=spreadsheet_id,
+    write_sheet_result = write_sheet_data(document_id=config.spreadsheet_id,
                                           ranges=volunteer_ranges,
                                           values=volunteer_values,
                                           sheets_service=sheets_service)
@@ -337,15 +326,15 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
             if not name[0].lower().strip() in event_volunteers: # filter out duplicates (if people filled out the attendance form more than once)
                 event_volunteers.update({name[0].lower().strip(): {"hours": round(meeting_length / 60, 2)}})
 
-    column = find_empty_col(spreadsheet_id, sheets_service, meeting_title)
+    column = find_empty_col(config.spreadsheet_id, sheets_service, meeting_title)
     if column.get("error"):
         return {"error": column.get("error")}
     column = column.get("column")
 
     # find ranges and values and log
-    all_rows = fetch_sheet_data(document_id=spreadsheet_id,
-                                ranges=[spreadsheet_ranges[0],
-                                        spreadsheet_ranges[1]],
+    all_rows = fetch_sheet_data(document_id=config.spreadsheet_id,
+                                ranges=[config.spreadsheet_ranges[0],
+                                        config.spreadsheet_ranges[1]],
                                 sheets_service=sheets_service).get("data")
 
     nicknames = all_rows[1]  # nickname rows
@@ -385,7 +374,7 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
 
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=spreadsheet_id,
+    write_sheet_result = write_sheet_data(document_id=config.spreadsheet_id,
                                           ranges=volunteer_ranges,
                                           values=volunteer_values,
                                           sheets_service=sheets_service)
@@ -402,15 +391,13 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
 # ------------------CHECK HOURS API STUFF------------------
 
 # updates the hours list by fetching hours from the spreadsheet
-async def update_hours_list(names_hours_list, service):
-    global names_col, nicknames_col, year_col, term_hours_col, all_hours_col
-
+async def update_hours_list(names_hours_list):
     names_hours_list.clear()
 
     names_hours_data_request = await asyncio.to_thread(
-        service.spreadsheets().values().batchGet,
-        spreadsheetId=spreadsheet_id,
-        ranges=[names_col, nicknames_col, year_col, term_hours_col, all_hours_col]
+        config.sheets_service.spreadsheets().values().batchGet,
+        spreadsheetId=config.spreadsheet_id,
+        ranges=[config.names_col, config.nicknames_col, config.year_col, config.term_hours_col, config.all_hours_col]
     )
     names_hours_data = names_hours_data_request.execute()
     nicknames_len = len(names_hours_data["valueRanges"][1]["values"])
@@ -440,14 +427,14 @@ async def update_hours_list(names_hours_list, service):
 # gets the hours for a person based on their name
 def get_hours(names_hours_list, name):
     if len(names_hours_list) == 0:
-        return None
+        return
 
     name = name.lower()
 
     for value in names_hours_list:
         if name in value["name"] or name in value["nickname"]:
             return value
-    return None
+    return
 
 
 # i will add this later, maybe...
