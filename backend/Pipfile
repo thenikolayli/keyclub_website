@@ -15,6 +15,7 @@ motor = "*"
 asyncio = "*"
 apscheduler = "*"
 sqlmodel = "*"
+passlib = "*"
 
 [dev-packages]
 

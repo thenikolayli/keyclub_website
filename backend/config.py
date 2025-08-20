@@ -1,9 +1,8 @@
 from dotenv import load_dotenv
 from os import getenv
 
-from sqlmodel import create_engine, SQLModel, Session
-from backend.models import Event, User
 # importing models so sqlmodel detects them and creates/updates tables
+# only models! not schemas
 
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
@@ -41,12 +40,5 @@ all_hours_col = getenv("ALL_HOURS_COL")
 spreadsheet_ranges = [names_col, nicknames_col]
 
 banned_usernamechars = " /\\"
-
-engine = create_engine("sqlite:///db.sqlite3")
-
-def update_tables():
-    SQLModel.metadata.create_all(engine)
-
-def get_session():
-    with Session(engine) as session:
-        yield session
+admin_username = getenv("ADMIN_USERNAME")
+admin_password = getenv("ADMIN_PASSWORD")

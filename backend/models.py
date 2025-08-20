@@ -1,16 +1,27 @@
-from sqlmodel import SQLModel, Field, select
+from sqlmodel import SQLModel, Field, Session, select
+from pydantic import field_validator
+
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from sqlmodel import Session
-from pydantic import field_validator, ValidationError
+from passlib.hash import argon2
 
 import backend.config as config
+from backend.database import engine
 
 class Message(SQLModel, table=False):
     first_name: str
     last_name: str
     email: str
     message: str
+
+
+class Event(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(ZoneInfo("America/Los_Angeles")))
+    title: str
+    hours_logged: float
+    hours_not_logged: float
+    people_attended: int
 
 class EventCreate(SQLModel, table=False):
     link: str
@@ -23,26 +34,51 @@ class MeetingCreate(SQLModel, table=False):
     meeting_length: int
     title: str
 
-class Event(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(ZoneInfo("America/Los_Angeles")))
-    title: str
-    hours_logged: float
-    hours_not_logged: float
-    people_attended: int
 
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(unique=True, nullable=False)
+    password: str = Field(nullable=False)
+    admin: bool = Field(default=False, nullable=False)
+
+    # not class method because it needs to access self
+    def hash_password(self):
+        self.password = argon2.hash(self.password)
+
+    def verify_password(self, password):
+        return argon2.verify(password, self.password)
+
+class UserLogin(SQLModel, table=False):
     username: str
     password: str
-    roles: list[str]
 
+class UserCreate(SQLModel, table=False):
+    username: str
+    password: str
+    # all validation logic is in the request schema to catch all issues before db constraints
     @field_validator("username")
-    def validate_username(self, value):
-        with Session(config.engine) as session:
-            if len(session.exec(select(User)).all()) > 0:
-                raise ValidationError("Username already exists")
+    @classmethod
+    def validate_username(cls, value):
+        if value.strip() == "" or not value:
+            raise ValueError("Username cannot be an empty string")
         for char in config.banned_usernamechars:
+            print(char)
             if char in value:
-                raise ValidationError(f"Character `{char}` is not allowed")
+                raise ValueError(f"Character `{char}` is not allowed")
+        with Session(engine) as session:
+            result = session.exec(select(User).where(User.username == value)).first()
+            if result:
+                raise ValueError(f"Username taken")
         return value
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, value):
+        if value.strip() == "" or not value:
+            raise ValueError("Password cannot be an empty string")
+        return value
+
+class UserUpdate(SQLModel, table=False):
+    username: str | None = None
+    password: str | None = None
+    admin: bool | None = None

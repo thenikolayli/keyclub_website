@@ -1,6 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+from sqlalchemy.exc import IntegrityError
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from zoneinfo import ZoneInfo
@@ -11,13 +13,17 @@ from backend.routers.gallery import update_photos
 from backend.routers.event import router as event_router
 from backend.routers.hours import router as hours_router
 from backend.routers.hours import update_hours
+from backend.routers.users import router as users_router
+
 import backend.config as config
+import backend.database as database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    config.update_tables()
+    database.update_tables()
+    database.create_admin()
     await update_hours()
-    await update_photos()
+    # await update_photos()
 
     # updates hours automatically every day at 12:00 PM and 6:00 PM
     scheduler = AsyncIOScheduler(timezone=ZoneInfo('America/Los_Angeles'))
@@ -33,6 +39,7 @@ app.include_router(email_router)
 app.include_router(gallery_router)
 app.include_router(event_router)
 app.include_router(hours_router)
+app.include_router(users_router)
 
 app.add_middleware(
     CORSMiddleware,

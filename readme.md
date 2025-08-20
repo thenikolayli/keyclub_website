@@ -40,9 +40,10 @@ Here are the instructions on how to do various things.
 ```
 
 ## To do
-- [ ] Add password hashing
-- [ ] Add password checking
+- [x] Add password hashing
+- [x] Add password checking
 - [ ] Admin accounts
+- [ ] JWT auth
 - [ ] Admin panel
 - [ ] Photo form review tab
 

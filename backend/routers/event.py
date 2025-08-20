@@ -5,6 +5,7 @@ from sqlmodel import Session
 from backend.keyclubutils import log_event, log_meeting
 from backend.models import EventCreate, MeetingCreate, Event
 import backend.config as config
+import backend.database as database
 
 router = APIRouter(prefix="/api/event", tags=["event"])
 
@@ -35,7 +36,7 @@ async def save_event_to_db(response):
         hours_not_logged=hours_not_logged,
         people_attended=people_attended,
     )
-    with Session(config.engine) as session:
+    with Session(database.engine) as session:
         session.add(event_write)
         session.commit()
 
