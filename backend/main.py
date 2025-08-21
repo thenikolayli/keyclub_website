@@ -14,6 +14,7 @@ from backend.routers.event import router as event_router
 from backend.routers.hours import router as hours_router
 from backend.routers.hours import update_hours
 from backend.routers.users import router as users_router
+from backend.routers.auth import router as auth_router
 
 import backend.config as config
 import backend.database as database
@@ -40,6 +41,7 @@ app.include_router(gallery_router)
 app.include_router(event_router)
 app.include_router(hours_router)
 app.include_router(users_router)
+app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,

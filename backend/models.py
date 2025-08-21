@@ -40,6 +40,7 @@ class User(SQLModel, table=True):
     username: str = Field(unique=True, nullable=False)
     password: str = Field(nullable=False)
     admin: bool = Field(default=False, nullable=False)
+    created: datetime = Field(default_factory=lambda: datetime.now(ZoneInfo("America/Los_Angeles")))
 
     # not class method because it needs to access self
     def hash_password(self):
@@ -82,3 +83,12 @@ class UserUpdate(SQLModel, table=False):
     username: str | None = None
     password: str | None = None
     admin: bool | None = None
+
+
+class RefreshJTI(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    jti: str
+    user_id: int
+    iat: int
+    exp: int
+    valid: bool

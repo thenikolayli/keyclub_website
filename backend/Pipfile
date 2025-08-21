@@ -16,6 +16,7 @@ asyncio = "*"
 apscheduler = "*"
 sqlmodel = "*"
 passlib = "*"
+pyjwt = "*"
 
 [dev-packages]
 

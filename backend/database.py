@@ -4,6 +4,7 @@ import backend.config as config
 engine = create_engine("sqlite:///db.sqlite3")
 
 def update_tables():
+    from backend.models import User, Event, RefreshJTI
     SQLModel.metadata.create_all(engine)
 
 # adds a default admin account if its not already there
