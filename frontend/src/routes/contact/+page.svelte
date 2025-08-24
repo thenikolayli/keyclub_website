@@ -8,20 +8,20 @@
     import SplitText from "gsap/SplitText";
     import gsap from "gsap";
 
-    let first_name = $state("")
-    let last_name = $state("")
+    let firstName = $state("")
+    let lastName = $state("")
     let email = $state("")
 
     let message = $state("")
-    let can_send = $state(true)
+    let canSend = $state(true)
     let htext
 
     onMount(() => {
         document.title = "Contact Us"
 
-        const header_text = SplitText.create(htext).words
+        const headerText = SplitText.create(htext).words
 
-        gsap.fromTo(header_text, {
+        gsap.fromTo(headerText, {
             yPercent: 50,
             opacity: 0,
         }, {
@@ -36,8 +36,8 @@
 
     const send_message = (event) => {
         event.preventDefault()
-        if (!can_send) return;
-        can_send = false
+        if (!canSend) return;
+        canSend = false
 
         try {
             const response = axios({
@@ -47,8 +47,8 @@
                     'Content-Type': 'application/json',
                 },
                 data: {
-                    first_name: first_name,
-                    last_name: last_name,
+                    first_name: firstName,
+                    last_name: lastName,
                     contact: email,
                     message: message
                 }
@@ -59,7 +59,7 @@
         }
 
         setTimeout(() => {
-            can_send = true
+            canSend = true
         }, 2000)
     }
 </script>
@@ -77,8 +77,8 @@
     <form onSubmit={send_message}
           class="flex flex-col w-full md:w-[80%] xl:w-[65%] mx-auto my-16 px-12">
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-12 text-2xl">
-            <ResponsiveInput oninput={(event) => first_name=event.target.value} getvalue={() => first_name} text="First Name"/>
-            <ResponsiveInput oninput={(event) => last_name=event.target.value} getvalue={() => last_name} text="Last Name"/>
+            <ResponsiveInput oninput={(event) => firstName=event.target.value} getvalue={() => firstName} text="First Name"/>
+            <ResponsiveInput oninput={(event) => lastName=event.target.value} getvalue={() => lastName} text="Last Name"/>
             <ResponsiveInput oninput={(event) => email=event.target.value} getvalue={() => email} text="Email *"/>
         </div>
 
@@ -91,7 +91,7 @@
             ></textarea>
         </div>
 
-        <ResponsiveButton init_text="Send" clicked_text="Sent!" on_click={send_message} can_send={can_send}/>
+        <ResponsiveButton init_text="Send" clicked_text="Sent!" on_click={send_message} can_send={canSend}/>
     </form>
 </section>
 <Footer/>

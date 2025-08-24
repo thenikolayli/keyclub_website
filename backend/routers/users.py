@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlmodel import select
 
-from backend.models import User, UserLogin, UserCreate, UserUpdate
+from backend.models import User, UserCreate, UserUpdate
+from backend.routers.auth import require_admin
 import backend.database as database
 
 router = APIRouter(prefix="/api/users", tags=["users"])
@@ -24,13 +25,13 @@ async def create_user(user: UserCreate, session = Depends(database.get_session))
     session.add(new_user)
     session.commit()
 
-    return JSONResponse(user.model_dump(mode="json"), status_code=status.HTTP_201_CREATED)
+    return JSONResponse(new_user.id, status_code=status.HTTP_201_CREATED)
 
 @router.put("/{user_id}")
-async def update_user(user_id: int, new_info: UserUpdate, session = Depends(database.get_session)):
+async def update_user(user_id: int, new_info: UserUpdate, session = Depends(database.get_session), _ = Depends(require_admin)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     if not user:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+        return JSONResponse("User not found", status_code=status.HTTP_404_NOT_FOUND)
 
     user.username = new_info.username or user.username
     user.admin = new_info.admin or user.admin
@@ -45,7 +46,7 @@ async def update_user(user_id: int, new_info: UserUpdate, session = Depends(data
     return JSONResponse(user.model_dump(mode="json"), status_code=status.HTTP_200_OK)
 
 @router.delete("/{user_id}")
-async def delete_user(user_id: int, session = Depends(database.get_session)):
+async def delete_user(user_id: int, session = Depends(database.get_session), _ = Depends(require_admin)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     session.delete(user)
     session.commit()

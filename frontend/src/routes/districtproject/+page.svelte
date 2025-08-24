@@ -7,14 +7,14 @@
     import ResponsiveButton from "$lib/components/ResponsiveButton.svelte"
 
     let htext
-    let can_send = $state(true)
+    let canSend = $state(true)
 
     onMount(() => {
         document.title = "District Project"
 
-        const header_text = SplitText.create(htext).words
+        const headerText = SplitText.create(htext).words
 
-        gsap.fromTo(header_text, {
+        gsap.fromTo(headerText, {
             yPercent: 50,
             opacity: 0,
         }, {
@@ -50,7 +50,7 @@
         RMHC's mission is to strengthen families,
         promote healing, and ensure the best health outcomes for children by removing barriers to healthcare.
 
-        <ResponsiveButton init_text="Visit their website" clicked_text="..." on_click={() => window.open("https://rmhc.org/", "_blank")} can_send={can_send} />
+        <ResponsiveButton init_text="Visit their website" clicked_text="..." on_click={() => window.open("https://rmhc.org/", "_blank")} can_send={canSend} />
     </p>
 </section>
 <Footer/>

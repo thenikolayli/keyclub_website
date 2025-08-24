@@ -7,7 +7,7 @@ export default defineConfig({
     server: {
         port: 3000,
         proxy: {
-            "/api": "localhost:8000" // this only applies when vite is running
+            "/api": "http://localhost:8000" // this only applies when vite is running
         }
     }
 });

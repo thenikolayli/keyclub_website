@@ -10,8 +10,8 @@
 
     let loop
     let officer_section
-    const partner_change = {duration: .8, ease: "power2.out"}
-    let can_send = $state(true)
+    const partnerChange = {duration: .8, ease: "power2.out"}
+    let canSend = $state(true)
     let small = $state(false)
     let fbsrc = $state("")
 
@@ -211,7 +211,7 @@
                  src="/about/killian.png" alt="Killian Bates"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Secretary</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Historian</h1>
                 <h2 class="cards-info text-3xl mt-2">Killian Bates</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">killianj1010@outlook.com</span></h3>
@@ -396,10 +396,10 @@
     </div>
 
     <div class="flex text-black gap-8 mt-4">
-        <button onclick={() => loop.previous(partner_change)} aria-label="Previous">
+        <button onclick={() => loop.previous(partnerChange)} aria-label="Previous">
             <Icon icon="solar:arrow-left-outline" class="size-[4rem]"/>
         </button>
-        <button onclick={() => loop.next(partner_change)} aria-label="Previous">
+        <button onclick={() => loop.next(partnerChange)} aria-label="Previous">
             <Icon icon="solar:arrow-right-outline" class="size-[4rem]"/>
         </button>
     </div>
@@ -424,8 +424,8 @@
     </p>
 
     <div class="flex flex-col md:flex-row mx-auto text-4xl space-x-8">
-        <ResponsiveButton bg_color="kcpink" init_text="Key Club" clicked_text="..." on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={can_send}/>
-        <ResponsiveButton init_text="PNW Key Club" clicked_text="..." on_click={() => window.open("https://pnwkeyclub.org/", "_blank")} can_send={can_send}/>
+        <ResponsiveButton bg_color="kcpink" init_text="Key Club" clicked_text="..." on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={canSend}/>
+        <ResponsiveButton init_text="PNW Key Club" clicked_text="..." on_click={() => window.open("https://pnwkeyclub.org/", "_blank")} can_send={canSend}/>
     </div>
 </section>
 <Footer/>

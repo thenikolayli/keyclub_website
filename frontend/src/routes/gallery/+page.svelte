@@ -6,8 +6,8 @@
     import Header from "$lib/components/Header.svelte";
     import Footer from "$lib/components/Footer.svelte";
 
-    let photo_urls = $state([])
-    let featured_image = $state("")
+    let photoUrls = $state([])
+    let featuredImage = $state("")
 
     const zone_count = 20
     let columns = $state(6)
@@ -41,62 +41,62 @@
         }
     }
 
-    const animate_image_hover = (image_id, start) => {
+    const animate_image_hover = (imageId, start) => {
         console.log(start)
-        gsap.to(`#${image_id}`, {
+        gsap.to(`#${imageId}`, {
             transformOrigin: "center center",
             scale: start ? 1.3 : 1,
-            filter: start ? "blur(3px)" : "blur(0px)",
+            // filter: start ? "blur(3px)" : "blur(0px)",
             duration: .3,
             ease: "power2.out"
         })
     }
 
-    const generate_grid = (indivisible_zones, divisible_zones, zone_goal) => {
-        if (indivisible_zones.length + divisible_zones.length < zone_goal && divisible_zones.length > 0) {
+    const generate_grid = (indivisibleZones, divisibleZones, zoneGoal) => {
+        if (indivisibleZones.length + divisibleZones.length < zoneGoal && divisibleZones.length > 0) {
             // picks value and removes it from the divisible zones
-            const pick_index = Math.floor(Math.random() * divisible_zones.length);
-            const pick = divisible_zones.splice(pick_index, 1)[0];
-            let division_axis;
-            let divided_zones = []
+            const pickIndex = Math.floor(Math.random() * divisibleZones.length);
+            const pick = divisibleZones.splice(pickIndex, 1)[0];
+            let divisionAxis;
+            let dividedZones = []
 
             // determines division axis
             if (pick.width > pick.height) {
-                division_axis = "horizontal"
+                divisionAxis = "horizontal"
             } else if (pick.height > pick.width) {
-                division_axis = "vertical"
+                divisionAxis = "vertical"
             } else {
-                division_axis = ["horizontal", "vertical"][Math.floor(Math.random() * 2)];
+                divisionAxis = ["horizontal", "vertical"][Math.floor(Math.random() * 2)];
             }
 
             // divides
-            if (division_axis === "horizontal") {
+            if (divisionAxis === "horizontal") {
                 const half = Math.floor(pick.width / 2);
                 const remainder = pick.width - half;
                 // console.log(pick.width, half, remainder)
 
-                divided_zones.push({x: pick.x, y: pick.y, width: half, height: pick.height})
-                divided_zones.push({x: pick.x + half, y: pick.y, width: remainder, height: pick.height})
-            } else if (division_axis === "vertical") {
+                dividedZones.push({x: pick.x, y: pick.y, width: half, height: pick.height})
+                dividedZones.push({x: pick.x + half, y: pick.y, width: remainder, height: pick.height})
+            } else if (divisionAxis === "vertical") {
                 const half = Math.floor(pick.height / 2);
                 const remainder = pick.height - half;
                 // console.log(pick.height, half, remainder)
 
-                divided_zones.push({x: pick.x, y: pick.y, width: pick.width, height: half})
-                divided_zones.push({x: pick.x, y: pick.y + half, width: pick.width, height: remainder})
+                dividedZones.push({x: pick.x, y: pick.y, width: pick.width, height: half})
+                dividedZones.push({x: pick.x, y: pick.y + half, width: pick.width, height: remainder})
             }
 
-            for (const each of divided_zones) {
+            for (const each of dividedZones) {
                 if (each.width === 1 && each.height === 1) {
-                    indivisible_zones.push(each)
+                    indivisibleZones.push(each)
                 } else {
-                    divisible_zones.push(each)
+                    divisibleZones.push(each)
                 }
             }
 
-            return generate_grid(indivisible_zones, divisible_zones, zone_goal);
+            return generate_grid(indivisibleZones, divisibleZones, zoneGoal);
         } else {
-            let zones = indivisible_zones.concat(divisible_zones);
+            let zones = indivisibleZones.concat(divisibleZones);
             zones.sort((a, b) => a.y - b.y || a.x - b.x);
             // console.log(zones)
             return zones
@@ -114,7 +114,7 @@
             method: "get",
             url: "/api/get_photos"
         })
-        photo_urls = result.data
+        photoUrls = result.data
 
         // reactive resize
         addEventListener("resize", window_resize_handler)
@@ -163,7 +163,7 @@
     })
 
     $effect(() => {
-        if (featured_image !== "") {
+        if (featuredImage !== "") {
             gsap.set([featured, background], {
                 display: "block",
                 opacity: 0
@@ -208,7 +208,7 @@
                     onmouseover={() => animate_image_hover(`image-${index}`, true)}
                     onmouseleave={() => animate_image_hover(`image-${index}`, false)}
                     onfocus={() => null}
-                    onclick={() => (featured_image = photo_urls[index])}
+                    onclick={() => (featuredImage = photoUrls[index])}
                     style="
                           grid-column-start: {each.x + 1};
                           grid-column: span {each.width} / span {each.width};
@@ -219,8 +219,8 @@
                 <img
                         id="image-{index}"
                         class="object-cover w-full h-full"
-                        src="{photo_urls[index]}"
-                        alt="{photo_urls[index]}"
+                        src="{photoUrls[index]}"
+                        alt="{photoUrls[index]}"
                 />
             </button>
         {/each}
@@ -237,8 +237,8 @@
 
 <Footer/>
 
-<img bind:this={featured} src={featured_image} alt="Featured image"
+<img bind:this={featured} src={featuredImage} alt="Featured image"
      class={"fixed z-30 max-w-[80vw] max-h-[80vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-kcyellow object-contain"}/>
 
-<button onclick={() => featured_image=""} bind:this={background}
+<button onclick={() => featuredImage=""} bind:this={background} aria-label="Click off"
         class={"fixed z-20 top-0 left-0 backdrop-blur-sm w-screen h-screen cursor-default"}></button>

@@ -1,8 +1,10 @@
 <script>
     import gsap from "gsap";
 
-    let {text, oninput, getvalue} = $props()
+    let {text, oninput, getvalue, textcolor} = $props()
     let text_element
+
+    textcolor = textcolor || "#000000";
 
     const animate_input = (is_mouse_inside) => {
         gsap.to(text_element, {
@@ -21,7 +23,7 @@
     })
 </script>
 
-<div class="relative border-b-3 border-kcyellow text-3xl"
+<div class="relative border-b-3 border-kcyellow text-3xl" style="color: {textcolor};"
      onmouseover={() => animate_input(true)} onfocus={() => animate_input(true)}
      onmouseout={() => animate_input(false)} onblur={() => animate_input(false)}
      role="button" tabindex="0"

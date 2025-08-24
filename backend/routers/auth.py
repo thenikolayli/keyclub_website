@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Cookie
+from fastapi import APIRouter, Depends, status, Cookie
 from fastapi.responses import JSONResponse
 from typing import Annotated
 
@@ -6,7 +6,7 @@ from sqlmodel import select, Session
 from backend.models import UserLogin, User, RefreshJTI
 from backend.config import jwt_secret, cookie_secure, cookie_domain, cookie_samesite, cookie_httponly, access_maxage, refresh_maxage
 from backend.database import engine, get_session
-import json, time, uuid, jwt
+import time, uuid, jwt
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -17,9 +17,9 @@ async def login(candidate: UserLogin, session = Depends(get_session)):
     user = session.exec(select(User).where(User.username == candidate.username)).first()
 
     if not user:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+        return JSONResponse("User not found", status.HTTP_404_NOT_FOUND)
     if not user.verify_password(candidate.password):
-        raise HTTPException(status.HTTP_403_FORBIDDEN, "Incorrect password")
+        return JSONResponse("Incorrect password", status.HTTP_403_FORBIDDEN)
 
     access_token, refresh_token = generate_token_pair(user.id, session)
     response = JSONResponse("Logged in", status_code=status.HTTP_200_OK)
@@ -62,7 +62,7 @@ async def logout(refresh: Annotated[str | None, Cookie()] = None, session = Depe
 @router.get("/refresh")
 async def refresh_tokens(refresh: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)):
     if not refresh:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "No refresh cookie")
+        return JSONResponse("No refresh token", status.HTTP_404_NOT_FOUND)
 
     # invalidates the old refresh jti
     try:
@@ -106,7 +106,7 @@ async def refresh_tokens(refresh: Annotated[str | None, Cookie()] = None, sessio
 @router.get("/me")
 async def me(access: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)):
     if not access:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "No access cookie")
+        return JSONResponse("No access token", status.HTTP_404_NOT_FOUND)
 
     try:
         payload = jwt.decode(access, jwt_secret, algorithms=["HS256"])
@@ -118,11 +118,11 @@ async def me(access: Annotated[str | None, Cookie()] = None, session: Session = 
         return delete_cookies("User not found", status.HTTP_404_NOT_FOUND)
 
     return JSONResponse({
-        "user_id": user.id,
+        "userId": user.id,
         "username": user.username,
         "admin": user.admin,
-        "created": user.created
-    })
+        "created": str(user.created)
+    }, status.HTTP_200_OK)
 
 
 
@@ -187,3 +187,16 @@ def create_jti():
 
             if len(duplicates) == 0:
                 return jti
+
+# returns user if admin, otherwise httpexception
+def require_admin(access: Annotated[str | None, Cookie()] = None):
+    if not access:
+        return JSONResponse("No access token", status.HTTP_403_FORBIDDEN)
+
+    try:
+        payload = jwt.decode(access, jwt_secret, algorithms=["HS256"])
+    except jwt.InvalidTokenError:
+        return JSONResponse("Token is invalid", status.HTTP_403_FORBIDDEN)
+
+    if not payload.get("admin"):
+        return JSONResponse("Unauthorized", status.HTTP_403_FORBIDDEN)

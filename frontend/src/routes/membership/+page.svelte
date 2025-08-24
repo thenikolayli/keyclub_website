@@ -10,9 +10,9 @@
     onMount(() => {
         document.title = "Membership"
 
-        const header_text = SplitText.create(htext).words
+        const headerText = SplitText.create(htext).words
 
-        gsap.fromTo(header_text, {
+        gsap.fromTo(headerText, {
             yPercent: 50,
             opacity: 0,
         }, {
