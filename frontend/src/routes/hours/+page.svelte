@@ -46,7 +46,7 @@
         // gets when the hours were last updated
         try {
             const result = await axios({
-                url: "/api/hours_last_updated",
+                url: "/api/hours/hours_last_updated",
                 method: "get"
             })
             let lastUpdate = moment.unix(result.data)
@@ -67,6 +67,9 @@
         apiResponse = ""
 
         try {
+            gsap.set(wrapperElement, {
+                opacity: 0
+            })
             header = ""
             gsap.set([atElement, yrElement], {
                 scaleX: 0,
@@ -81,7 +84,7 @@
             yrEnd = yrGoals[1]
 
             const response = await axios({
-                url: "/api/get_hours",
+                url: "/api/hours/get_hours",
                 method: "get",
                 params: {
                     name: name
@@ -92,20 +95,18 @@
             atHours = response.data["all_hours"]
             yrHours = response.data["term_hours"]
 
-            setTimeout(() => {
-                gsap.to(wrapperElement, {
-                    opacity: 1,
-                    duration: 1,
-                    ease: "power1.out"
-                })
+            gsap.to(wrapperElement, {
+                opacity: 1,
+                duration: 1,
+                ease: "power1.out"
+            })
 
-                setTimeout(() => {
-                    atAnim = true
-                    yrAnim = true
-                    animate_pbars(atElement, atGoals, atHours, atHoursElement, (value) => atStart=value, (value) => atEnd=value, (value) => atAnim=value)
-                    animate_pbars(yrElement, yrGoals, yrHours, yrHoursElement, (value) => yrStart=value, (value) => yrEnd=value, (value) => yrAnim=value)
-                }, 1000)
-            }, 2000)
+            setTimeout(() => {
+                atAnim = true
+                yrAnim = true
+                animate_pbars(atElement, atGoals, atHours, atHoursElement, (value) => atStart=value, (value) => atEnd=value, (value) => atAnim=value)
+                animate_pbars(yrElement, yrGoals, yrHours, yrHoursElement, (value) => yrStart=value, (value) => yrEnd=value, (value) => yrAnim=value)
+            }, 1000)
 
         } catch (error) {
             console.error(error)
@@ -149,7 +150,7 @@
 </script>
 
 <Header />
-<section class="relative w-full h-screen min-h-screen flex flex-col items-center p-4">
+<section class="relative w-full lg:w-1/2 mx-auto h-screen min-h-screen flex flex-col items-center p-4 text-kcblack">
     <header class="text-7xl mb-4">HOURS</header>
     <div bind:this={wrapperElement} class="w-full py-8 text-xl mt-8">
         <h1 class="text-3xl text-center w-full">{header}</h1>

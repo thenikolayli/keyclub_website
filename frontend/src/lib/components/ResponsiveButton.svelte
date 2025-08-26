@@ -12,7 +12,7 @@
 
     onMount(() => {
         gsap.set(init_text_element, {yPercent: 0})
-        gsap.set(clicked_text_element, {yPercent: 10})
+        gsap.set(clicked_text_element, {yPercent: 100})
 
         timeline = gsap.timeline({paused: true})
         timeline.to(init_text_element, {
@@ -21,7 +21,7 @@
             ease: "power2.out",
         }, 0)
         timeline.to(clicked_text_element, {
-            yPercent: -100,
+            yPercent: 0,
             duration: .2,
             ease: "power2.out",
         }, 0)
@@ -48,11 +48,12 @@
 </script>
 
 <button onclick={on_click}
-        class={"relative w-full p-2 px-8 mt-8 border-3 border-kcyellow overflow-hidden text-2xl text-kcblack"}
+        class="relative w-full p-2 px-8 mt-8 border-3 border-kcyellow overflow-hidden text-2xl text-kcblack"
         onmouseover={() => button_animation(true)} onfocus={() => button_animation(true)}
         onmouseout={() => button_animation(false)} onblur={() => button_animation(false)}
 >
-    <span bind:this={init_text_element} class={"relative z-10"}>{init_text}</span>
-    <span bind:this={clicked_text_element} class={"z-10 absolute inset-x-0 mx-auto"}>{clicked_text}</span>
-    <div bind:this={bg_element} class="absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></div>
+    <span bind:this={init_text_element} class="absolute z-10">{init_text}</span>
+    <span bind:this={clicked_text_element} class="z-10 absolute inset-x-0 mx-auto">{clicked_text}</span>
+    <span class="text-transparent">{init_text}</span>
+    <span bind:this={bg_element} class="absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></span>
 </button>

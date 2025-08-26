@@ -25,7 +25,7 @@ async def keyclub_log_event(event_data: EventCreate, _ = Depends(require_admin))
     if log_event_response.get("error"):
         return JSONResponse(log_event_response.get("error"), status_code=status.HTTP_400_BAD_REQUEST)
 
-    await save_event_to_db(log_event_response)
+    save_event_to_db(log_event_response)
     return JSONResponse(log_event_response, status_code=status.HTTP_200_OK)
 
 @router.post("/log_meeting")
@@ -47,35 +47,25 @@ async def keyclub_log_meeting(meeting_data: MeetingCreate, _ = Depends(require_a
     if log_meeting_response.get("error"):
         return JSONResponse(log_meeting_response.get("error"), status_code=status.HTTP_400_BAD_REQUEST)
 
-    await save_event_to_db(log_meeting_response)
+    save_event_to_db(log_meeting_response)
     return JSONResponse(log_meeting_response, status_code=status.HTTP_200_OK)
 
 
 # saves an event or meeting to the database
-async def save_event_to_db(response):
+def save_event_to_db(response):
     # creates db entry
     title = response.get("event_title")
-    hours_logged = 0
-    hours_not_logged = 0
+    hours_total = 0
     people_attended = 0
 
-    # volunteers logged
-    if response.get("logged"):
-        for volunteer_logged, data in response.get("logged").items():
-            hours_logged += data
-            people_attended += 1
-
-    # volunteers not logged
-    if response.get("not_logged"):
-        for volunteer_not_logged, data in response.get("not_logged").items():
-            hours_not_logged += data
-            people_attended += 1
+    for volunteer in response.get("volunteers"):
+        people_attended += 1
+        hours_total += volunteer.get("hours")
 
     # creates entry and writes to db
     event_write = Event(
         title=title,
-        hours_logged=hours_logged,
-        hours_not_logged=hours_not_logged,
+        hours_total=hours_total,
         people_attended=people_attended,
     )
     with Session(database.engine) as session:

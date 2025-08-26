@@ -86,7 +86,7 @@
 <section class="relative w-full h-screen flex flex-col">
     <img class="h-full w-full object-cover brightness-50" src="/home/cover.webp" alt="Cover image"/>
 
-    <div class="absolute inset-x-0 mx-auto top-[25%] z-10 text-white text-center px-8">
+    <div class="absolute inset-x-0 mx-auto top-[25%] z-10 text-stone-200 text-center px-8">
         <h2 class="intro1 text-3xl">
             we don't make keys...
         </h2>
@@ -102,7 +102,7 @@
     </div>
 </section>
 
-<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>
 
     <div class="w-full h-full flex flex-col items-center justify-center p-8">
@@ -116,7 +116,7 @@
     </div>
 </section>
 
-<section class="relative slides h-screen text-white bg-kcyellow">
+<section class="relative slides h-screen text-stone-200 bg-kcyellow">
 
     <section class="relative top-0 w-full h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
@@ -157,10 +157,10 @@
             <header class="text-3xl h-[5vh]">SERVICE</header>
 
             <p class="text-3xl mt-4">
-                Service Co are the standby volunteers of Key Club.
+                Service Co is focused on the <a class="underline" href="/districtproject">District Project</a>.
                 <br/> <br/>
-                We help out whenever we can and sign up for events with low volunteers.
-                This committee is great for getting volunteer hours!
+                We brainstorm and run events for our local community and try to find ways to support the
+                District Project: the Ronald McDonald House Charities!
                 <br/> <br/>
                 Follow the JHS Key Club Reminds Instagram to
                 receive reminders about events that need volunteers:
@@ -212,7 +212,7 @@
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/remind.jpg" alt="Remind image"/>
 
-    <div class="w-full h-full p-8 flex items-center justify-center overflow-hidden">
+    <div class="w-full h-full p-8 flex items-center justify-center overflow-hidden bg-stone-200">
         <div class="text-center flex flex-col items-center justify-center">
             <header class="text-4xl">
                 FOLLOW OUR SOCIALS!

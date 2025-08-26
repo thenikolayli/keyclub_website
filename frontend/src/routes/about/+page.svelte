@@ -21,17 +21,20 @@
 
         fbsrc = "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FKiwanisofmillcreek&tabs=timeline&width=340&height=500"
 
-        gsap.to(officer_section, {
-            backgroundColor: "#231f20",
-            scrollTrigger: {
-                trigger: officer_section,
-                start: "top top",
-                end: () => "+=" + 1/4 * innerHeight, // end after quarter of screen height
-                scrub: 1,
-                once: true,
-                // markers: true,
+        gsap.fromTo(officer_section, {
+                backgroundColor: "#e7e5e4"
+            }, {
+                backgroundColor: "#231f20",
+                scrollTrigger: {
+                    trigger: officer_section,
+                    start: "top top",
+                    end: () => "+=" + 1/4 * innerHeight, // end after quarter of screen height
+                    scrub: 1,
+                    once: true,
+                    // markers: true,
+                }
             }
-        })
+        )
         gsap.to(".intro-text", {
             color: "#fed450",
             scrollTrigger: {
@@ -116,7 +119,7 @@
 </script>
 
 <Header/>
-<section bind:this={officer_section} class="w-full h-fit text-white">
+<section bind:this={officer_section} class="w-full h-fit text-stone-200 bg-stone-200">
     <div class="w-full h-[75vh] flex flex-col items-center justify-center text-center">
         <header class="intro-text text-black text-7xl">MEET THE OFFICERS</header>
 <!--        <h1 class="intro-text text-black mt-8">(scroll)</h1>-->

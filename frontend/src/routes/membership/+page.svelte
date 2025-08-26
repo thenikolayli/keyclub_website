@@ -27,9 +27,9 @@
 </script>
 
 <Header/>
-<section class="w-full min-h-screen text-center text-2xl">
+<section class="w-full min-h-screen text-center text-2xl text-kcblack">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
-        <header bind:this={htext} class="text-white text-4xl">
+        <header bind:this={htext} class="text-stone-200 text-4xl">
             REGISTRATION IS CLOSED
         </header>
         <img class="absolute -z-10 top-0 left-0 w-full h-full object-cover" src="/membership/membership_cover.jpg"
@@ -42,7 +42,7 @@
             <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
             <div class="w-full">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
-                <p class="text-left ">
+                <p class="text-left w-fit mx-auto">
                     <span class="underline">Get an ASB card!</span> If you don't already have one, go to the
                     ASB office for assistance.
                     <br/><br/>
@@ -58,10 +58,10 @@
             <img class="md:order-2 object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
             <div class="md:order-1 w-full">
                 <header class="text-4xl mb-8">Pay Dues</header>
-                <p class="text-left">
+                <p class="text-left w-fit mx-auto">
                     The official dues payments are closed.
                     <br/><br/>
-                    Check back next year!
+                    Check back in October 🎃.
                 </p>
             </div>
         </div>
@@ -72,6 +72,7 @@
                 <header class="text-4xl mb-8">Stay in the Hive</header>
                 <p class="text-left">
                     Complete your annual hour requirement of <span class="underline">25 hours</span>!
+                    (There is no semester hour requirement.)
                     <br/><br/>
                     Attend <span class="underline">50%</span> of the general meetings.
                     <br/><br/>
@@ -79,7 +80,7 @@
                         class="underline">24 hour notice</span> if you can't make it to an
                     event.
                     Misbehavior or failure to show up to 3 events without advanced notice gets you suspended
-                    from Key Club.
+                    from the club.
                 </p>
             </div>
         </div>

@@ -19,13 +19,12 @@ class Event(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     timestamp: datetime = Field(default_factory=lambda: datetime.now(ZoneInfo("America/Los_Angeles")))
     title: str
-    hours_logged: float
-    hours_not_logged: float
+    hours_total: float
     people_attended: int
 
 class EventCreate(SQLModel, table=False):
     link: str
-    hours_multiplier: float
+    hours_multiplier: float = 1
 
 class MeetingCreate(SQLModel, table=False):
     link: str

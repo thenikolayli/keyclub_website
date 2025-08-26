@@ -2,20 +2,29 @@
     import {getContext, onMount} from "svelte";
     import ResponsiveInput from "$lib/components/ResponsiveInput.svelte";
     import axios from "axios";
+    import ResponsiveButton from "$lib/components/ResponsiveButton.svelte";
 
     let usernameField = $state("")
     let password = $state("")
     let apiResponse = $state("")
+    let tab = $state("logEvent")
 
     let username = getContext("username")
     let userId = getContext("userId")
     let admin = getContext("admin")
 
+    let eventLink = $state("")
+    let eventHoursMultiplier = $state(1)
+    let eventApiResponse = $state("")
+    let canSendEvent = $state(true)
+    let eventResponseTitle = $state("")
+    let eventResponseVolunteers = $state({})
+
     onMount(() => {
         document.title = "Admin";
     })
 
-    const onsubmit = async (event) => {
+    const submitLogin = async (event) => {
         event.preventDefault()
 
         try {
@@ -23,7 +32,7 @@
                 method: "post",
                 url: "/api/auth/login",
                 data: {
-                    username: usernameField,
+                    username: username,
                     password: password,
                 }
             })
@@ -32,18 +41,115 @@
                 window.location.reload()
             }
         } catch (error) {
-            apiResponse = "Invalid credentials"
+            apiResponse = "Invalid credentials."
         }
+    }
+
+    const submitLogEvent = async (event) => {
+        event.preventDefault()
+        if (!canSendEvent) return
+        canSendEvent = false
+
+        try {
+            const response = await axios({
+                method: "post",
+                url: "/api/event/log_event",
+                data: {
+                    link: eventLink,
+                    hours_multiplier: eventHoursMultiplier,
+                }
+            })
+
+            if (response.status === 200) {
+                eventApiResponse = response.data.data
+                eventResponseTitle = response.data.event_title
+                eventResponseVolunteers = response.data.volunteers
+            }
+
+            console.log(response.data)
+            console.log(Object.entries(response.data.volunteers))
+        } catch (error) {
+            console.log(error)
+            if (error.response.status === 422) {
+                eventApiResponse = "No link."
+            }
+            eventApiResponse = "Error logging event."
+        }
+
+        setTimeout(() => canSendEvent = true, 1000)
     }
 </script>
 
-{#if username.value}
-    <section class="relative w-full h-screen bg-kcblack">
-        <header>Hello, {username.value}</header>
-    </section>
+<section class="relative w-full h-screen bg-kcblack text-kcblack">
+    {#if username.value && admin.value}
+        <header class="w-full bg-white min-h-[120px] text-3xl px-8 pt-8 pb-4 text-center">
+            <h1>Hello, {username.value}</h1>
+
+            <section class="mt-4 flex space-x-4 mx-auto w-fit">
+                <div>
+                    <label for="logEvent" class="text-xl border-2 p-2 font-light border-kcblack text-kcblack has-checked:text-white has-checked:bg-kcblack transition duration-100 cursor-pointer">
+                        Log Events
+                        <input type="radio" name="tab" id="logEvent" class="hidden" onclick={() => tab = "logEvent"} checked/>
+                    </label>
+                </div>
+                <div>
+                    <label for="logMeeting" class="text-xl border-2 p-2 font-light border-kcblack text-kcblack has-checked:text-white has-checked:bg-kcblack transition duration-100 cursor-pointer">
+                        Log Meetings
+                        <input type="radio" name="tab" id="logMeeting" class="hidden" onclick={() => tab = "logMeeting"} />
+                    </label>
+                </div>
+                <div>
+                    <label for="photos" class="text-xl border-2 p-2 font-light border-kcblack text-kcblack has-checked:text-white has-checked:bg-kcblack transition duration-100 cursor-pointer">
+                        Check Photos
+                        <input type="radio" name="tab" id="photos" class="hidden" onclick={() => tab = "photos"} />
+                    </label>
+                </div>
+            </section>
+        </header>
+
+        <section class="mx-auto bg-stone-800 w-fit p-8 mt-8 border-3 border-stone-700 text-stone-300">
+            {#if tab === "logEvent"}
+                <header class="text-3xl">Log Events</header>
+
+                <form action="submit" onsubmit={submitLogEvent} class="mt-10 space-y-12">
+                    <ResponsiveInput text="Link" oninput={(event) => eventLink = event.target.value} getvalue={() => eventLink} textcolor="#d6d3d1"/>
+                    <ResponsiveInput text="Hours Multiplier" oninput={(event) => eventHoursMultiplier = event.target.value} getvalue={() => eventHoursMultiplier} textcolor="#d6d3d1"/>
+                    <ResponsiveButton init_text="Submit" clicked_text="..." on_click={submitLogEvent} can_send={canSendEvent} />
+
+                    <span class="text-xl">{eventApiResponse}</span>
+                </form>
+
+                <table class="w-full font-light">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Logged</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {#each Object.values(eventResponseVolunteers) as entry}
+                        <tr>
+                            <th>{entry["name"]}</th>
+                            <th>
+                                {#if entry["logged"]}
+                                    X
+                                {/if}
+                            </th>
+                            <th>{entry["hours"]}</th>
+                        </tr>
+                    {/each}
+                    </tbody>
+                </table>
+            {:else if tab === "logMeeting"}
+                Log Meetings
+            {:else if tab === "photos"}
+                <header class="text-3xl">Photos</header>
+                Not implemented yet...
+            {/if}
+        </section>
     {:else}
-    <section class="relative w-full h-screen bg-kcblack">
-        <form onsubmit={onsubmit} class="absolute p-8 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-kcblack border-3 border-kcyellow">
+        <form onsubmit={submitLogin} class="absolute p-8 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-kcblack border-3 border-kcyellow">
             <header class="text-5xl text-kcyellow">Login</header>
 
             <div class="mt-12 space-y-8">
@@ -56,5 +162,5 @@
             </button>
             <p class="text-white w-full text-xl mt-4">{apiResponse}</p>
         </form>
-    </section>
     {/if}
+</section>

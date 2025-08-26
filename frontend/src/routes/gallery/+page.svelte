@@ -112,7 +112,7 @@
         // loads photos
         const result = await axios({
             method: "get",
-            url: "/api/get_photos"
+            url: "/api/gallery/get_photos"
         })
         photoUrls = result.data
 

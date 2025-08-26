@@ -251,8 +251,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
     # ranges and values to log in the spreadsheet
     volunteer_ranges = [f"{column}1:{column}1"]
     volunteer_values = [event_title]
-    volunteer_logged = {}
-    volunteer_not_logged = {}
+    volunteers = []
 
     # preps ranges and values to write to for the hours spreadsheet
     for name in event_volunteers:
@@ -265,12 +264,20 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         elif fullname in nicknames:
             row = nicknames.index(fullname)
         else:
-            volunteer_not_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
+            volunteers.append({
+                "name": fullname,
+                "hours": float(event_volunteers.get(name).get("hours")) * hours_multiplier,
+                "logged": False
+            })
             continue
 
         volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
         volunteer_values.append(float(event_volunteers.get(name).get("hours")) * hours_multiplier)
-        volunteer_logged.update({name: float(event_volunteers.get(name).get("hours")) * hours_multiplier})
+        volunteers.append({
+            "name": fullname,
+            "hours": float(event_volunteers.get(name).get("hours")) * hours_multiplier,
+            "logged": True
+        })
 
     # logs hours to hours spreadsheet
     write_sheet_result = write_sheet_data(document_id=config.spreadsheet_id,
@@ -282,8 +289,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
 
     # returns info on event automation attempt
     return {"data": f"{event_title} has been logged successfully",
-            "logged": volunteer_logged,
-            "not_logged": volunteer_not_logged,
+            "volunteers": volunteers,
             "event_title": event_title}
 
 def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meeting_title, sheets_service):
