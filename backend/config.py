@@ -8,6 +8,7 @@ load_dotenv()
 
 api_url = getenv('API_URL')
 
+banner_json_path = "backend/banner.json"
 keyclub_email = "jhskeyclub21@gmail.com"
 app_password = getenv("APP_PASSWORD")
 

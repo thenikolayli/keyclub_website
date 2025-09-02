@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from zoneinfo import ZoneInfo
 
-from backend.routers.email import router as email_router
+from backend.routers.misc import router as email_router
 from backend.routers.gallery import router as gallery_router
 from backend.routers.gallery import update_photos
 from backend.routers.event import router as event_router

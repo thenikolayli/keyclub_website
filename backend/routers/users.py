@@ -27,8 +27,8 @@ async def create_user(user: UserCreate, session = Depends(database.get_session))
 
     return JSONResponse(new_user.id, status_code=status.HTTP_201_CREATED)
 
-@router.put("/{user_id}")
-async def update_user(user_id: int, new_info: UserUpdate, session = Depends(database.get_session), _ = Depends(require_admin)):
+@router.put("/{user_id}", dependencies=[Depends(require_admin)])
+async def update_user(user_id: int, new_info: UserUpdate, session = Depends(database.get_session)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     if not user:
         return JSONResponse("User not found", status_code=status.HTTP_404_NOT_FOUND)
@@ -45,8 +45,8 @@ async def update_user(user_id: int, new_info: UserUpdate, session = Depends(data
 
     return JSONResponse(user.model_dump(mode="json"), status_code=status.HTTP_200_OK)
 
-@router.delete("/{user_id}")
-async def delete_user(user_id: int, session = Depends(database.get_session), _ = Depends(require_admin)):
+@router.delete("/{user_id}", dependencies=[Depends(require_admin)])
+async def delete_user(user_id: int, session = Depends(database.get_session)):
     user = session.exec(select(User).where(User.id == user_id)).first()
     session.delete(user)
     session.commit()

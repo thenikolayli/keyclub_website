@@ -1,6 +1,6 @@
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, status, Depends
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from backend.keyclubutils import log_event, log_meeting
 from backend.models import EventCreate, MeetingCreate, Event
@@ -11,8 +11,8 @@ import backend.database as database
 router = APIRouter(prefix="/api/event", tags=["event"])
 
 
-@router.post("/log_event")
-async def keyclub_log_event(event_data: EventCreate, _ = Depends(require_admin)):
+@router.post("/log_event", dependencies=[Depends(require_admin)])
+async def keyclub_log_event(event_data: EventCreate):
     document_id = event_data.link
     hours_multiplier = event_data.hours_multiplier
     log_event_response = log_event(
@@ -28,8 +28,8 @@ async def keyclub_log_event(event_data: EventCreate, _ = Depends(require_admin))
     save_event_to_db(log_event_response)
     return JSONResponse(log_event_response, status_code=status.HTTP_200_OK)
 
-@router.post("/log_meeting")
-async def keyclub_log_meeting(meeting_data: MeetingCreate, _ = Depends(require_admin)):
+@router.post("/log_meeting", dependencies=[Depends(require_admin)])
+async def keyclub_log_meeting(meeting_data: MeetingCreate):
     document_id = meeting_data.link
     first_name_col = meeting_data.first_name_col
     last_name_col = meeting_data.last_name_col
@@ -49,6 +49,11 @@ async def keyclub_log_meeting(meeting_data: MeetingCreate, _ = Depends(require_a
 
     save_event_to_db(log_meeting_response)
     return JSONResponse(log_meeting_response, status_code=status.HTTP_200_OK)
+
+@router.get("/", dependencies=[Depends(require_admin)])
+async def get_events(count: int = 10, skip: int = 0, session = Depends(database.get_session)):
+    users = session.exec(select(Event).offset(skip).limit(count)).all()
+    return JSONResponse([user.model_dump(mode="json") for user in users], status_code=status.HTTP_200_OK)
 
 
 # saves an event or meeting to the database

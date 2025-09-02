@@ -20,29 +20,8 @@
     let eventResponseTitle = $state("")
     let eventResponseVolunteers = $state({})
 
-    let bannerCurrentMessage = $state("")
-    let bannerCurrentShow = $state(false)
-    let bannerMessage = $state("")
-    let bannerShow
-    let bannerApiResponse = $state("")
-    let canSendBanner = $state(true)
-
-    onMount(async () => {
+    onMount(() => {
         document.title = "Admin";
-
-        try {
-            const response = await axios({
-                method: "get",
-                url: "/api/misc/get_banner"
-            })
-
-            if (response.status === 200) {
-                bannerCurrentMessage = response.data.message
-                bannerCurrentShow = response.data.show
-            }
-        } catch (error) {
-            console.log(error)
-        }
     })
 
     const submitLogin = async (event) => {
@@ -70,7 +49,6 @@
         event.preventDefault()
         if (!canSendEvent) return
         canSendEvent = false
-        eventApiResponse = ""
 
         try {
             const response = await axios({
@@ -100,35 +78,6 @@
 
         setTimeout(() => canSendEvent = true, 1000)
     }
-
-    const submitSetBanner = async (event) => {
-        event.preventDefault()
-        if (!canSendBanner) return
-        canSendBanner = false
-        bannerApiResponse = ""
-
-        try {
-            const response = await axios({
-                method: "post",
-                url: "/api/misc/update_banner",
-                data: {
-                    message: bannerMessage,
-                    show: bannerShow.checked,
-                }
-            })
-
-            if (response.status === 200) {
-                bannerApiResponse = response.data
-                bannerCurrentMessage = bannerMessage
-                bannerCurrentShow = bannerShow.checked
-            }
-        } catch (error) {
-            console.log(error)
-            bannerApiResponse = "Error setting banner."
-        }
-
-        setTimeout(() => canSendBanner = true, 1000)
-    }
 </script>
 
 <section class="relative w-full h-screen min-h-screen bg-kcblack text-kcblack">
@@ -155,16 +104,10 @@
                         <input type="radio" name="tab" id="photos" class="hidden" onclick={() => tab = "photos"} />
                     </label>
                 </div>
-                <div>
-                    <label for="banner" class="text-xl border-2 p-2 font-light border-kcblack text-kcblack has-checked:text-white has-checked:bg-kcblack transition duration-100 cursor-pointer">
-                        Banner
-                        <input type="radio" name="tab" id="banner" class="hidden" onclick={() => tab = "banner"} />
-                    </label>
-                </div>
             </section>
         </header>
 
-        <section class="mx-auto bg-stone-800 w-full md:w-1/2 p-8 mt-8 border-3 border-stone-700 text-stone-300">
+        <section class="mx-auto bg-stone-800 w-fit p-8 mt-8 border-3 border-stone-700 text-stone-300">
             {#if tab === "logEvent"}
                 <header class="text-3xl">Log Events</header>
 
@@ -177,7 +120,7 @@
                 </form>
 
                 {#if eventResponseVolunteers.length > 0}
-                    <table class="w-full mt-8">
+                    <table class="w-full">
                         <thead>
                         <tr>
                             <th class="font-light">Name</th>
@@ -191,9 +134,7 @@
                                 <th class="font-light">{entry["name"]}</th>
                                 <th class="font-light">
                                     {#if entry["logged"]}
-                                        ✅
-                                    {:else}
-                                        ❌
+                                        X
                                     {/if}
                                 </th>
                                 <th class="font-light">{entry["hours"]}</th>
@@ -208,30 +149,6 @@
             {:else if tab === "photos"}
                 <header class="text-3xl">Photos</header>
                 Not implemented yet...
-            {:else if tab === "banner"}
-                <header class="text-3xl">Banner</header>
-
-                <div class="text-2xl mt-4">
-                    <h1>Current banner message: "{bannerCurrentMessage}"</h1>
-                    <h1>Current banner shown:
-                        {#if bannerCurrentShow}
-                            ✅
-                        {:else}
-                            ❌
-                        {/if}
-                    </h1>
-                </div>
-
-                <form action="submit" onsubmit={submitSetBanner} class="mt-14 space-y-12">
-                    <ResponsiveInput text="Message" oninput={(event) => bannerMessage = event.target.value} getvalue={() => bannerMessage} textcolor="#d6d3d1"/>
-                    <div class="flex">
-                        <label class="text-3xl mr-2" for="showBanner">Show banner?</label>
-                        <input bind:this={bannerShow} class="size-8" type="checkbox" name="showBanner" id="showBanner">
-                    </div>
-                    <ResponsiveButton init_text="Submit" clicked_text="..." on_click={submitSetBanner} can_send={canSendBanner} />
-
-                    <span class="text-xl">{bannerApiResponse}</span>
-                </form>
             {/if}
         </section>
 

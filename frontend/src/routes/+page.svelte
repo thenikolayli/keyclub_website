@@ -6,11 +6,52 @@
     import SplitText from "gsap/SplitText";
     import ScrollTrigger from "gsap/ScrollTrigger";
     import {onMount} from "svelte";
+    import axios from "axios";
+    import textFit from "textfit";
 
-    onMount(() => {
+    let bannerMessage = $state("")
+    let bannerShow = $state(false)
+    let bannerText
+    let banner
+
+    $effect(() => {
+        if (bannerMessage) {
+            textFit(bannerText)
+        }
+    })
+
+    onMount(async () => {
         document.title = "JHS Key Club"
         gsap.registerPlugin(SplitText)
         gsap.registerPlugin(ScrollTrigger)
+
+        // gets banner info
+        try {
+            const response = await axios({
+                method: "get",
+                url: "/api/misc/get_banner"
+            })
+
+            if (response.status === 200) {
+                bannerMessage = response.data.message
+                bannerShow = response.data.show
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+        gsap.set(banner, {
+            xPercent: 100
+        })
+
+        if (bannerShow) {
+            gsap.to(banner, {
+                xPercent: 0,
+                duration: .7,
+                ease: "power2.out",
+                delay: 1
+            })
+        }
 
         const timeline = gsap.timeline({
             defaults: {
@@ -54,7 +95,7 @@
         }, {
             opacity: 1,
             duration: 1
-        }, 2.6)
+        }, 2.3)
 
 
         gsap.set(".slide", {
@@ -83,7 +124,7 @@
 
 <Header />
 
-<section class="relative w-full h-screen flex flex-col">
+<section class="relative w-full h-screen flex flex-col overflow-hidden">
     <img class="h-full w-full object-cover brightness-50" src="/home/cover.webp" alt="Cover image"/>
 
     <div class="absolute inset-x-0 mx-auto top-[25%] z-10 text-stone-200 text-center px-8">
@@ -96,16 +137,21 @@
         <h2 class="intro3 text-5xl mt-2">
             difference!
         </h2>
-        <h1 class="intro4 text-3xl mt-6">
+        <h1 class="intro4 text-3xl md:text-5xl mt-6">
             Henry M. Jackson High School Key Club
         </h1>
+    </div>
+
+    <div bind:this={banner} class="absolute right-0 top-8 p-4 bg-stone-200 h-[6rem] w-[24rem] flex items-center text-kcblack">
+        <img class="h-full mr-4" src="/bee.webp" alt="Wolfbee">
+        <span class="w-[60%] h-full" bind:this={bannerText}>{bannerMessage}</span>
     </div>
 </section>
 
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>
 
-    <div class="w-full h-full flex flex-col items-center justify-center p-8">
+    <div class="w-full h-full flex flex-col items-center justify-center p-8 text-kcblack">
         <header class="text-4xl md:text-7xl">WHO ARE WE?</header>
         <p class="text-xl md:text-3xl mt-8 text-left">
             Key Club is a student-led volunteering organization. Jackson High School is one of 13
@@ -212,7 +258,7 @@
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/remind.jpg" alt="Remind image"/>
 
-    <div class="w-full h-full p-8 flex items-center justify-center overflow-hidden bg-stone-200">
+    <div class="w-full h-full p-8 flex items-center justify-center overflow-hidden bg-stone-200 text-kcblack">
         <div class="text-center flex flex-col items-center justify-center">
             <header class="text-4xl">
                 FOLLOW OUR SOCIALS!

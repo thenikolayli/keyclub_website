@@ -16,13 +16,7 @@
     setContext("admin", admin)
 
     onMount(async () => {
-        // attempts to refresh tokens
-        try {
-            await axios({
-                method: "get",
-                url: "/api/auth/refresh",
-            })
-        } catch (error) {}
+        await refreshToken()
 
         // attempts to get user info
         try {
@@ -39,7 +33,20 @@
         } catch (error) {
             console.log(error)
         }
+
+        // refreshes token every 4.5 minutes automatically
+        setInterval(refreshToken, 4.5 * 60 * 1000)
     })
+
+    const refreshToken = async () => {
+        // attempts to refresh tokens
+        try {
+            await axios({
+                method: "get",
+                url: "/api/auth/refresh",
+            })
+        } catch (error) {}
+    }
 </script>
 
 <svelte:head>

@@ -29,7 +29,7 @@
 </script>
 
 <Header/>
-<section class="w-full min-h-screen">
+<section class="w-full min-h-screen text-kcblack">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
         <header bind:this={htext} class="text-white text-4xl">
             DISTRICT PROJECT

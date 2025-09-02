@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, Cookie
+from fastapi import APIRouter, Depends, status, Cookie, HTTPException
 from fastapi.responses import JSONResponse
 from typing import Annotated
 
@@ -191,12 +191,13 @@ def create_jti():
 # returns user if admin, otherwise httpexception
 def require_admin(access: Annotated[str | None, Cookie()] = None):
     if not access:
-        return JSONResponse("No access token", status.HTTP_403_FORBIDDEN)
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "No access token")
 
     try:
         payload = jwt.decode(access, jwt_secret, algorithms=["HS256"])
     except jwt.InvalidTokenError:
-        return JSONResponse("Token is invalid", status.HTTP_403_FORBIDDEN)
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Token is invalid")
 
     if not payload.get("admin"):
-        return JSONResponse("Unauthorized", status.HTTP_403_FORBIDDEN)
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Unauthorized")
+    return True

@@ -22,6 +22,7 @@
 		"axios": "^1.11.0",
 		"gsap": "^3.13.0",
 		"moment-timezone": "^0.6.0",
-		"tailwindcss": "^4.1.11"
+		"tailwindcss": "^4.1.11",
+		"textfit": "^2.4.0"
 	}
 }

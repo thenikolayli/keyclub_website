@@ -14,6 +14,10 @@ class Message(SQLModel, table=False):
     email: str
     message: str
 
+class SetBanner(SQLModel, table=False):
+    message: str
+    show: bool
+
 
 class Event(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)

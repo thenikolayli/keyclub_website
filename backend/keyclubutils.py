@@ -255,8 +255,11 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
 
     # preps ranges and values to write to for the hours spreadsheet
     for name in event_volunteers:
-        first, last = name.split(" ")
-        fullname = f"{last}, {first}"
+        try:
+            first, last = name.split(" ")
+            fullname = f"{last}, {first}"
+        except ValueError:
+            fullname = name
 
         # if fullname is not in fullnames or nicknames, skip and add to unlogged
         if fullname in fullnames:

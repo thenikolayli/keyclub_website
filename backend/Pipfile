@@ -17,6 +17,7 @@ apscheduler = "*"
 sqlmodel = "*"
 passlib = "*"
 pyjwt = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 

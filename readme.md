@@ -19,9 +19,10 @@ Here's the explanations for what everything is
 - `.env` - environment variables (change some during production)
 - `key.json` - credentials for logging into the Key Club service account, it's the account that logs hours and sends emails and such
 - `docker-compose.yml` - learn about Docker and containerization
-- `\_\_init__.py` - im not sure myself, but it helps Python find files using absolute paths
+- `\_\_init__.py` - lets Python see directories as modules
+- `banner.json` - JSON file that stores info on the banner, primarily for next meeting info
 
-## How to run this???
+## How to run this?
 Here are the instructions on how to do various things.
 
 ### *setting up the virtual environments*
@@ -38,14 +39,6 @@ Here are the instructions on how to do various things.
 ```
 /frontend> npm run dev
 ```
-
-## To do
-- [x] Add password hashing
-- [x] Add password checking
-- [ ] Admin accounts
-- [ ] JWT auth
-- [ ] Admin panel
-- [ ] Photo form review tab
 
 ## How will photo forms work?
 - Refresh button to fetch new form responses

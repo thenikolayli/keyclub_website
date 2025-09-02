@@ -42,7 +42,7 @@
         try {
             const response = axios({
                 method: 'POST',
-                url: '/api/message',
+                url: '/api/misc/message',
                 headers: {
                     'Content-Type': 'application/json',
                 },
