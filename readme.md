@@ -7,9 +7,11 @@ Here's the explanations for what everything is
 - `.env` - environment variables (change some during production)
 - `key.json` - credentials for logging into the Key Club service account, it's the account that logs hours and sends emails and such
 - `docker-compose.yml` - learn about Docker and containerization
-- `\_\_init__.py` - it helps Python find files using absolute paths by seeing directories and modules
+- `\_\_init__.py` - lets Python see directories as modules
+- `banner.json` - JSON file that stores info on the banner, primarily for next meeting info
 
-## Instructions
+## How to run this?
+Here are the instructions on how to do various things.
 
 ### *setting up the virtual environments*
 ```
@@ -25,3 +27,12 @@ Here's the explanations for what everything is
 ```
 /frontend> npm run dev
 ```
+## How will photo forms work?
+- Refresh button to fetch new form responses
+- - Saved form responses to db as unresolved
+- - If it's already in the DB (based on name), skip it
+- Opening the form will show the info (full name, email, event name, and photos)
+- Then you can accept/reject it
+- Yk what else
+
+events will be saved in the db as well as photo forms

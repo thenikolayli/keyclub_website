@@ -3,11 +3,11 @@ FROM node:alpine AS build
 COPY . /app
 WORKDIR /app
 
-ENV VITE_DOCKER="true"
-RUN npm i && npm run build
+RUN npm install && npm run build
 
-FROM nginx:alpine AS main
+FROM node:alpine AS main
 
-# copies static files and nginx configuration
-COPY --from=build /app/build /static
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/build /app/build
+COPY --from=build /app/node_modules /app/node_modules
+
+WORKDIR /app

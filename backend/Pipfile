@@ -14,6 +14,10 @@ google-auth-oauthlib = "*"
 motor = "*"
 asyncio = "*"
 apscheduler = "*"
+sqlmodel = "*"
+passlib = "*"
+pyjwt = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 

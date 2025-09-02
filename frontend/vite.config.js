@@ -1,20 +1,13 @@
-import { defineConfig } from 'vite'
-import solid from 'vite-plugin-solid'
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [
-    solid(),
-    tailwindcss()
-  ],
-  build: {
-    outDir: "./build",
-  },
-  base: process.env.VITE_DOCKER ? "/static/" : "/",
-  server: {
-    port: 3000,
-    proxy: {
-      "/api": "http://localhost:8000"
+    plugins: [sveltekit(), tailwindcss()],
+    server: {
+        port: 3000,
+        proxy: {
+            "/api": "http://localhost:8000" // this only applies when vite is running
+        }
     }
-  }
-})
+});

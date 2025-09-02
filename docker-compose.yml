@@ -2,42 +2,36 @@ services:
   keyclub_backend:
     build: ./backend
     volumes:
-      - keyclub_photos:/app/photos
+      - ./keyclub_photos:/backend/photos
+      - ./key.json:/backend/key.json
+      - ./db.sqlite3:/backend/db.sqlite3
+      - ./banner.json:/backend/banner.json
     env_file:
       - .env
     expose:
       - 8000
     networks:
       - local
-    command: pipenv run uvicorn main:app --port 8000 --host 0.0.0.0
+    command: pipenv run uvicorn backend.main:app --port 8000 --host 0.0.0.0
   keyclub_frontend:
     build: ./frontend
+    expose:
+      - 3000
+    networks:
+      - local
+    command: node build
+  keyclub_proxy:
+    image: nginx:latest
     volumes:
-      - keyclub_photos:/photos
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./keyclub_photos:/gallery
     depends_on:
       - keyclub_backend
-#    expose:
-#      - 80
-    networks:
-      - local
-    # V for testing only V
+      - keyclub_frontend
     ports:
       - 80:80
-  keyclub_mongo:
-    image: mongo
-    # V for data persistence
-    volumes:
-      - db_data:/data/db
-#    expose:
-#      - 27017
-    ports:
-      - 27017:27017
     networks:
       - local
-
-volumes:
-  keyclub_photos:
-  db_data:
 
 networks:
   local:

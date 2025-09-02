@@ -1,1 +1,5 @@
 .venv
+event_log.json
+key.json
+photos
+db.sqlite3

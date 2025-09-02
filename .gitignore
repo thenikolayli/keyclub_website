@@ -1,4 +1,11 @@
 .idea
-key.json
 .env
+key.json
+event_log.json
+backend/key.json
 backend/photo_urls.json
+backend/event_log.json
+backend/banner.json
+keyclub_photos
+backend/photoss
+banner.json
