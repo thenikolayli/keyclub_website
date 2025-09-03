@@ -17,15 +17,29 @@
 
     onMount(async () => {
         await refreshToken()
+        await getMe()
+        // refreshes token every 4.5 minutes automatically
+        setInterval(async () => {
+            await refreshToken()
+            await getMe()
+        }, 4.5 * 60 * 1000)
+    })
 
-        // attempts to get user info
+    const refreshToken = async () => {
+        try {
+            await axios({
+                method: "get",
+                url: "/api/auth/refresh",
+            })
+        } catch (error) {}
+    }
+
+    const getMe = async () => {
         try {
             const userData = await axios({
                 method: "get",
                 url: "/api/auth/me",
             })
-
-            // console.log(userData.data.username)
 
             userId.value = userData.data.user_id
             username.value = userData.data.username
@@ -33,19 +47,6 @@
         } catch (error) {
             console.log(error)
         }
-
-        // refreshes token every 4.5 minutes automatically
-        setInterval(refreshToken, 4.5 * 60 * 1000)
-    })
-
-    const refreshToken = async () => {
-        // attempts to refresh tokens
-        try {
-            await axios({
-                method: "get",
-                url: "/api/auth/refresh",
-            })
-        } catch (error) {}
     }
 </script>
 

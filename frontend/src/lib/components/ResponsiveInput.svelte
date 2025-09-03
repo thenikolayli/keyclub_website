@@ -26,7 +26,7 @@
 <div class="relative border-b-3 border-kcyellow text-3xl" style="color: {textcolor};"
      onmouseover={() => animate_input(true)} onfocus={() => animate_input(true)}
      onmouseout={() => animate_input(false)} onblur={() => animate_input(false)}
-     role="button" tabindex="0"
+     role="button" tabindex="-1"
 >
     <input class="outline-none relative z-10 w-full" type="text" value={getvalue()}
            oninput={oninput}

@@ -11,12 +11,19 @@ router = APIRouter(prefix="/api/users", tags=["users"])
 @router.get("/")
 async def get_users(count: int = 10, skip: int = 0, session = Depends(database.get_session)):
     users = session.exec(select(User).offset(skip).limit(count)).all()
-    return JSONResponse([user.model_dump(mode="json") for user in users], status_code=status.HTTP_200_OK)
+    for i in range(len(users)):
+        users[i] = users[i].model_dump()
+        users[i].pop("password")
+        users[i].update({"created": str(users[i].get("created"))})
+    return JSONResponse(users, status_code=status.HTTP_200_OK)
 
 @router.get("/{user_id}")
 async def get_user(user_id: int, session = Depends(database.get_session)):
     user = session.exec(select(User).where(User.id == user_id)).first()
-    return JSONResponse(user.model_dump(mode="json"), status_code=status.HTTP_200_OK)
+    user = user.model_dump()
+    user.pop("password")
+    user.update({"created": str(user.get("created"))})
+    return JSONResponse(user, status_code=status.HTTP_200_OK)
 
 @router.post("/")
 async def create_user(user: UserCreate, session = Depends(database.get_session)):
@@ -25,7 +32,7 @@ async def create_user(user: UserCreate, session = Depends(database.get_session))
     session.add(new_user)
     session.commit()
 
-    return JSONResponse(new_user.id, status_code=status.HTTP_201_CREATED)
+    return JSONResponse("Account created", status_code=status.HTTP_201_CREATED)
 
 @router.put("/{user_id}", dependencies=[Depends(require_admin)])
 async def update_user(user_id: int, new_info: UserUpdate, session = Depends(database.get_session)):

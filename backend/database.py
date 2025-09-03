@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, SQLModel, Session, select
 import backend.config as config
 
-engine = create_engine("sqlite:///db.sqlite3")
+engine = create_engine(config.db_string)
 
 def update_tables():
     from backend.models import User, Event, RefreshJTI
