@@ -128,8 +128,8 @@ async def me(access: Annotated[str | None, Cookie()] = None, session: Session = 
 
 def delete_cookies(reason, code):
     response = JSONResponse(reason, status_code=code)
-    response.delete_cookie("access")
-    response.delete_cookie("refresh")
+    response.delete_cookie("access", path="/", domain=cookie_domain)
+    response.delete_cookie("refresh", path="/", domain=cookie_domain)
     return response
 
 # generates an access and refresh jwt tokens, adds refresh jti to the db
