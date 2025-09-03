@@ -211,7 +211,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
                 end[0] += 12
 
             # calculates hours
-            hours = str(round((((end[0] * 60 + end[1]) - (start[0] * 60 + start[1])) / 60) * hours_multiplier,2))
+            hours = str(round((((end[0] * 60 + end[1]) - (start[0] * 60 + start[1])) / 60) * hours_multiplier, 2))
 
             ranges.append(index)
             values.append(hours)
@@ -262,10 +262,11 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
             fullname = name
 
         # if fullname is not in fullnames or nicknames, skip and add to unlogged
+        # add 2 to account for starting on 2nd row and Python starting lists on 0
         if fullname in fullnames:
-            row = fullnames.index(fullname)
+            row = fullnames.index(fullname) + 2
         elif fullname in nicknames:
-            row = nicknames.index(fullname)
+            row = nicknames.index(fullname) + 2
         else:
             volunteers.append({
                 "name": fullname,
@@ -274,7 +275,7 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
             })
             continue
 
-        volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
+        volunteer_ranges.append(f"{column}{row}:{column}{row}")
         volunteer_values.append(float(event_volunteers.get(name).get("hours")) * hours_multiplier)
         volunteers.append({
             "name": fullname,
@@ -414,7 +415,6 @@ async def update_hours_list(names_hours_list):
 
     for i in range(loop_range):
         last, first = names_hours_data["valueRanges"][0]["values"][i][0].split(", ")
-        # print(first, last, i)
 
         full_name = f"{first.lower()} {last.lower()}"
         if i >= nicknames_len or names_hours_data["valueRanges"][1]["values"][i] == []:

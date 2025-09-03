@@ -196,7 +196,7 @@
             class={"z-10 absolute text-kcyellow text-8xl md:text-[10rem] tracking-wide top-[17rem]"}>Gallery
     </header>
     <section bind:this={wrapper}
-            class={"xl:grid p-4 md:p-8 gap-4 md:gap-8 relative w-full h-[200vh] bg-white text-white overflow-hidden"}
+            class={"xl:grid p-4 md:p-8 gap-4 md:gap-8 relative w-full h-[200vh] bg-stone-200 text-stone-200 overflow-hidden"}
             style="
                         display: grid;
                         grid-template-columns: repeat({columns}, minmax(0, 1fr));

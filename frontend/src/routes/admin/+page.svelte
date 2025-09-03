@@ -168,6 +168,11 @@
             {#if tab === "logEvent"}
                 <header class="text-3xl">Log Events</header>
 
+                <p class="mt-4">
+                    NOTE! If the sign up sheet already has hours filled out, the multiplier will be applied twice!
+                    Don't set the hours multiplier if the event sign up sheet already has hours calculated.
+                </p>
+
                 <form action="submit" onsubmit={submitLogEvent} class="mt-10 space-y-12">
                     <ResponsiveInput text="Link" oninput={(event) => eventLink = event.target.value} getvalue={() => eventLink} textcolor="#d6d3d1"/>
                     <ResponsiveInput text="Hours Multiplier" oninput={(event) => eventHoursMultiplier = event.target.value} getvalue={() => eventHoursMultiplier} textcolor="#d6d3d1"/>
