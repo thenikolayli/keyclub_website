@@ -245,6 +245,25 @@
             }
             }>Log out</button>
         </section>
+    {:else if username.value && !admin.value}
+        <div class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
+            <div class="relative p-8 bg-kcblack border-3 border-kcyellow">
+                <header class="text-5xl text-kcyellow">Hello, {username.value}</header>
+
+                <p class="text-3xl text-stone-200 mt-8">
+                    You do not have admin priveleges.
+                </p>
+            </div>
+
+            <button class="text-3xl underline text-stone-200 mt-8" onclick={async () => {
+                await axios({
+                    method: "get",
+                    url: "/api/auth/logout",
+                })
+                window.location.reload()
+            }
+            }>Log out</button>
+        </div>
     {:else}
         <div class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
             <form onsubmit={submitLogin} class="relative p-8 bg-kcblack border-3 border-kcyellow">
