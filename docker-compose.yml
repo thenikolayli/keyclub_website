@@ -10,28 +10,21 @@ services:
       - .env
     expose:
       - 8000
-    networks:
-      - local
     command: pipenv run uvicorn backend.main:app --port 8000 --host 0.0.0.0
+
   keyclub_frontend:
     build: ./frontend
     expose:
       - 3000
-    networks:
-      - local
     command: node build
+
   keyclub_proxy:
-    image: nginx:latest
+    image: caddy:alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - ./keyclub_photos:/gallery
     depends_on:
-      - keyclub_backend
+#      - keyclub_backend
       - keyclub_frontend
     ports:
       - 80:80
-    networks:
-      - local
-
-networks:
-  local:
