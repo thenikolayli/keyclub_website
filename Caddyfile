@@ -1,4 +1,4 @@
-http://localhost {
+:80 {
     encode
 
     # all api-related stuff gets proxied to the api

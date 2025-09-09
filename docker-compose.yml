@@ -24,7 +24,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./keyclub_photos:/gallery
     depends_on:
-#      - keyclub_backend
+      - keyclub_backend
       - keyclub_frontend
     ports:
       - 80:80
