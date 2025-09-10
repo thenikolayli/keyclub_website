@@ -100,6 +100,8 @@
 
         gsap.set(".slide", {
             position: "absolute",
+            left: "50%",
+            transform: "translate(-50%, 0)",
             willChange: "transform"
         })
 
@@ -162,9 +164,9 @@
     </div>
 </section>
 
-<section class="relative slides h-screen text-stone-200 bg-kcyellow">
+<section class="relative slides h-screen text-stone-200 bg-kcblack">
 
-    <section class="relative top-0 w-full h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
+    <section class="relative top-0 w-full md:w-1/2 mx-auto h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">COMMITTEES</header>
 
@@ -182,7 +184,7 @@
              src="/home/committees_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative h-[calc(100vh+3rem)] w-full h-[calc(100vh-3rem)] bg-kcblack border-3 border-kcyellow z-[12]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-3rem)] bg-kcblack border-3 border-kcyellow z-[12]">
         <div class="absolute top-0 left-0 w-full h-full z-20 p-2">
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
@@ -198,7 +200,7 @@
              src="/home/spirit_cover.webp" alt="cover"/>
     </section>
 
-    <section class="slide relative h-[calc(100vh+6rem)] w-full h-[calc(100vh-6rem)] bg-kcblack border-3 border-kcyellow z-[13]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-6rem)] bg-kcblack border-3 border-kcyellow z-[13]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">SERVICE</header>
 
@@ -220,7 +222,7 @@
              src="/home/service_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative h-[calc(100vh+9rem)] w-full h-[calc(100vh-9rem)] bg-kcblack border-3 border-kcyellow z-[14]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-9rem)] bg-kcblack border-3 border-kcyellow z-[14]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">DECORATION</header>
 
@@ -235,7 +237,7 @@
              src="/home/deco_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative h-[calc(100vh+12rem)] w-full h-[calc(100vh-12rem)] bg-kcblack border-3 border-kcyellow z-[15]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-12rem)] bg-kcblack border-3 border-kcyellow z-[15]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">LEADERSHIP</header>
 

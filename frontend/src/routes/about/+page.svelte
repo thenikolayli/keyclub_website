@@ -206,7 +206,7 @@
                 <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold] pr-1">Webmaster</h1>
                 <h2 class="cards-info text-3xl mt-2">Nikolay Li</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">youdontneed@my.email</span></h3>
+                        class="ml-2">nikolayliwork@gmail.com</span></h3>
             </div>
         </div>
         <div class="relative cards h-fit w-full md:w-fit md:flex">
