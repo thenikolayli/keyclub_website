@@ -8,11 +8,14 @@
     import {onMount} from "svelte";
     import axios from "axios";
     import textFit from "textfit";
+    import moment from "moment-timezone";
 
     let bannerMessage = $state("")
     let bannerShow = $state(false)
     let bannerText
     let banner
+
+    let timeLeftString = $state("")
 
     $effect(() => {
         if (bannerMessage) {
@@ -52,6 +55,13 @@
                 delay: 1
             })
         }
+
+        // countdown to October 31st 11:59:59 PM PDT (dues close)
+        const duesClose = moment("2025-10-31T11:59:59")
+        setInterval(() => {
+            const timeLeft = moment.unix(duesClose - moment()).format("[Dues close in] M [months,] D [days,] h [hours,] m [minutes, and] s [seconds!]")
+            console.log(timeLeft)
+        }, 1000)
 
         const timeline = gsap.timeline({
             defaults: {
@@ -146,6 +156,10 @@
         <img class="h-full mr-4" src="/bee.webp" alt="Wolfbee">
         <span class="w-[60%] h-full" bind:this={bannerText}>{bannerMessage}</span>
     </div>
+</section>
+
+<section class="relative w-full h-screen text-kcblack">
+    <h1>{timeLeftString}</h1>
 </section>
 
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
