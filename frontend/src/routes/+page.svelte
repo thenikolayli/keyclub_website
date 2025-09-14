@@ -8,11 +8,15 @@
     import {onMount} from "svelte";
     import axios from "axios";
     import textFit from "textfit";
+    import moment from "moment-timezone";
+    import momentDurationFormatSetup from "moment-duration-format"
 
     let bannerMessage = $state("")
     let bannerShow = $state(false)
     let bannerText
     let banner
+
+    let timeLeftString = $state("")
 
     $effect(() => {
         if (bannerMessage) {
@@ -52,6 +56,14 @@
                 delay: 1
             })
         }
+
+        // countdown to October 31st 11:59:59 PM PDT (dues close)
+        momentDurationFormatSetup(moment)
+        const duesClose = moment("2025-10-31T11:59:59").tz("America/Los_Angeles")
+        setInterval(() => {
+            const msLeft = moment.duration(duesClose - moment.tz("America/Los_Angeles"))
+            timeLeftString = msLeft.format("[Dues close in] M [months,] D [days,] h [hours,] m [minutes, and] s [seconds!]")
+        }, 1000)
 
         const timeline = gsap.timeline({
             defaults: {
@@ -100,9 +112,9 @@
 
         gsap.set(".slide", {
             position: "absolute",
+            willChange: "transform",
             left: "50%",
-            transform: "translate(-50%, 0)",
-            willChange: "transform"
+            translateX: "-50%"
         })
 
         gsap.to(".slide", {
@@ -150,6 +162,24 @@
     </div>
 </section>
 
+<section class="relative w-full h-screen text-kcblack bg-kcyellow">
+    <header class="relative top-12 mx-auto w-fit text-4xl md:text-7xl">🚨 IMPORTANT 🚨</header>
+    <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl">{timeLeftString}</h1>
+    <div class="absolute left-1/2 top-1/2 -translate-1/2 w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
+        <p class="text-2xl md:text-4xl text-left">
+            In order to officially register for Key Club, you must pay <span class="underline">$41</span>.
+        </p>
+        <ul class="mt-8 text-2xl md:text-4xl list-disc">
+            <li>International: $10</li>
+            <li>District: $5.50</li>
+            <li>Club: $2.50</li>
+            <li>Hoodie: $23</li>
+        </ul>
+        <hr class="border-2 w-[60%] my-4">
+        <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
+    </div>
+</section>
+
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>
 
@@ -188,12 +218,18 @@
         <div class="absolute top-0 left-0 w-full h-full z-20 p-2">
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
-            <p class="text-3xl mt-4">
-                Spirit Co is focused on maintaining the spirit of Key Club!
-                <br/> <br/>
-                We learn chants and prepare members for the
-                annual District Convention (DCON)!
-            </p>
+            <div class="mt-4">
+                <p class="text-3xl">As one of the LARGEST committees in Key Club, we work to create fun energizers, take part in spirited events, and overall build a fun atmosphere!</p>
+
+                <div class="flex justify-between text-xl text-kcblack">
+                    <div class="bg-stone-200 p-4 w-[35%]">
+                        <img src="/committees/will.png" alt="will badiang">
+                        <h1 class="text-2xl font-semibold">Will Badiang</h1>
+                        <span class="text-stone-700">Co-Chair</span>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
