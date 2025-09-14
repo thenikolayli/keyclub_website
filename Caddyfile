@@ -1,0 +1,25 @@
+:80 {
+    encode
+
+    # all api-related stuff gets proxied to the api
+    @api {
+        path /api/*
+        path /api_docs
+        path /openapi.json
+    }
+
+    handle @api {
+        reverse_proxy http://keyclub_backend:8000
+    }
+
+    # file server for photos
+    handle /gallery/* {
+        root * /
+        file_server
+    }
+
+    # everything else gets proxied to the node server
+    handle {
+        reverse_proxy http://keyclub_frontend:3000
+    }
+}

@@ -28,11 +28,11 @@ photos_folder_id = getenv("PHOTOS_FOLDER_ID")
 names_hours_list = []
 hours_last_updated = 0
 spreadsheet_id = getenv("HOURS_SPREADSHEET_ID")
-names_col = "A3:A"
-nicknames_col = "B3:B"
-year_col = "D3:D"
-term_hours_col = "I3:I"
-all_hours_col = "H3:H"
+names_col = "A2:A"
+nicknames_col = "B2:B"
+year_col = "D2:D"
+term_hours_col = "I2:I"
+all_hours_col = "H2:H"
 spreadsheet_ranges = [names_col, nicknames_col]
 
 banned_usernamechars = " /\\"

@@ -1,5 +1,5 @@
 .venv
-event_log.json
 key.json
 photos
 db.sqlite3
+banner.json

@@ -21,6 +21,7 @@ services:
       - local
     command: node build
   keyclub_proxy:
+    container_name: keyclub_proxy
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
