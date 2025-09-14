@@ -188,12 +188,12 @@
     })
 </script>
 
-<section bind:this={superwrapper} class={"overflow-hidden flex flex-col items-center"}>
-    <div class={"relative z-20 w-full"}>
+<section bind:this={superwrapper} class="overflow-hidden flex flex-col items-center">
+    <div class="relative z-20 w-full">
         <Header/>
     </div>
     <header bind:this={title}
-            class={"z-10 absolute text-kcyellow text-8xl md:text-[10rem] tracking-wide top-[17rem]"}>Gallery
+            class="z-10 absolute text-kcyellow text-8xl md:text-[10rem] tracking-wide top-[17rem]">Gallery
     </header>
     <section bind:this={wrapper}
             class={"xl:grid p-4 md:p-8 gap-4 md:gap-8 relative w-full h-[200vh] bg-stone-200 text-stone-200 overflow-hidden"}
@@ -225,8 +225,8 @@
             </button>
         {/each}
     </section>
-    <h1 class={"text-black text-center text-4xl my-4"}>
-        <button class={"cursor-pointer underline"} onclick={() => {
+    <h1 class="text-black text-center text-4xl my-4">
+        <button class="cursor-pointer underline" onclick={() => {
                         location.reload()
                         scrollTo(0, 0)
                     }}>Refresh
@@ -238,7 +238,7 @@
 <Footer/>
 
 <img bind:this={featured} src={featuredImage} alt="Featured image"
-     class={"fixed z-30 max-w-[80vw] max-h-[80vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-kcyellow object-contain"}/>
+     class="fixed z-30 max-w-[80vw] max-h-[80vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-kcyellow object-contain"/>
 
 <button onclick={() => featuredImage=""} bind:this={background} aria-label="Click off"
-        class={"fixed z-20 top-0 left-0 backdrop-blur-sm w-screen h-screen cursor-default"}></button>
+        class="fixed z-20 top-0 left-0 backdrop-blur-sm w-screen h-screen cursor-default"></button>

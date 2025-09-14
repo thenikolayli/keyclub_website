@@ -196,7 +196,7 @@
 
 <section class="relative slides h-screen text-stone-200 bg-kcblack">
 
-    <section class="relative mx-auto top-0 w-full md:w-1/2 h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
+    <section class="relative top-0 w-full md:w-1/2 mx-auto h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">COMMITTEES</header>
 

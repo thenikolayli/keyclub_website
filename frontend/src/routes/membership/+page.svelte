@@ -30,7 +30,7 @@
 <section class="w-full min-h-screen text-center text-2xl text-kcblack">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
         <header bind:this={htext} class="text-stone-200 text-4xl">
-            REGISTRATION IS CLOSED
+            REGISTRATION IS OPEN
         </header>
         <img class="absolute -z-10 top-0 left-0 w-full h-full object-cover" src="/membership/membership_cover.jpg"
              alt="Membership Cover"/>
@@ -43,13 +43,27 @@
             <div class="w-full">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
                 <p class="text-left w-fit mx-auto">
-                    <span class="underline">Get an ASB card!</span> If you don't already have one, go to the
-                    ASB office for assistance.
-                    <br/><br/>
-                    Start your service!
-                    <br/><br/>
-                    Participate in club events/socials, go to DCMs, and attend club
-                    meetings. Requirements are listed below.
+                    <span class="font-semibold">
+                        Fill out
+                        <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScOw-IMurvmc-Y09TA6kibg4yGE6OvMkGgZLRevgMJiOHgOeA/viewform?usp=sharing&ouid=111551984194695570978">
+                            THIS
+                        </a>
+                        form!
+                    </span>
+                    <br><br>
+                    <span class="font-semibold">Attend our general meetings!</span>
+                    <br>
+                    We meet in the annex every <span class="underline">second Wednesday of each month</span>,
+                    excluding summer of course.
+                    <br><br>
+                    <span class="font-semibold">Get an ASB card!</span>
+                    <br>
+                    If you don't already have one, go to the ASB office for assistance.
+                    <br/><br>
+                    <span class="font-semibold">Start your service!</span>
+                    <br/>
+                    Volunteer in club events/socials, go to DCMs (Division Council Meetings), and attend club
+                    meetings.
                 </p>
             </div>
         </div>
@@ -59,9 +73,9 @@
             <div class="md:order-1 w-full">
                 <header class="text-4xl mb-8">Pay Dues</header>
                 <p class="text-left w-fit mx-auto">
-                    The official dues payments are closed.
+                    The official dues payments are closed... for now.
                     <br/><br/>
-                    Check back in October 🎃.
+                    Check back in mid-late September. 🍂
                 </p>
             </div>
         </div>

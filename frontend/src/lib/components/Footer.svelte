@@ -13,7 +13,7 @@
     <ul class="flex space-x-4 my-8 mx-auto w-fit">
         <li><a aria-label="TikTok" target="_blank" href={"https://tiktok.com/@jhskeyclub21"}><Icon icon="fa7-brands:tiktok" class="size-[1.5em]"/></a></li>
         <li><a aria-label="YouTube" target="_blank" href={"https://www.youtube.com/@jhskeyclub4870"}><Icon icon="fa7-brands:youtube" class="size-[1.5em]"/></a></li>
-        <li><a aria-label="Discord Server" target="_blank" href={"https://discord.gg/2zqfsWXqzm"}><Icon icon="fa7-brands:discord" class="size-[1.5em]"/></a></li>
+        <li><a aria-label="Discord Server" target="_blank" href={"https://discord.gg/SvBtv4fMbe"}><Icon icon="fa7-brands:discord" class="size-[1.5em]"/></a></li>
         <li><a aria-label="Instagram" target="_blank" href={"https://www.instagram.com/jhskeyclub21"}><Icon icon="fa7-brands:instagram" class="size-[1.5em]"/></a></li>
         <li><a aria-label="Linktree" target="_blank" href={"https://linktr.ee/jhskeyclub21"}><Icon icon="fe:link" class="size-[1.5em]"/></a></li>
     </ul>
