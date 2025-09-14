@@ -7,17 +7,31 @@
     import ResponsiveButton from "$lib/components/ResponsiveButton.svelte";
     import Icon from "@iconify/svelte"
     import {onMount} from "svelte";
+    import textFit from "textfit";
 
     let loop
     let officer_section
     const partnerChange = {duration: .8, ease: "power2.out"}
+
     let canSend = $state(true)
     let small = $state(false)
     let fbsrc = $state("")
 
+    let thirst
+    let lighthouse
+    let schoolhouse
+    let collegewise
+    let unicef
+
     onMount(() => {
         document.title = "About"
         gsap.registerPlugin(ScrollTrigger)
+
+        textFit(thirst)
+        textFit(lighthouse)
+        textFit(schoolhouse)
+        textFit(collegewise)
+        textFit(unicef)
 
         fbsrc = "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FKiwanisofmillcreek&tabs=timeline&width=340&height=500"
 
@@ -224,7 +238,7 @@
     </section>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
     <header class="text-6xl sm:text-7xl mb-4">FACULTY ADVISORS</header>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[4rem] w-[90%] lg:w-[70%] xl:w-[60%] flex-1">
@@ -249,7 +263,7 @@
     </div>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
     <header class="text-6xl sm:text-7xl mb-4">KIWANIS ADVISORS</header>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[4rem] w-[90%] lg:w-[70%] xl:w-[60%] flex-1">
@@ -275,7 +289,7 @@
     </div>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
     <header class="text-6xl sm:text-7xl mb-4">D21 LIEUTENANT GOVERNOR</header>
 
     <div
@@ -289,7 +303,7 @@
     </div>
 </section>
 
-<section class="w-full h-screen p-8 flex items-center flex-col text-white">
+<section class="w-full h-screen p-8 flex items-center flex-col text-stone-200">
     <header class="text-4xl sm:text-7xl text-black text-center">OUR PREFERRED PARTNERS AND CHARITIES</header>
 
     <div
@@ -299,7 +313,7 @@
             <div class="absolute p-8 h-full z-10">
                 <img class="h-[20%] object-contain" src="/about/thirstproject_logo.png" alt="Logo"/>
 
-                <p class="text-md sm:text-xl mt-8 sm:leading-10">
+                <p bind:this={thirst} class="w-full h-[80%]">
                     Thirst Project hopes to educate the next generation by arming students with
                     information
                     about how they can be a part of social change,
@@ -317,7 +331,7 @@
             <div class="absolute p-8 h-full z-10">
                 <img class="h-[20%] object-contain" src="/about/unicef_logo.png" alt="Logo"/>
 
-                <p class="text-md md:text-xl mt-8 sm:leading-6">
+                <p bind:this={unicef} class="w-full h-[80%]">
                     UNICEF is the only organization of the United Nations dedicated exclusively to
                     children.
                     Working with other United Nations bodies, governments and non-governmental
@@ -338,7 +352,7 @@
             <div class="absolute p-8 h-full z-10">
                 <img class="h-[20%] object-contain" src="/about/erikaslighthouse_logo.png" alt="Logo"/>
 
-                <p class="text-md md:text-xl mt-8 sm:leading-6">
+                <p bind:this={lighthouse} class="w-full h-[80%]">
                     The mission of Erika's Lighthouse is to make sure no young person feels alone in
                     their depression.
                     This nonprofit organization encourages good mental health and strives to break down
@@ -359,7 +373,7 @@
             <div class="absolute p-8 h-full z-10">
                 <img class="h-[20%] object-contain" src="/about/schoolhouse_logo.png" alt="Logo"/>
 
-                <p class="text-md md:text-xl mt-8 sm:leading-6">
+                <p bind:this={schoolhouse} class="w-full h-[80%]">
                     Want to make an impact and have fun while doing it? Looking for a service project
                     that you can complete from the comfort of your bedroom?
                     Key Club has partnered with Schoolhouse to bring free tutoring to thousands of
@@ -380,7 +394,7 @@
             <div class="absolute p-8 h-full z-10">
                 <img class="h-[20%] object-contain" src="/about/collegewise_logo.png" alt="Logo"/>
 
-                <p class="text-md md:text-xl mt-8 sm:leading-6">
+                <p bind:this={collegewise} class="w-full h-[80%]">
                     Collegewise helps identify the college that’s right for you, assists with the
                     application process,
                     and provides tutoring for ACT/SAT exams. While a paid subscription is available for
@@ -408,7 +422,7 @@
     </div>
 </section>
 
-<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 text-kcblack">
     <div class="w-full h-full flex flex-col items-center justify-center p-8">
         <header class="text-4xl md:text-7xl">OUR KIWANIS</header>
         <p class="text-3xl md:text-2xl mt-8 text-left">
@@ -420,9 +434,9 @@
     <img class="w-full h-full object-cover" src="/about/kiwanis.jpg" alt="Mill Creek Kiwanis"/>
 </section>
 
-<section class="w-full p-8 my-[4rem] text-center">
+<section class="w-full p-8 my-[4rem] text-center text-kcblack">
     <header class="text-4xl sm:text-7xl">MORE WEBSITES</header>
-    <p class="mt-4 mb-8 text-3xl text-left">
+    <p class="mt-4 mb-8 text-3xl text-center">
         Check out our international and district websites to learn more or catch up with the buzz!
     </p>
 
