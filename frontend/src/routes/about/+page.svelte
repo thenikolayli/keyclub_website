@@ -146,8 +146,8 @@
                  alt="Lex Padua"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class={"h-4 w-full"}></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">President</h1>
-                <h3 class="cards-info text-3xl mt-2">Lex Padua</h3>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Lex Padua</h1>
+                <h3 class="cards-info text-3xl mt-2">President</h3>
                 <h3 class="cards-info text-lg flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">alexmariepadua19@gmail.com</span></h3>
             </div>
@@ -158,8 +158,8 @@
                  src="/about/clarrise.png" alt="Clarrise Song"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Vice President</h1>
-                <h2 class="cards-info text-3xl mt-2">Clarrise Song</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Clarisse Song</h1>
+                <h2 class="cards-info text-3xl mt-2">Vice President</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">clarissesong18@gmail.com</span></h3>
             </div>
@@ -170,8 +170,8 @@
                  src="/about/annabelle.png" alt="Annabelle Ho"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Treasurer</h1>
-                <h2 class="cards-info text-3xl mt-2">Annabelle Ho</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Annabelle Ho</h1>
+                <h2 class="cards-info text-3xl mt-2">Treasurer</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">annabelle.zt.ho@gmail.com</span></h3>
             </div>
@@ -182,8 +182,8 @@
                  src="/about/ravindu.png" alt="Ravindu Marasinghe"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Secretary</h1>
-                <h2 class="cards-info text-3xl mt-2">Ravindu Marasinghe</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Ravindu Marasinghe</h1>
+                <h2 class="cards-info text-3xl mt-2">Secretary</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">ravindu2008@icloud.com</span></h3>
             </div>
@@ -194,8 +194,8 @@
                  src="/about/allyson.png" alt="Allyson Chun"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Editor</h1>
-                <h2 class="cards-info text-3xl mt-2">Allyson Chun</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Allyson Chun</h1>
+                <h2 class="cards-info text-3xl mt-2">Editor</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">allysonhw96@gmail.com</span></h3>
             </div>
@@ -206,8 +206,8 @@
                  src="/about/ellie.png" alt="Ellie Nguyen"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Editor</h1>
-                <h2 class="cards-info text-3xl mt-2">Ellie Nguyen</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Ellie Nguyen</h1>
+                <h2 class="cards-info text-3xl mt-2">Editor</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">ellienguyen882@gmail.com</span></h3>
             </div>
@@ -217,8 +217,8 @@
                  src="/about/nikolay.png" alt="Nikolay Li"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold] pr-1">Webmaster</h1>
-                <h2 class="cards-info text-3xl mt-2">Nikolay Li</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold] pr-1">Nikolay Li</h1>
+                <h2 class="cards-info text-3xl mt-2">Webmaster</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">nikolayliwork@gmail.com</span></h3>
             </div>
@@ -228,8 +228,8 @@
                  src="/about/killian.png" alt="Killian Bates"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Historian</h1>
-                <h2 class="cards-info text-3xl mt-2">Killian Bates</h2>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Killian Bates</h1>
+                <h2 class="cards-info text-3xl mt-2">Historian</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
                         class="ml-2">killianj1010@outlook.com</span></h3>
             </div>
@@ -311,16 +311,21 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <img class="h-[20%] object-contain" src="/about/thirstproject_logo.png" alt="Logo"/>
+                <div class="h-[20%] flex items-center justify-between w-full">
+                    <img class="h-full object-contain" src="/about/thirstproject_logo.png" alt="Logo"/>
 
-                <p bind:this={thirst} class="w-full h-[80%]">
+                    <a class="text-black bg-stone-200 p-4 text-xl"
+                       href="https://thirstproject.org/" target="_blank">
+                        Learn More
+                    </a>
+                </div>
+
+
+                <p bind:this={thirst} class="w-full h-[60%]">
                     Thirst Project hopes to educate the next generation by arming students with
                     information
                     about how they can be a part of social change,
                     make a difference and encourage others to join in the effort.
-
-                    <a class="float-right text-black bg-white mt-4 p-4 text-xl"
-                       href="https://thirstproject.org/" target="_blank">Learn More</a>
                 </p>
             </div>
 
@@ -329,9 +334,16 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <img class="h-[20%] object-contain" src="/about/unicef_logo.png" alt="Logo"/>
+                <div class="h-[20%] flex items-center justify-between w-full">
+                    <img class="h-full object-contain" src="/about/unicef_logo.png" alt="Logo"/>
 
-                <p bind:this={unicef} class="w-full h-[80%]">
+                    <a class="text-black bg-stone-200 p-4 text-xl"
+                       href="https://www.unicef.org/" target="_blank">
+                        Learn More
+                    </a>
+                </div>
+
+                <p bind:this={unicef} class="w-full h-[60%]">
                     UNICEF is the only organization of the United Nations dedicated exclusively to
                     children.
                     Working with other United Nations bodies, governments and non-governmental
@@ -339,9 +351,6 @@
                     UNICEF helps to provide for children’s needs in more than 150 developing countries
                     through community-based services in primary health care,
                     basic education and safe water and sanitation.
-
-                    <a class="float-right text-black bg-white mt-4 p-4 text-xl"
-                       href="https://www.unicef.org/" target="_blank">Learn More</a>
                 </p>
             </div>
 
@@ -350,18 +359,22 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <img class="h-[20%] object-contain" src="/about/erikaslighthouse_logo.png" alt="Logo"/>
+                <div class="h-[20%] flex items-center justify-between w-full">
+                    <img class="h-full object-contain" src="/about/erikaslighthouse_logo.png" alt="Logo"/>
 
-                <p bind:this={lighthouse} class="w-full h-[80%]">
+                    <a class="text-black bg-stone-200 p-4 text-xl"
+                       href="https://erikaslighthouse.org/" target="_blank">
+                        Learn More
+                    </a>
+                </div>
+
+                <p bind:this={lighthouse} class="w-full h-[70%]">
                     The mission of Erika's Lighthouse is to make sure no young person feels alone in
                     their depression.
                     This nonprofit organization encourages good mental health and strives to break down
                     the stigma surrounding mental health issues.
                     Erika's Lighthouse is dedicated to creating a community of empathy and education and
                     has resources and programs for students and educators, grades 4-12.
-
-                    <a class="float-right text-black bg-white mt-4 p-4 text-xl"
-                       href="https://erikaslighthouse.org/" target="_blank">Learn More</a>
                 </p>
             </div>
 
@@ -371,18 +384,22 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <img class="h-[20%] object-contain" src="/about/schoolhouse_logo.png" alt="Logo"/>
+                <div class="h-[20%] flex items-center justify-between w-full">
+                    <img class="h-full object-contain" src="/about/schoolhouse_logo.png" alt="Logo"/>
 
-                <p bind:this={schoolhouse} class="w-full h-[80%]">
+                    <a class="text-black bg-stone-200 p-4 text-xl"
+                       href="https://schoolhouse.world/key-club" target="_blank">
+                        Learn More
+                    </a>
+                </div>
+
+                <p bind:this={schoolhouse} class="w-full h-[70%]">
                     Want to make an impact and have fun while doing it? Looking for a service project
                     that you can complete from the comfort of your bedroom?
                     Key Club has partnered with Schoolhouse to bring free tutoring to thousands of
                     learners across the world.
                     If you're interested in learning something new, or you're interested in becoming a
                     tutor yourself, sign up today!
-
-                    <a class="float-right text-black bg-white mt-4 p-4 text-xl"
-                       href="https://schoolhouse.world/key-club" target="_blank">Learn More</a>
                 </p>
             </div>
 
@@ -392,18 +409,22 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <img class="h-[20%] object-contain" src="/about/collegewise_logo.png" alt="Logo"/>
+                <div class="h-[20%] flex items-center justify-between w-full">
+                    <img class="h-full object-contain" src="/about/collegewise_logo.png" alt="Logo"/>
 
-                <p bind:this={collegewise} class="w-full h-[80%]">
+                    <a class="text-black bg-stone-200 p-4 text-xl"
+                       href="https://collegewise.com/" target="_blank">
+                        Learn More
+                    </a>
+                </div>
+
+                <p bind:this={collegewise} class="w-full h-[60%]">
                     Collegewise helps identify the college that’s right for you, assists with the
                     application process,
                     and provides tutoring for ACT/SAT exams. While a paid subscription is available for
                     those who wish to access it,
                     every Key Club member has access to a suite of Collegewise resources on the Runway
                     platform as a member benefit.
-
-                    <a class="float-right text-black bg-white mt-4 p-4 text-xl"
-                       href="https://collegewise.com/" target="_blank">Learn More</a>
                 </p>
             </div>
 

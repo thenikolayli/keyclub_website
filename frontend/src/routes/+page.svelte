@@ -162,21 +162,23 @@
     </div>
 </section>
 
-<section class="relative w-full h-screen text-kcblack bg-kcyellow">
+<section class="hidden relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">
     <header class="relative top-12 mx-auto w-fit text-4xl md:text-7xl">🚨 IMPORTANT 🚨</header>
-    <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl">{timeLeftString}</h1>
-    <div class="absolute left-1/2 top-1/2 -translate-1/2 w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
-        <p class="text-2xl md:text-4xl text-left">
-            In order to officially register for Key Club, you must pay <span class="underline">$41</span>.
-        </p>
-        <ul class="mt-8 text-2xl md:text-4xl list-disc">
-            <li>International: $10</li>
-            <li>District: $5.50</li>
-            <li>Club: $2.50</li>
-            <li>Hoodie: $23</li>
-        </ul>
-        <hr class="border-2 w-[60%] my-4">
-        <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
+    <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl p-4">{timeLeftString}</h1>
+    <div class="relative flex-1">
+        <div class="absolute left-1/2 top-1/2 -translate-1/2 w-[80%] md:w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
+            <p class="text-2xl md:text-4xl text-left">
+                In order to officially register for Key Club, you must pay <span class="underline">$41</span>.
+            </p>
+            <ul class="mt-8 text-2xl md:text-4xl list-disc">
+                <li>International: $10</li>
+                <li>District: $5.50</li>
+                <li>Club: $2.50</li>
+                <li>Hoodie: $23</li>
+            </ul>
+            <hr class="border-2 w-[60%] my-4">
+            <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
+        </div>
     </div>
 </section>
 
@@ -205,8 +207,6 @@
                 <br/> <br/>
                 Committees are a great way to meet new people and gain more volunteer hours.
                 Each committee is run by one or multiple committee chairs and they host their own meetings.
-                <br/> <br/>
-                Member and chair applications are currently closed.
             </p>
         </div>
 
@@ -215,20 +215,13 @@
     </section>
 
     <section class="slide relative w-full md:w-1/2 h-[calc(100vh-3rem)] bg-kcblack border-3 border-kcyellow z-[12]">
-        <div class="absolute top-0 left-0 w-full h-full z-20 p-2">
+        <div class="absolute top-0 left-0 w-full h-full z-20 p-2 text-3xl">
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
-            <div class="mt-4">
-                <p class="text-3xl">As one of the LARGEST committees in Key Club, we work to create fun energizers, take part in spirited events, and overall build a fun atmosphere!</p>
+            <p class="mt-4">As one of the LARGEST committees in Key Club, we work to create fun energizers, take part in spirited events, and overall build a fun atmosphere!</p>
 
-                <div class="flex justify-between text-xl text-kcblack">
-                    <div class="bg-stone-200 p-4 w-[35%]">
-                        <img src="/committees/will.png" alt="will badiang">
-                        <h1 class="text-2xl font-semibold">Will Badiang</h1>
-                        <span class="text-stone-700">Co-Chair</span>
-                        <p></p>
-                    </div>
-                </div>
+            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
+                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSf4dZ5ygdjPqQGGIC_ze8NH9NADRONzOkhUQWo_ysNC29WDzg/viewform">Apply here!</a>
             </div>
         </div>
 
@@ -237,21 +230,16 @@
     </section>
 
     <section class="slide relative w-full md:w-1/2 h-[calc(100vh-6rem)] bg-kcblack border-3 border-kcyellow z-[13]">
-        <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
-            <header class="text-3xl h-[5vh]">SERVICE</header>
+        <div class="absolute top-0 left-0 w-full h-full z-10 p-2 text-3xl">
+            <header class="h-[5vh]">SERVICE</header>
 
-            <p class="text-3xl mt-4">
-                Service Co is focused on the <a class="underline" href="/districtproject">District Project</a>.
-                <br/> <br/>
-                We brainstorm and run events for our local community and try to find ways to support the
-                District Project: the Ronald McDonald House Charities!
-                <br/> <br/>
-                Follow the JHS Key Club Reminds Instagram to
-                receive reminders about events that need volunteers:
-                <a href="https://instagram.com/jhskeyclubreminds" class="flex items-center underline">
-                    <Icon icon="fa7-brands:instagram" /> <span class="ml-2">jhskeyclubreminds</span>
-                </a>
+            <p class="mt-4">
+                Brainstorm fun events to contribute to the <a class="underline" href="/districtproject">District Project</a>!
             </p>
+
+            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
+                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScB4Fk9qVfBD0knPGxAktgDyY458q32Zzou0AXQStlKPxIJbw/viewform">Apply here!</a>
+            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -259,14 +247,22 @@
     </section>
 
     <section class="slide relative w-full md:w-1/2 h-[calc(100vh-9rem)] bg-kcblack border-3 border-kcyellow z-[14]">
-        <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
-            <header class="text-3xl h-[5vh]">DECORATION</header>
+        <div class="absolute top-0 left-0 w-full h-full z-10 p-2 text-3xl">
+            <header class="h-[5vh]">DECORATION</header>
 
-            <p class="text-3xl mt-4">
-                Decoration Co is the art club of Key Club.
-                <br/> <br/>
-                We create decorations (primarily posters) for events such as the Key Club Banquet and the Eggstravaganza.
+            <p class="mt-4">
+                This committee is
             </p>
+            <ul class="text-2xl list-disc list-inside">
+                <li>About making posters</li>
+                <li>Spending lots of time at the AC</li>
+                <li>Laid back</li>
+                <li>After school</li>
+            </ul>
+
+            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
+                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSfbib7QF9pWxsiXYIqTz9T3RyAO4xLYLGhcTRLLqUkifTPiqg/viewform">Apply here!</a>
+            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -278,9 +274,7 @@
             <header class="text-3xl h-[5vh]">LEADERSHIP</header>
 
             <p class="text-3xl mt-4">
-                Leadership Co is the backbone of our Key Club.
-                <br/> <br/>
-                We reach out to our community to create and lead volunteer events.
+                Create and lead events for Key Club! Registration opens at the end of the first semester, so stay tuned for more info!!
                 <br/> <br/>
                 <span class="w-full text-center">🚨 NOTE: </span>
                 This committee is only for Sophomores and above. 🚨
