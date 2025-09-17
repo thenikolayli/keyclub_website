@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 
 load_dotenv()
 
-api_url = getenv('API_URL')
+goaccess_path = "/backend/report.html"
 
 banner_json_path = "backend/banner.json"
 keyclub_email = "jhskeyclub21@gmail.com"

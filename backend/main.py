@@ -15,6 +15,7 @@ from backend.routers.hours import router as hours_router
 from backend.routers.hours import update_hours
 from backend.routers.users import router as users_router
 from backend.routers.auth import router as auth_router
+from backend.routers.admin import router as admin_router
 
 import backend.config as config
 import backend.database as database
@@ -35,13 +36,14 @@ async def lifespan(app: FastAPI):
 
     yield
 
-app = FastAPI(docs_url=config.api_url, redoc_url=None, openapi_url="/openapi.json", root_path="", host="0.0.0.0", port=8000, lifespan=lifespan)
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", host="0.0.0.0", port=8000, lifespan=lifespan)
 app.include_router(email_router)
 app.include_router(gallery_router)
 app.include_router(event_router)
 app.include_router(hours_router)
 app.include_router(users_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 app.add_middleware(
     CORSMiddleware,

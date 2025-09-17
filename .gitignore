@@ -8,3 +8,5 @@ backend/banner.json
 backend/photos
 keyclub_photos
 banner.json
+access.log
+report.html

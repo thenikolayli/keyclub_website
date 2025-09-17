@@ -6,6 +6,7 @@ services:
       - ./key.json:/backend/key.json
       - ./db.sqlite3:/backend/db.sqlite3
       - ./banner.json:/backend/banner.json
+      - ./report.html:/backend/report.html
     env_file:
       - .env
     expose:
@@ -26,11 +27,23 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./keyclub_photos:/gallery
+      - ./access.log:/var/log/nginx/access.log
     depends_on:
       - keyclub_backend
       - keyclub_frontend
     ports:
       - 80:80
+    networks:
+      - local
+  keyclub_goaccess:
+    container_name: keyclub_goaccess
+    image: allinurl/goaccess
+    volumes:
+      - ./access.log:/access.log
+      - ./report.html:/report.html
+    command: "access.log -o /report.html --log-format=COMBINED --real-time-html --ws-url=ws://localhost:80/goaccess"
+    expose:
+      - 7890
     networks:
       - local
 
