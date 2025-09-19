@@ -162,11 +162,11 @@
     </div>
 </section>
 
-<section class="hidden relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">
+<section class="relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">
     <header class="relative top-12 mx-auto w-fit text-4xl md:text-7xl">🚨 IMPORTANT 🚨</header>
     <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl p-4">{timeLeftString}</h1>
-    <div class="relative flex-1">
-        <div class="absolute left-1/2 top-1/2 -translate-1/2 w-[80%] md:w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
+    <div class="relative flex-1 flex items-center justify-center">
+        <div class="w-[80%] md:w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
             <p class="text-2xl md:text-4xl text-left">
                 In order to officially register for Key Club, you must pay <span class="underline">$41</span>.
             </p>
@@ -178,6 +178,11 @@
             </ul>
             <hr class="border-2 w-[60%] my-4">
             <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
+
+            <p class="mt-8 text-xl md:text-3xl">
+                You can pay online by following <a class="underline" href="https://www.everettsd.org/payments">this link</a>
+                or in person at the ASB office.
+            </p>
         </div>
     </div>
 </section>

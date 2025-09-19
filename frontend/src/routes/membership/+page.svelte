@@ -40,7 +40,7 @@
 
         <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
-            <div class="w-full">
+            <div class="w-full p-4">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
                 <p class="text-left w-fit mx-auto">
                     <span class="font-semibold">
@@ -70,19 +70,27 @@
 
         <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <img class="md:order-2 object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
-            <div class="md:order-1 w-full">
+            <div class="md:order-1 w-full p-4">
                 <header class="text-4xl mb-8">Pay Dues</header>
-                <p class="text-left w-fit mx-auto">
-                    The official dues payments are closed... for now.
-                    <br/><br/>
-                    Check back in mid-late September. 🍂
-                </p>
+                <div class="text-left w-fit mx-auto">
+                    <p>
+                        The Key Club dues are <span class="underline">$41</span>.
+                        You can pay online by following <a class="underline" href="https://www.everettsd.org/payments">this link</a>
+                        or in person at the ASB office.
+                    </p>
+                    <ul class="mx-auto w-fit mt-8 list-disc">
+                        <li>International: $10</li>
+                        <li>District: $5.50</li>
+                        <li>Club: $2.50</li>
+                        <li>Hoodie: $23</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
         <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
             <img class="object-contain w-[80%] mx-auto" src="/membership/members3.png" alt="Members 3"/>
-            <div class="w-full">
+            <div class="w-full p-4">
                 <header class="text-4xl mb-8">Stay in the Hive</header>
                 <p class="text-left">
                     Complete your annual hour requirement of <span class="underline">25 hours</span>!
