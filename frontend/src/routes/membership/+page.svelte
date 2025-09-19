@@ -75,7 +75,7 @@
                 <div class="text-left w-fit mx-auto">
                     <p>
                         The Key Club dues are <span class="underline">$41</span>.
-                        You can pay online by following <a class="underline" href="https://www.everettsd.org/payments">this link</a>
+                        You can pay online by following <a class="underline" target="_blank" href="https://www.everettsd.org/payments">this link</a>
                         or in person at the ASB office.
                     </p>
                     <ul class="mx-auto w-fit mt-8 list-disc">

@@ -180,7 +180,7 @@
             <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
 
             <p class="mt-8 text-xl md:text-3xl">
-                You can pay online by following <a class="underline" href="https://www.everettsd.org/payments">this link</a>
+                You can pay online by following <a class="underline" target="_blank" href="https://www.everettsd.org/payments">this link</a>
                 or in person at the ASB office.
             </p>
         </div>
