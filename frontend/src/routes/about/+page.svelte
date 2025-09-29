@@ -451,8 +451,10 @@
             Kiwanis is an international community of clubs in which is dedicated to serving the
             community and the lives of the children around it.
         </p>
+
+        <ResponsiveButton init_text="Kiwanis Website" clicked_text="..." on_click={() => window.open("https://k19352.site.kiwanis.org/", "_blank")} can_send={canSend}/>
     </div>
-    <img class="w-full h-full object-cover" src="/about/kiwanis.jpg" alt="Mill Creek Kiwanis"/>
+    <img class="w-full h-full object-contain" src="/about/kiwanis.jpg" alt="Mill Creek Kiwanis"/>
 </section>
 
 <section class="w-full p-8 text-center text-kcblack bg-stone-200">
@@ -462,7 +464,7 @@
     </p>
 
     <div class="flex flex-col md:flex-row mx-auto text-4xl space-x-8">
-        <ResponsiveButton bg_color="kcpink" init_text="Key Club" clicked_text="..." on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={canSend}/>
+        <ResponsiveButton init_text="Key Club" clicked_text="..." on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={canSend}/>
         <ResponsiveButton init_text="PNW Key Club" clicked_text="..." on_click={() => window.open("https://pnwkeyclub.org/", "_blank")} can_send={canSend}/>
     </div>
 </section>

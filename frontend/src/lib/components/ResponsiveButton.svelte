@@ -12,11 +12,11 @@
 
     onMount(() => {
         gsap.set(init_text_element, {yPercent: 0})
-        gsap.set(clicked_text_element, {yPercent: 100})
+        gsap.set(clicked_text_element, {yPercent: 120})
 
         timeline = gsap.timeline({paused: true})
         timeline.to(init_text_element, {
-            yPercent: -110,
+            yPercent: -120,
             duration: .2,
             ease: "power2.out",
         }, 0)
