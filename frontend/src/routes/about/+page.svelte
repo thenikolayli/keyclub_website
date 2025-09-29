@@ -238,7 +238,7 @@
     </section>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack bg-stone-200">
     <header class="text-6xl sm:text-7xl mb-4">FACULTY ADVISORS</header>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[4rem] w-[90%] lg:w-[70%] xl:w-[60%] flex-1">
@@ -263,7 +263,7 @@
     </div>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack bg-stone-200">
     <header class="text-6xl sm:text-7xl mb-4">KIWANIS ADVISORS</header>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[4rem] w-[90%] lg:w-[70%] xl:w-[60%] flex-1">
@@ -289,7 +289,7 @@
     </div>
 </section>
 
-<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack">
+<section class="w-full min-h-screen p-8 flex items-center flex-col text-center text-kcblack bg-stone-200">
     <header class="text-6xl sm:text-7xl mb-4">D21 LIEUTENANT GOVERNOR</header>
 
     <div
@@ -303,15 +303,15 @@
     </div>
 </section>
 
-<section class="w-full h-screen p-8 flex items-center flex-col text-stone-200">
-    <header class="text-4xl sm:text-7xl text-black text-center">OUR PREFERRED PARTNERS AND CHARITIES</header>
+<section class="w-full h-screen p-8 flex items-center flex-col text-stone-200 bg-stone-200">
+    <header class="text-4xl sm:text-7xl text-kcblack text-center">OUR PREFERRED PARTNERS AND CHARITIES</header>
 
     <div
             class="border-16 border-kcyellow mt-8 w-full h-[80%] md:h-[70%] md:aspect-[1.2] lg:w-auto lg:aspect-[1.7] flex overflow-hidden">
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <div class="h-[20%] flex items-center justify-between w-full">
+                <div class="h-[40%] md:h-[20%] flex flex-col md:flex-row space-y-4 items-start md:items-center justify-between w-full mb-4">
                     <img class="h-full object-contain" src="/about/thirstproject_logo.png" alt="Logo"/>
 
                     <a class="text-black bg-stone-200 p-4 text-xl"
@@ -334,7 +334,7 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <div class="h-[20%] flex items-center justify-between w-full">
+                <div class="h-[40%] md:h-[20%] flex flex-col md:flex-row space-y-4 items-start md:items-center justify-between w-full mb-4">
                     <img class="h-full object-contain" src="/about/unicef_logo.png" alt="Logo"/>
 
                     <a class="text-black bg-stone-200 p-4 text-xl"
@@ -359,7 +359,7 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <div class="h-[20%] flex items-center justify-between w-full">
+                <div class="h-[40%] md:h-[20%] flex flex-col md:flex-row space-y-4 items-start md:items-center justify-between w-full mb-4">
                     <img class="h-full object-contain" src="/about/erikaslighthouse_logo.png" alt="Logo"/>
 
                     <a class="text-black bg-stone-200 p-4 text-xl"
@@ -368,7 +368,7 @@
                     </a>
                 </div>
 
-                <p bind:this={lighthouse} class="w-full h-[70%]">
+                <p bind:this={lighthouse} class="w-full h-[60%]">
                     The mission of Erika's Lighthouse is to make sure no young person feels alone in
                     their depression.
                     This nonprofit organization encourages good mental health and strives to break down
@@ -384,7 +384,7 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <div class="h-[20%] flex items-center justify-between w-full">
+                <div class="h-[40%] md:h-[20%] flex flex-col md:flex-row space-y-4 items-start md:items-center justify-between w-full mb-4">
                     <img class="h-full object-contain" src="/about/schoolhouse_logo.png" alt="Logo"/>
 
                     <a class="text-black bg-stone-200 p-4 text-xl"
@@ -393,7 +393,7 @@
                     </a>
                 </div>
 
-                <p bind:this={schoolhouse} class="w-full h-[70%]">
+                <p bind:this={schoolhouse} class="w-full h-[60%]">
                     Want to make an impact and have fun while doing it? Looking for a service project
                     that you can complete from the comfort of your bedroom?
                     Key Club has partnered with Schoolhouse to bring free tutoring to thousands of
@@ -409,7 +409,7 @@
 
         <div class="partner relative w-full h-full flex-none">
             <div class="absolute p-8 h-full z-10">
-                <div class="h-[20%] flex items-center justify-between w-full">
+                <div class="h-[40%] md:h-[20%] flex flex-col md:flex-row space-y-4 items-start md:items-center justify-between w-full mb-4">
                     <img class="h-full object-contain" src="/about/collegewise_logo.png" alt="Logo"/>
 
                     <a class="text-black bg-stone-200 p-4 text-xl"
@@ -443,7 +443,7 @@
     </div>
 </section>
 
-<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 text-kcblack">
+<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 text-kcblack bg-stone-200">
     <div class="w-full h-full flex flex-col items-center justify-center p-8">
         <header class="text-4xl md:text-7xl">OUR KIWANIS</header>
         <p class="text-3xl md:text-2xl mt-8 text-left">
@@ -455,7 +455,7 @@
     <img class="w-full h-full object-cover" src="/about/kiwanis.jpg" alt="Mill Creek Kiwanis"/>
 </section>
 
-<section class="w-full p-8 my-[4rem] text-center text-kcblack">
+<section class="w-full p-8 text-center text-kcblack bg-stone-200">
     <header class="text-4xl sm:text-7xl">MORE WEBSITES</header>
     <p class="mt-4 mb-8 text-3xl text-center">
         Check out our international and district websites to learn more or catch up with the buzz!

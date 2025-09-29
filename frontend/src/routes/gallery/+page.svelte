@@ -225,7 +225,7 @@
             </button>
         {/each}
     </section>
-    <h1 class="text-black text-center text-4xl my-4">
+    <h1 class="bg-stone-200 text-kcblack text-center text-4xl py-4">
         <button class="cursor-pointer underline" onclick={() => {
                         location.reload()
                         scrollTo(0, 0)
@@ -237,7 +237,7 @@
 
 <Footer/>
 
-<img bind:this={featured} src={featuredImage} alt="Featured image"
+<img bind:this={featured} src={featuredImage} alt=""
      class="fixed z-30 max-w-[80vw] max-h-[80vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-3 border-kcyellow object-contain"/>
 
 <button onclick={() => featuredImage=""} bind:this={background} aria-label="Click off"

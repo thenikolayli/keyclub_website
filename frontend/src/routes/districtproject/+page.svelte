@@ -29,13 +29,13 @@
 </script>
 
 <Header/>
-<section class="w-full min-h-screen text-kcblack">
+<section class="w-full min-h-screen text-kcblack bg-stone-200 text-kcblack">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
-        <header bind:this={htext} class="text-white text-4xl">
+        <header bind:this={htext} class="text-stone-200 text-4xl">
             DISTRICT PROJECT
         </header>
         <img class="absolute -z-10 top-0 left-0 w-full h-full object-cover brightness-50"
-             src="/districtproject/cover.jpg" alt="cover image"/>
+             src="/districtproject/cover.jpg" alt=""/>
     </div>
 
     <p class="p-4 w-full md:w-1/2 mx-auto text-3xl">

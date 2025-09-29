@@ -27,7 +27,7 @@
 </script>
 
 <Header/>
-<section class="w-full min-h-screen text-center text-2xl text-kcblack">
+<section class="w-full min-h-screen text-center text-2xl text-kcblack bg-stone-200">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
         <header bind:this={htext} class="text-stone-200 text-4xl">
             REGISTRATION IS OPEN
@@ -38,7 +38,7 @@
 
     <section class="p-4 space-y-8 md:space-y-16 w-full my-8 md:text-3xl">
 
-        <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+        <div class="w-full grid flex flex-col md:flex-row">
             <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
             <div class="w-full p-4">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+        <div class="w-full grid flex flex-col md:flex-row">
             <img class="md:order-2 object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
             <div class="md:order-1 w-full p-4">
                 <header class="text-4xl mb-8">Pay Dues</header>
@@ -88,7 +88,7 @@
             </div>
         </div>
 
-        <div class="w-full grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+        <div class="w-full grid flex flex-col md:flex-row">
             <img class="object-contain w-[80%] mx-auto" src="/membership/members3.png" alt="Members 3"/>
             <div class="w-full p-4">
                 <header class="text-4xl mb-8">Stay in the Hive</header>

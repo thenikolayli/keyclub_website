@@ -65,7 +65,7 @@
 </script>
 
 <Header/>
-<section class="w-full min-h-screen flex flex-col">
+<section class="w-full min-h-screen flex flex-col bg-stone-200">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
         <header bind:this={htext} class="text-white text-4xl">
             CONTACT US

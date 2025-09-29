@@ -10,8 +10,8 @@
 
 <Header/>
 
-<section class="w-full h-screen min-h-screen flex flex-col items-center">
-    <header class="text-7xl mb-4">EVENTS</header>
+<section class="w-full h-screen min-h-screen flex flex-col items-center bg-stone-200">
+    <header class="text-kcblack text-7xl mb-4">EVENTS</header>
 
     <div class="h-full w-full lg:w-[70%] flex flex-col items-center justify-center p-4">
         <iframe title=""
@@ -19,6 +19,10 @@
                 class="h-full w-full">
         </iframe>
     </div>
+
+    <p class="text-kcblack p-8 text-xl">
+        You must add a specific event or the entire calendar to your personal Google Calendar to see the event sign up Google Doc.
+    </p>
 </section>
 
 <Footer/>

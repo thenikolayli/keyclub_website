@@ -28,7 +28,7 @@ button {
 }
 
 body {
-    @apply font-[century-gothic] bg-stone-200 text-stone-200;
+    @apply font-[century-gothic] bg-kcblack text-stone-200;
 }
 
 header {
