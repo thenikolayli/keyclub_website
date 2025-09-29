@@ -29,18 +29,20 @@
 <Header/>
 <section class="w-full min-h-screen text-center text-2xl text-kcblack bg-stone-200">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
-        <header bind:this={htext} class="text-stone-200 text-4xl">
+        <header bind:this={htext} class="relative z-10 text-stone-200 text-4xl">
             REGISTRATION IS OPEN
         </header>
-        <img class="absolute -z-10 top-0 left-0 w-full h-full object-cover" src="/membership/membership_cover.jpg"
-             alt="Membership Cover"/>
+        <img class="absolute z-0 top-0 left-0 w-full h-full object-cover" src="/membership/membership_cover.jpg"
+             alt=""/>
     </div>
 
     <section class="p-4 space-y-8 md:space-y-16 w-full my-8 md:text-3xl">
 
-        <div class="w-full grid flex flex-col md:flex-row">
-            <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
-            <div class="w-full p-4">
+        <div class="w-full flex flex-col md:flex-row">
+            <div class="w-full md:w-1/2">
+                <img class="object-contain w-[80%] mx-auto" src="/membership/members1.png" alt="Members 1"/>
+            </div>
+            <div class="w-full md:w-1/2 p-4">
                 <header class="text-4xl mb-8">Be a Keyutie</header>
                 <p class="text-left w-fit mx-auto">
                     <span class="font-semibold">
@@ -68,9 +70,11 @@
             </div>
         </div>
 
-        <div class="w-full grid flex flex-col md:flex-row">
-            <img class="md:order-2 object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
-            <div class="md:order-1 w-full p-4">
+        <div class="w-full flex flex-col md:flex-row">
+            <div class="md:order-2 w-full md:w-1/2">
+                <img class="object-contain w-[80%] mx-auto" src="/membership/members2.png" alt="Members 2"/>
+            </div>
+            <div class="md:order-1 w-full md:w-1/2 p-4">
                 <header class="text-4xl mb-8">Pay Dues</header>
                 <div class="text-left w-fit mx-auto">
                     <p>
@@ -88,9 +92,11 @@
             </div>
         </div>
 
-        <div class="w-full grid flex flex-col md:flex-row">
-            <img class="object-contain w-[80%] mx-auto" src="/membership/members3.png" alt="Members 3"/>
-            <div class="w-full p-4">
+        <div class="w-full flex flex-col md:flex-row">
+            <div class="w-full md:w-1/2">
+                <img class="object-contain w-[80%] mx-auto" src="/membership/members3.png" alt="Members 3"/>
+            </div>
+            <div class="w-full md:w-1/2 p-4">
                 <header class="text-4xl mb-8">Stay in the Hive</header>
                 <p class="text-left">
                     Complete your annual hour requirement of <span class="underline">25 hours</span>!

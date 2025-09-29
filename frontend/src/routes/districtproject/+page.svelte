@@ -31,10 +31,10 @@
 <Header/>
 <section class="w-full min-h-screen text-kcblack bg-stone-200 text-kcblack">
     <div class="relative w-full h-[30vh] flex flex-col items-center justify-center">
-        <header bind:this={htext} class="text-stone-200 text-4xl">
+        <header bind:this={htext} class="relative z-10 text-stone-200 text-4xl">
             DISTRICT PROJECT
         </header>
-        <img class="absolute -z-10 top-0 left-0 w-full h-full object-cover brightness-50"
+        <img class="absolute z-0 top-0 left-0 w-full h-full object-cover brightness-50"
              src="/districtproject/cover.jpg" alt=""/>
     </div>
 
