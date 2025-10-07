@@ -82,7 +82,7 @@
             <ResponsiveInput oninput={(event) => email=event.target.value} getvalue={() => email} text="Email *"/>
         </div>
 
-        <div class="w-full mt-8 text-2xl">
+        <div class="w-full mt-8 text-2xl text-kcblack">
             <h1 class="mb-1">Message *</h1>
             <textarea
                     oninput={(event) => message=event.target.value}

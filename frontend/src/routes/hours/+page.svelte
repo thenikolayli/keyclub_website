@@ -150,7 +150,7 @@
 </script>
 
 <Header />
-<section class="relative w-full lg:w-1/2 mx-auto h-screen min-h-screen flex flex-col items-center p-4 text-kcblack">
+<section class="relative w-full lg:w-1/2 mx-auto h-screen min-h-screen flex flex-col items-center p-4 text-kcblack bg-stone-200">
     <header class="text-7xl mb-4">HOURS</header>
     <div bind:this={wrapperElement} class="w-full py-8 text-xl mt-8">
         <h1 class="text-3xl text-center w-full">{header}</h1>
