@@ -7,6 +7,10 @@ from cloudinary import uploader as cloudinary_uploader
 import requests, json, logging, re
 import api.config as config
 
+from googleapiclient.errors import HttpError
+from google.api_core.exceptions import PermissionDenied
+from api.utils.event_logging_utils import url_to_id
+
 template = config.reminds_template
 font_path = config.font_path
 
@@ -22,6 +26,8 @@ description_y_start = title_y_end + 30
 description_y_end = 900
 info_y_start = description_y_end
 info_y_end = 1100
+
+logging.basicConfig(filename=config.reminds_logger_path, level=logging.INFO)
 
 
 # ------------------- Utility Functions -------------------
@@ -76,29 +82,25 @@ def fit_text(text, max_width, max_height, size = 2, max_size = 100):
         return fit_text(text, max_width, max_height, size + 2, max_size)
 
 # returns the fullness of an event, volunteers_signed_up/total_spots
-def get_event_fullness(docs_url, docs_service_param):
+def get_event_fullness(docs_url):
     docs_url = docs_url.split("id=")[1]
-    document = docs_service_param.documents().get(documentId=docs_url).execute()
+    document = config.docs_service.documents().get(documentId=docs_url).execute()
     body_content = document.get("body").get("content")
     tables = []
     rows = []
     volunteers = 0
     empty = 0
 
-    # gets all tables from sign up doc
+    # gets all tables from sign up doc, removes first because its the metadata table
     for item in body_content:
         if "table" in item:
             table = item.get("table")
             tables.append(table)
-
-    # removes the first table because its just event info
     tables.pop(0)
 
-    # gets rows from each table and appends them
+    # gets rows from each table and appends them, removes 1st because its the header row
     for table in tables:
         rows.extend(table.get("tableRows", []))
-
-    # removes the first row because its the header row
     rows.pop(0)
 
     # checks if the first cell of each row is \n, if yes then its empty, otherwise theres a volunteer
@@ -110,38 +112,13 @@ def get_event_fullness(docs_url, docs_service_param):
                 empty += 1
             else:
                 volunteers += 1
-        except AttributeError: pass
+        except AttributeError:
+            pass
     return volunteers / (volunteers + empty)
-
-# returns the address on the sign up google doc
-def get_event_address(docs_url, docs_service_param):
-    docs_url = docs_url.split("id=")[1]
-    document = docs_service_param.documents().get(documentId=docs_url).execute()
-    body_content = document.get("body").get("content")
-    table = None
-
-    # gets the first table
-    for item in body_content:
-        if "table" in item:
-            table = item.get("table")
-            break
-
-    # goes through each row to find location row
-    for row in table.get("tableRows", []):
-        try:
-            col_name = row.get("tableCells")[0].get("content")[0].get("paragraph").get("elements")[0].get("textRun").get("content")
-
-            if "location" in col_name.lower():
-                location = ""
-                for element in row.get("tableCells")[1].get("content")[0].get("paragraph").get("elements"):
-                    location += element.get("textRun").get("content")
-                return location
-        except AttributeError: pass
-    return "No location provided."
 
 # returns whether or not an event has been posted before
 def in_current_events(event_title, event_date):
-    with open("current_events.json", "r") as file:
+    with open(config.reminds_current_events_path, "r") as file:
         current_events = json.load(file)
     for event in current_events:
         # checks if an event with the same title and date is currently posted
@@ -168,6 +145,39 @@ def format_time(datetime_param):
 
     return datetime_param
 
+# returns title, date, time, location, and fullness via the sign up sheet url
+def get_event_info(url):
+    # gets document
+    document_id = url_to_id(url)
+    try:
+        document = config.docs_service.documents().get(documentId=document_id).execute()
+    except HttpError:
+        return
+
+    # finds metadata table (always the first table)
+    body_content = document.get("body").get("content")
+    info_table_rows = None
+    for item in body_content:
+        if "table" in item:
+            info_table_rows = item.get("table").get("tableRows")
+            break
+    if not info_table_rows:
+        return
+
+    try:
+        event_title = info_table_rows[0].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[0].get(
+            "textRun").get("content")
+        event_date = info_table_rows[1].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[0].get(
+            "textRun").get("content")
+        event_time = info_table_rows[2].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[0].get(
+            "textRun").get("content")
+        event_location = info_table_rows[3].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[
+            0].get("textRun").get("content")
+    except AttributeError:
+        return
+
+    return event_title, event_date, event_time, event_location
+
 
 # ------------------- Main Functions -------------------
 
@@ -176,7 +186,7 @@ def update_current_events():
     today = datetime.now().date()
     new_current_events = []
 
-    with open("current_events.json", "r") as file:
+    with open(config.reminds_current_events_path, "r") as file:
         current_events = json.load(file)
 
     # check if each event passed
@@ -188,17 +198,17 @@ def update_current_events():
         else:
             new_current_events.append(event)
 
-    with open("current_events.json", "w") as file:
+    with open(config.reminds_current_events_path, "w") as file:
         json.dump(new_current_events, file)
 
     logging.info("Updated current events")
 
 # adds an event to the log
 def add_to_current_events(event_title, event_date, public_id):
-    with open("current_events.json", "r") as file:
+    with open(config.reminds_current_events_path, "r") as file:
         current_events = json.load(file)
     current_events.append({"event_title": event_title, "event_date": event_date, "public_id": public_id})
-    with open("current_events.json", "w") as file:
+    with open(config.reminds_current_events_path, "w") as file:
         json.dump(current_events, file)
     logging.info(f"Added {event_title} to current events")
 
@@ -325,15 +335,3 @@ def get_events(calendar_service, docs_service, calendar_id):
         except KeyError: pass
     logging.info(f"Fetched {len(return_events)} new events")
     return return_events
-
-# formatter for python logging
-class TZFormatter(logging.Formatter):
-    def __init__(self, fmt=None, datefmt=None, tz=ZoneInfo("America/Los_Angeles")):
-        super().__init__(fmt=fmt, datefmt=datefmt)
-        self.tz = tz
-
-    def formatTime(self, record, datefmt=None):
-        dt = datetime.fromtimestamp(record.created, self.tz)
-        if datefmt:
-            return dt.strftime(datefmt)
-        return dt.isoformat()

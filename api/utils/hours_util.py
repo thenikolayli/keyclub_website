@@ -1,0 +1,93 @@
+from api.models.hours_models import Hours
+from sqlmodel import select
+import api.config as config
+import asyncio
+
+# updates the hours list by fetching hours from the spreadsheet
+async def update_hours_list(session):
+    # fetches new hours data
+    names_hours_data_request = await asyncio.to_thread(
+        config.sheets_service.spreadsheets().values().batchGet,
+        spreadsheetId=config.spreadsheet_id,
+        ranges=[config.names_col, config.nicknames_col, config.year_col, config.term_hours_col, config.all_hours_col]
+    )
+    names_hours_data = names_hours_data_request.execute()
+    loop_range = len(names_hours_data["valueRanges"][0]["values"]) # to be able to try and get corresponding values in the row
+
+    # adds each name to db
+    for i in range(loop_range):
+        try:
+            name = names_hours_data["valueRanges"][i]["values"][0]
+            nickname = names_hours_data["valueRanges"][1]["values"][i]["values"][0] | ""
+            grad_year = int(names_hours_data["valueRanges"][2]["values"][i][0])
+            term_hours = float(names_hours_data["valueRanges"][3]["values"][i][0])
+            all_hours = float(names_hours_data["valueRanges"][4]["values"][i][0])
+        except ValueError:
+            # if a person doesn't have any of these values besides the nickname, skip them
+            continue
+
+        # if an entry for this person exists, update it, otherwise make an entry for them
+        hours_write = session.exec(select(Hours).where(Hours.name == name)).first()
+        if hours_write:
+            hours_write.nickname = nickname
+            hours_write.term_hours = term_hours
+            hours_write.all_hours = all_hours
+        else:
+            hours_write = Hours(
+                name = name,
+                nickname = nickname,
+                grad_year = grad_year,
+                term_hours = term_hours,
+                all_hours = all_hours
+            )
+        session.add(hours_write)
+        session.commit()
+
+
+# gets the hours for a person based on their name
+def get_hours(session, name):
+    name = name.lower()
+
+    # finds the "First, Last", "Last, First", and "Nickname" variations and formats them to "First, Last" or "Nickname"
+    try:
+        first, last = name.split(" ")
+        first = first.capitalize()
+        last = last.capitalize()
+
+        # two different configs because some people put last name first
+        last_first = f"{last}, {first}"
+        first_last = f"{first}, {last}"
+
+        hours = session.exec(select(Hours).where(Hours.name == last_first)).first()
+        if hours:
+            return hours
+        # returns first_last hours or None if nothing is found
+        return session.exec(select(Hours).where(Hours.name == first_last)).first()
+    except ValueError:
+        # if only the first name or nickname was given
+        name = name.capitalize()
+
+        # split "Last, First" into ["Last", "First"] and look for second index
+        hours = session.exec(select(Hours).where(Hours.name.split(",")[1] == name)).first()
+        if hours:
+            return hours
+        # returns nickname hours or None if nothing is found
+        return session.exec(select(Hours).where(Hours.nickname == name)).first()
+
+
+# i will add this later, maybe...
+
+# returns top five people for a year in terms of hours, ex: sophomore
+# def get_year_ranking(names_hours_list, year):
+#     if len(names_hours_list) == 0:
+#         return None
+#
+#     year = year.lower()
+#     year_ranking = [each for each in names_hours_list if each["year"] == year]
+#
+#     for i in range(len(year_ranking)):
+#         for j in range(i + 1, len(year_ranking)):
+#             if year_ranking[i]["all_hours"] < year_ranking[j]["all_hours"]:
+#                 year_ranking[i], year_ranking[j] = year_ranking[j], year_ranking[i]
+#
+#     return year_ranking[0:5]

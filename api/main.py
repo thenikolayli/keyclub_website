@@ -14,6 +14,7 @@ from api.routers.hours_router import update_hours
 from api.routers.users_router import router as users_router
 from api.routers.auth_router import router as auth_router
 from api.routers.admin_router import router as admin_router
+from api.routers.reminds_router import router as reminds_router
 
 import api.database as database
 
@@ -41,6 +42,7 @@ app.include_router(hours_router)
 app.include_router(users_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(reminds_router)
 
 app.add_middleware(
     CORSMiddleware,

@@ -6,4 +6,7 @@ router = APIRouter(prefix="/api/reminds", tags=["reminds"])
 features
 
 post an event
+
+check events
 '''
+
