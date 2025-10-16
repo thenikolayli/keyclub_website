@@ -3,7 +3,7 @@ services:
     container_name: keyclub_api
     build: ./api
     volumes:
-      - ./actions.log:/api/data/actions.log
+      - ./reminds.log:/api/data/reminds.log
       - ./banner.json:/api/data/banner.json
       - ./current_events.json:/api/data/current_events.json
       - ./db.sqlite3:/api/data/db.sqlite3

@@ -9,10 +9,3 @@ class Message(SQLModel, table=False):
 class SetBanner(SQLModel, table=False):
     message: str
     show: bool
-
-
-
-
-
-
-

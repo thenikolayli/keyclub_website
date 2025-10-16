@@ -1,8 +1,8 @@
 # collection of utility functions used to automatically log events and meetings and check volunteer hours
 
 from googleapiclient.errors import HttpError
+from api.models.event_models import Event
 import api.config as config
-import asyncio
 
 # function that takes in a Google Docs/Sheets url and returns the document_id
 def url_to_id(url):
@@ -14,36 +14,50 @@ def url_to_id(url):
         except IndexError:
             return url
 
+# saves an event or meeting to the database
+def save_event_to_db(response, session):
+    # creates db entry
+    title = response.get("event_title")
+    hours_total = 0
+    people_attended = 0
 
-# ------------------EVENT LOGGING API STUFF------------------
+    for volunteer in response.get("volunteers"):
+        people_attended += 1
+        hours_total += volunteer.get("hours")
+
+    # creates entry and writes to db
+    event_write = Event(
+        title=title,
+        hours_total=hours_total,
+        people_attended=people_attended,
+    )
+    session.add(event_write)
+    session.commit()
+
 
 # function that returns cell values for ranges from the FIRST sheet on the spreadsheet
 def fetch_sheet_data(document_id, ranges, sheets_service):
     document_id = url_to_id(document_id) # formats document_id
-    data = []
 
     # obtain spreadsheet metadata and first sheet name
     try:
         sheet_metadata = sheets_service.spreadsheets().get(spreadsheetId=document_id).execute() # attempts to get spreadsheet metadata
-    except HttpError:
-        return {"error": "error accessing spreadsheet"} # returns error if failed
+    except HttpError: return
     sheet_title = sheet_metadata.get("sheets")[0].get("properties").get("title")  # gets first sheet title, data is read from the first sheet
 
     # format ranges to read cells from
     for i in range(len(ranges)):
         ranges[i] = f"{sheet_title}!{ranges[i]}"
-
     # read cells and return what was read
     try:
         result = sheets_service.spreadsheets().values().batchGet(spreadsheetId=document_id, ranges=ranges).execute() # attempts to read cells from ranges
-    except HttpError:
-        return {"error": "error accessing spreadsheet"} # returns error if failed
+    except HttpError: return
 
+    data = []
     for valueRange in result.get("valueRanges"): # gets cell_range and values in every cell_range
         value = "" if not valueRange.get("values") else valueRange.get("values") # returns value of cell or "" if blank cell
         data.append(value)
-
-    return {"data": data}
+    return data
 
 # function that writes values to ranges in a spreadsheet
 def write_sheet_data(document_id, ranges, values, sheets_service):
@@ -53,9 +67,7 @@ def write_sheet_data(document_id, ranges, values, sheets_service):
     # attempts to write values to ranges in a spreadsheet
     try:
         result = sheets_service.spreadsheets().values().batchUpdate(spreadsheetId=document_id, body={"valueInputOption": "USER_ENTERED", "data": data}).execute()  # writes data
-    except HttpError:
-        result = {"error": "error writing to sheet"} # returns error if couldn't write
-
+    except HttpError: return
     return result
 
 # function that returns a dictionary of volunteer names, their sign in, and sign out times from tables within the document
@@ -64,8 +76,7 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
 
     try:  # attempts to get document info
         document = docs_service.documents().get(documentId=document_id).execute()
-    except HttpError:  # if no permission, return error
-        return {"error": f"no permission, error accessing document"}
+    except HttpError: return
 
     body_content = document.get("body").get("content")  # gets body content
     event_title = document.get("title")  # saves title
@@ -77,7 +88,6 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
         if "table" in item:
             doc_tables.update({f"table{len(doc_tables) + 1}": list(item.get("table").get("tableRows"))})  # adds tables
     doc_tables.pop("table1") # removes first table, it contains event name, address, etc (not volunteer info)
-
 
     for table in doc_tables:
         row = doc_tables.get(table)
@@ -130,7 +140,7 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
                         0].get("startIndex")
                 volunteers.update({name: {"hours": hours, "start": start, "end": end}})
 
-    return {"data": {"event_title": event_title, "volunteers": volunteers}}
+    return event_title, volunteers
 
 # function that writes values to ranges in a google document
 def write_docs_data(document_id, ranges, values, docs_service):
@@ -146,9 +156,7 @@ def write_docs_data(document_id, ranges, values, docs_service):
     # attempts to write to the google doc
     try:
         result = docs_service.documents().batchUpdate(documentId=document_id, body={"requests": updates}).execute()
-    except HttpError:
-        result = {"error": "error writing to doc"}
-
+    except HttpError: return
     return result
 
 # finds first empty column without an event
@@ -156,24 +164,21 @@ def find_empty_col(spreadsheet_id, sheets_service, meeting_title):
     # finding next empty column in the hours spreadsheet to log the event
     event_list = fetch_sheet_data(document_id=spreadsheet_id, ranges=[f"K1:ZZ1"],
                                   sheets_service=sheets_service)
-    if event_list.get("error"):  # if there was an error fetching sheet data
-        return {"error": event_list.get("error")}
+    if not event_list: return
     event_list = event_list.get("data")[0][0]
     empty_event_number = event_list.index("") + 11  # gets first empty col and adds 11 to offset info cols
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     column = ""
 
     # if event is already in the spreadsheet, quit
-    if meeting_title in event_list:
-        return {"error": f"{meeting_title} is already in spreadsheet"}
+    if meeting_title in event_list: return
 
     # accounts for columns that have two letters
     if empty_event_number > len(alphabet):
         column = alphabet[empty_event_number // len(alphabet) - (
                 empty_event_number % len(alphabet) == 0) - 1]  # find the first letter and add it
     column += alphabet[empty_event_number % len(alphabet) - 1]  # add the second letter
-
-    return {"column": column}
+    return column
 
 # function that takes in a url to a key club sign up google doc, hours multiplier, and credentials
 # and logs the event in the hours spreadsheet, and returns a dictionary of volunteers who were and were not logged
@@ -182,20 +187,18 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
     hours_multiplier = float(hours_multiplier) if hours_multiplier != "" else 1 # formats hours multiplier
 
     event_data = fetch_docs_data(document_id, docs_service) # gets list of volunteers and sign in/out times and hours
-    if event_data.get("error"):
-        return {"error": event_data.get("error")}
+    if not event_data: return
 
     event_title = event_data.get("data").get("event_title")  # gets event title
     event_volunteers = event_data.get("data").get("volunteers")  # gets event volunteer hours
 
     # check if event has hours filled out on the Google doc
-    if not event_volunteers:
-        return {"error": "empty event"}
+    if not event_volunteers: return None
+
     # if the first volunteer doesn't have hours calculated, assume that the entire list of volunteers doesn't have
     # their hours calculated either, therefore calculate hours for all the volunteers
     # this is checked by checking if the hours value of the first volunteer is an int or a string, int if not calculated
     # because it will be set to the index of the hours cell of the doc for that volunteer
-
     if isinstance(event_volunteers.get(list(event_volunteers)[0]).get("hours"), int):
         ranges = []
         values = []
@@ -396,68 +399,3 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
             "logged": volunteer_logged,
             "not_logged": volunteer_not_logged,
             "event_title": meeting_title}
-
-
-# ------------------CHECK HOURS API STUFF------------------
-
-# updates the hours list by fetching hours from the spreadsheet
-async def update_hours_list(names_hours_list):
-    names_hours_list.clear()
-
-    names_hours_data_request = await asyncio.to_thread(
-        config.sheets_service.spreadsheets().values().batchGet,
-        spreadsheetId=config.spreadsheet_id,
-        ranges=[config.names_col, config.nicknames_col, config.year_col, config.term_hours_col, config.all_hours_col]
-    )
-    names_hours_data = names_hours_data_request.execute()
-    nicknames_len = len(names_hours_data["valueRanges"][1]["values"])
-    loop_range = len(names_hours_data["valueRanges"][2]["values"])
-
-    for i in range(loop_range):
-        last, first = names_hours_data["valueRanges"][0]["values"][i][0].split(", ")
-
-        full_name = f"{first.lower()} {last.lower()}"
-        if i >= nicknames_len or names_hours_data["valueRanges"][1]["values"][i] == []:
-            nickname = ""
-        else:
-            nickname = names_hours_data["valueRanges"][1]["values"][i][0].lower()
-        year = names_hours_data["valueRanges"][2]["values"][i][0].lower()
-        term_hours = float(names_hours_data["valueRanges"][3]["values"][i][0])
-        all_hours = float(names_hours_data["valueRanges"][4]["values"][i][0])
-
-        names_hours_list.append({
-            "name": full_name,
-            "nickname": nickname,
-            "year": year,
-            "term_hours": term_hours,
-            "all_hours": all_hours
-        })
-
-# gets the hours for a person based on their name
-def get_hours(names_hours_list, name):
-    if len(names_hours_list) == 0:
-        return
-
-    name = name.lower()
-
-    for value in names_hours_list:
-        if name in value["name"] or name in value["nickname"]:
-            return value
-
-
-# i will add this later, maybe...
-
-# returns top five people for a year in terms of hours, ex: sophomore
-# def get_year_ranking(names_hours_list, year):
-#     if len(names_hours_list) == 0:
-#         return None
-#
-#     year = year.lower()
-#     year_ranking = [each for each in names_hours_list if each["year"] == year]
-#
-#     for i in range(len(year_ranking)):
-#         for j in range(i + 1, len(year_ranking)):
-#             if year_ranking[i]["all_hours"] < year_ranking[j]["all_hours"]:
-#                 year_ranking[i], year_ranking[j] = year_ranking[j], year_ranking[i]
-#
-#     return year_ranking[0:5]

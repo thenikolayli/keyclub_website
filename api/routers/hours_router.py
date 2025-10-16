@@ -1,34 +1,35 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
-from api.utils.event_logging_utils import update_hours_list
-from api.utils.event_logging_utils import get_hours as get_hours_util
+from api.utils.hours_util import update_hours_list
+from api.utils.hours_util import get_hours as get_hours_util
 import api.config as config
+import api.database as database
 
 router = APIRouter(prefix="/api/hours", tags=["hours"])
 
 
 @router.get("/update_hours")
-async def update_hours():
-    await update_hours_list(config.names_hours_list)
-    utc_time = datetime.now(timezone(timedelta(hours=-5)))
-    config.hours_last_updated = utc_time.timestamp()
-    print("hours updated!")
+async def update_hours(session = Depends(database.get_session)):
+    if datetime.now(ZoneInfo("America/Los_Angeles")) - config.hours_last_updated >= config.hours_update_timeout:
+        return JSONResponse("Please wait at least 5 minutes between hours update requests.", status_code=status.HTTP_400_BAD_REQUEST)
 
-    return JSONResponse("hours updated!", status_code=status.HTTP_200_OK)
+    await update_hours_list(session)
+    config.hours_last_updated = datetime.now(ZoneInfo("America/Los_Angeles"))
+
+    return JSONResponse("Hours updated!", status_code=status.HTTP_200_OK)
 
 @router.get("/hours_last_updated")
 async def update_hours_last_updated():
-
-    return JSONResponse(config.hours_last_updated, status_code=status.HTTP_200_OK)
+    return JSONResponse(config.hours_last_updated.strftime("%c"), status_code=status.HTTP_200_OK)
 
 @router.get("/get_hours")
-async def get_hours(name: str):
-    hours = get_hours_util(config.names_hours_list, name)
+async def get_hours(name: str, session = Depends(database.get_session)):
+    hours = get_hours_util(session, name)
 
     if hours:
-        print(hours)
-        return JSONResponse(hours, status_code=status.HTTP_200_OK)
-    return JSONResponse("hours not found", status_code=status.HTTP_404_NOT_FOUND)
+        return JSONResponse(hours.model_dump(mode="json"), status_code=status.HTTP_200_OK)
+    return JSONResponse("Hours not found.", status_code=status.HTTP_404_NOT_FOUND)
