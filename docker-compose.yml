@@ -4,8 +4,6 @@ services:
     build: ./api
     volumes:
       - ./reminds.log:/api/data/reminds.log
-      - ./banner.json:/api/data/banner.json
-      - ./current_events.json:/api/data/current_events.json
       - ./db.sqlite3:/api/data/db.sqlite3
       - ./key.json:/api/data/key.json
       - ./report.html:/api/data/report.html

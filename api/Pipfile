@@ -21,8 +21,9 @@ argon2-cffi = "*"
 pillow = "*"
 cloudinary = "*"
 pilmoji = "*"
+emoji = "==1.7"
 
 [dev-packages]
 
 [requires]
-python_version = "3.14"
+python_version = "3.13"

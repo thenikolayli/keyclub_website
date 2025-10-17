@@ -1,0 +1,180 @@
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "accessNotConfigured"
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1wnfCLayGgtuDD6GRIVILWu-ogA45gQFMGe4XXhRGJ1s
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1X0HuAqUAcbSN7Tyo67D_KiJb_1VJHKD14H9bnD9kYQ0
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1sW9t6Bchl0EhnSPdvYASmJC_wyftnnayrL5Su3nl5Ao
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1wmlMppSIW4lZfbjUkWD3AAEPR4rrHzWb36W1Q7E-pl4
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=17G5ifBzSgeuGHn_9DeEWckndOEjeLKiSTmmVLhJm4so
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=13fmPvGaL4XcMjvOQARMZnIeP9F8QCV0JP7ZvJ0Q-hG4
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1ILRPtFrJH4v5PcShuJWm-IsS2Bmrho3P3Zaxf1qH7WI
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1wnfCLayGgtuDD6GRIVILWu-ogA45gQFMGe4XXhRGJ1s
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1X0HuAqUAcbSN7Tyo67D_KiJb_1VJHKD14H9bnD9kYQ0
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1sW9t6Bchl0EhnSPdvYASmJC_wyftnnayrL5Su3nl5Ao
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1wmlMppSIW4lZfbjUkWD3AAEPR4rrHzWb36W1Q7E-pl4
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=17G5ifBzSgeuGHn_9DeEWckndOEjeLKiSTmmVLhJm4so
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=13fmPvGaL4XcMjvOQARMZnIeP9F8QCV0JP7ZvJ0Q-hG4
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document https://drive.google.com/open?id=1ILRPtFrJH4v5PcShuJWm-IsS2Bmrho3P3Zaxf1qH7WI
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+INFO:root:Updated current events
+INFO:root:Fetched 7 new events
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=1wnfCLayGgtuDD6GRIVILWu-ogA45gQFMGe4XXhRGJ1s.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=1X0HuAqUAcbSN7Tyo67D_KiJb_1VJHKD14H9bnD9kYQ0.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=1sW9t6Bchl0EhnSPdvYASmJC_wyftnnayrL5Su3nl5Ao.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=1wmlMppSIW4lZfbjUkWD3AAEPR4rrHzWb36W1Q7E-pl4.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=17G5ifBzSgeuGHn_9DeEWckndOEjeLKiSTmmVLhJm4so.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=13fmPvGaL4XcMjvOQARMZnIeP9F8QCV0JP7ZvJ0Q-hG4.
+ERROR:root:Error fetching document.
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"
+ERROR:root:Failed to fetch document to get event info: https://drive.google.com/open?id=1ILRPtFrJH4v5PcShuJWm-IsS2Bmrho3P3Zaxf1qH7WI.
+ERROR:root:Error fetching document.
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Adding job tentatively -- it will be properly scheduled when the scheduler starts
+INFO:apscheduler.scheduler:Added job "update_hours" to job store "default"
+INFO:apscheduler.scheduler:Added job "update_photos" to job store "default"
+INFO:apscheduler.scheduler:Added job "main" to job store "default"
+INFO:apscheduler.scheduler:Scheduler started
+WARNING:googleapiclient.http:Encountered 403 Forbidden with reason "PERMISSION_DENIED"

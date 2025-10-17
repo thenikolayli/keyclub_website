@@ -1,10 +1,12 @@
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
+from sqlmodel import select
 from email.message import EmailMessage
-from api.models.misc_models import Message, SetBanner
+from api.models.misc_models import Message, Banner
 from api.utils.auth_utils import require_admin
 import api.config as config
+import api.database as database
 
 import smtplib, json
 
@@ -28,14 +30,17 @@ async def message(email_message: Message):
 
 # sets banner info
 @router.post("/update_banner", dependencies=[Depends(require_admin)])
-async def update_banner(banner: SetBanner):
-    with open(config.banner_json_path, "w") as file:
-        json.dump(banner.model_dump(), file)
+async def update_banner(banner: Banner, session = Depends(database.get_session)):
+    selected_banner = session.exec(select(Banner)).first()
+    selected_banner.message = banner.message
+    selected_banner.show = banner.show
+    session.add(selected_banner)
+    session.commit()
+
     return JSONResponse("Banner updated", status_code=status.HTTP_200_OK)
 
 # returns banner info
 @router.get("/get_banner")
-async def get_banner():
-    with open(config.banner_json_path, "r") as file:
-        banner = json.load(file)
-    return JSONResponse(banner, status_code=status.HTTP_200_OK)
+async def get_banner(session = Depends(database.get_session)):
+    selected_banner = session.exec(select(Banner)).first()
+    return JSONResponse(selected_banner.model_dump(mode="json"), status_code=status.HTTP_200_OK)

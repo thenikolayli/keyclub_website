@@ -1,6 +1,9 @@
 # collection of utility functions used to automatically log events and meetings and check volunteer hours
 
 from googleapiclient.errors import HttpError
+
+from api.exceptions import SheetFetchError, SheetUpdateError, DocumentFetchError, DocumentTableError, EmptyEventError, \
+    DuplicateEventError
 from api.models.event_models import Event
 import api.config as config
 
@@ -15,19 +18,18 @@ def url_to_id(url):
             return url
 
 # saves an event or meeting to the database
-def save_event_to_db(response, session):
+def save_event_to_db(volunteers, event_title, session):
     # creates db entry
-    title = response.get("event_title")
     hours_total = 0
     people_attended = 0
 
-    for volunteer in response.get("volunteers"):
+    for volunteer in volunteers:
         people_attended += 1
         hours_total += volunteer.get("hours")
 
     # creates entry and writes to db
     event_write = Event(
-        title=title,
+        title=event_title,
         hours_total=hours_total,
         people_attended=people_attended,
     )
@@ -36,13 +38,14 @@ def save_event_to_db(response, session):
 
 
 # function that returns cell values for ranges from the FIRST sheet on the spreadsheet
-def fetch_sheet_data(document_id, ranges, sheets_service):
-    document_id = url_to_id(document_id) # formats document_id
+def fetch_sheet_data(docs_url, ranges, sheets_service):
+    document_id = url_to_id(docs_url) # formats document_id
 
     # obtain spreadsheet metadata and first sheet name
     try:
         sheet_metadata = sheets_service.spreadsheets().get(spreadsheetId=document_id).execute() # attempts to get spreadsheet metadata
-    except HttpError: return
+    except HttpError:
+        raise SheetFetchError("Couldn't fetch sheet.")
     sheet_title = sheet_metadata.get("sheets")[0].get("properties").get("title")  # gets first sheet title, data is read from the first sheet
 
     # format ranges to read cells from
@@ -51,7 +54,8 @@ def fetch_sheet_data(document_id, ranges, sheets_service):
     # read cells and return what was read
     try:
         result = sheets_service.spreadsheets().values().batchGet(spreadsheetId=document_id, ranges=ranges).execute() # attempts to read cells from ranges
-    except HttpError: return
+    except HttpError:
+        raise SheetFetchError("Couldn't read sheet cells.")
 
     data = []
     for valueRange in result.get("valueRanges"): # gets cell_range and values in every cell_range
@@ -60,14 +64,15 @@ def fetch_sheet_data(document_id, ranges, sheets_service):
     return data
 
 # function that writes values to ranges in a spreadsheet
-def write_sheet_data(document_id, ranges, values, sheets_service):
-    document_id = url_to_id(document_id)  # formats document_id
+def write_sheet_data(docs_url, ranges, values, sheets_service):
+    document_id = url_to_id(docs_url)  # formats document_id
     data = [{"range": ranges[i], "values": [[values[i]]]} for i in range(len(values))]  # formats ranges and values
 
     # attempts to write values to ranges in a spreadsheet
     try:
         result = sheets_service.spreadsheets().values().batchUpdate(spreadsheetId=document_id, body={"valueInputOption": "USER_ENTERED", "data": data}).execute()  # writes data
-    except HttpError: return
+    except HttpError:
+        raise SheetUpdateError("Couldn't update sheets")
     return result
 
 # function that returns a dictionary of volunteer names, their sign in, and sign out times from tables within the document
@@ -76,7 +81,8 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
 
     try:  # attempts to get document info
         document = docs_service.documents().get(documentId=document_id).execute()
-    except HttpError: return
+    except HttpError:
+        raise DocumentFetchError("Couldn't fetch document.")
 
     body_content = document.get("body").get("content")  # gets body content
     event_title = document.get("title")  # saves title
@@ -87,7 +93,7 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
     for item in body_content:
         if "table" in item:
             doc_tables.update({f"table{len(doc_tables) + 1}": list(item.get("table").get("tableRows"))})  # adds tables
-    doc_tables.pop("table1") # removes first table, it contains event name, address, etc (not volunteer info)
+    doc_tables.pop("table1") # removes first table, it contains event name, address, etc. (not volunteer info)
 
     for table in doc_tables:
         row = doc_tables.get(table)
@@ -139,12 +145,11 @@ def fetch_docs_data(document_id, docs_service):  # only used for getting stuff f
                     hours = row[i].get("tableCells")[hours_col].get("content")[0].get("paragraph").get("elements")[
                         0].get("startIndex")
                 volunteers.update({name: {"hours": hours, "start": start, "end": end}})
-
     return event_title, volunteers
 
 # function that writes values to ranges in a google document
-def write_docs_data(document_id, ranges, values, docs_service):
-    document_id = url_to_id(document_id) # formats document_id
+def write_docs_data(docs_url, ranges, values, docs_service):
+    document_id = url_to_id(docs_url) # formats document_id
     correction = 0 # offset per correction (index gets pushed forward for each character written)
     updates = [] # list of updates to write
 
@@ -156,22 +161,28 @@ def write_docs_data(document_id, ranges, values, docs_service):
     # attempts to write to the google doc
     try:
         result = docs_service.documents().batchUpdate(documentId=document_id, body={"requests": updates}).execute()
-    except HttpError: return
+    except HttpError:
+        raise DocumentTableError("Couldn't update document tables.")
     return result
 
 # finds first empty column without an event
 def find_empty_col(spreadsheet_id, sheets_service, meeting_title):
     # finding next empty column in the hours spreadsheet to log the event
-    event_list = fetch_sheet_data(document_id=spreadsheet_id, ranges=[f"K1:ZZ1"],
-                                  sheets_service=sheets_service)
-    if not event_list: return
-    event_list = event_list.get("data")[0][0]
+    event_list = fetch_sheet_data(
+        docs_url=spreadsheet_id,
+        ranges=[f"K1:ZZ1"],
+        sheets_service=sheets_service
+    )
+    if not event_list:
+        raise SheetFetchError("Couldn't fetch sheet data to find empty col.")
+    event_list = event_list[0][0]
     empty_event_number = event_list.index("") + 11  # gets first empty col and adds 11 to offset info cols
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     column = ""
 
     # if event is already in the spreadsheet, quit
-    if meeting_title in event_list: return
+    if meeting_title in event_list:
+        raise DuplicateEventError("Event is already in the sheet.")
 
     # accounts for columns that have two letters
     if empty_event_number > len(alphabet):
@@ -182,18 +193,15 @@ def find_empty_col(spreadsheet_id, sheets_service, meeting_title):
 
 # function that takes in a url to a key club sign up google doc, hours multiplier, and credentials
 # and logs the event in the hours spreadsheet, and returns a dictionary of volunteers who were and were not logged
-def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
-    document_id = url_to_id(document_id) # formats document_id
+def log_event(docs_url, hours_multiplier, sheets_service,  docs_service):
+    document_id = url_to_id(docs_url) # formats document_id
     hours_multiplier = float(hours_multiplier) if hours_multiplier != "" else 1 # formats hours multiplier
-
     event_data = fetch_docs_data(document_id, docs_service) # gets list of volunteers and sign in/out times and hours
-    if not event_data: return
-
-    event_title = event_data.get("data").get("event_title")  # gets event title
-    event_volunteers = event_data.get("data").get("volunteers")  # gets event volunteer hours
+    event_title, event_volunteers = event_data
 
     # check if event has hours filled out on the Google doc
-    if not event_volunteers: return None
+    if not event_volunteers:
+        raise EmptyEventError("Event has no volunteers.")
 
     # if the first volunteer doesn't have hours calculated, assume that the entire list of volunteers doesn't have
     # their hours calculated either, therefore calculate hours for all the volunteers
@@ -223,22 +231,15 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         # since hours have been calculated, it resets the hours multiplier to prevent it from multiplying the hours twice
         hours_multiplier = 1
         # writes calculated hours to the event sign up document
-        write_docs_result = write_docs_data(document_id=document_id, ranges=ranges, values=values, docs_service=docs_service)
-        if write_docs_result.get("error"):
-            return {"error": write_docs_result.get("error")}
+        write_docs_data(docs_url=document_id, ranges=ranges, values=values, docs_service=docs_service)
 
     column = find_empty_col(config.spreadsheet_id, sheets_service, event_title)
-
-    if column.get("error"):
-        return {"error": column.get("error")}
-    column = column.get("column")
-
     # find ranges and values and log
     all_rows = fetch_sheet_data(
-        document_id=config.spreadsheet_id,
+        docs_url=config.spreadsheet_id,
         ranges=[config.spreadsheet_ranges[0], config.spreadsheet_ranges[1]],
         sheets_service=sheets_service
-    ).get("data")
+    )
 
     nicknames = all_rows[1] # nickname rows
     fullnames = all_rows[0] # full name rows
@@ -287,51 +288,41 @@ def log_event(document_id, hours_multiplier, sheets_service,  docs_service):
         })
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=config.spreadsheet_id,
-                                          ranges=volunteer_ranges,
-                                          values=volunteer_values,
-                                          sheets_service=sheets_service)
-    if write_sheet_result.get("error"):
-        return {"error": write_sheet_result.get("error")}
+    write_sheet_data(docs_url=config.spreadsheet_id,
+                      ranges=volunteer_ranges,
+                      values=volunteer_values,
+                      sheets_service=sheets_service)
+    return volunteers, event_title
 
-    # returns info on event automation attempt
-    return {"data": f"{event_title} has been logged successfully",
-            "volunteers": volunteers,
-            "event_title": event_title}
 
 def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meeting_title, sheets_service):
     document_id = url_to_id(document_id) # formats document_id
     event_volunteers = {}
-
     first_name_col = first_name_col.upper()
     last_name_col = last_name_col.upper()
     meeting_length = float(meeting_length)
 
     # adds volunteers and hours to volunteer dict
     if last_name_col != "":
-        event_data = fetch_sheet_data(document_id=document_id,
+        event_data = fetch_sheet_data(docs_url=document_id,
                                       ranges=[f"{first_name_col}:{first_name_col}",
                                               f"{last_name_col}:{last_name_col}"],
                                       sheets_service=sheets_service)  # fetches meeting data
-        if event_data.get("error"):  # if there was an error fetching sheet data
-            return {"error": event_data.get("error")}
 
         # formats results
-        first_names = event_data.get("data")[0]
-        last_names = event_data.get("data")[1]
+        first_names = event_data[0]
+        last_names = event_data[1]
 
         for i in range(1, len(first_names)): # goes through all names skipping header row
             name = f"{first_names[i][0]} {last_names[i][0]}".lower().strip() # formats name
             if not name in event_volunteers: # filter out duplicates (if people filled out the attendance form more than once)
                 event_volunteers.update({name: {"hours": round(meeting_length / 60, 2)}}) # adds to volunteer dict
     else: # if last name col not given, assume first name col contains full names
-        event_data = fetch_sheet_data(document_id=document_id,
+        event_data = fetch_sheet_data(docs_url=document_id,
                                       ranges=[f"{first_name_col}:{first_name_col}"],
                                       sheets_service=sheets_service)
-        if event_data.get("error"):
-            return {"error": event_data.get("error")}
 
-        event_data = event_data.get("data")[0] # formats result
+        event_data = event_data[0] # formats result
         event_data.pop(0) # removes header row
 
         # adds volunteers to volunteer dictionary
@@ -340,15 +331,12 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
                 event_volunteers.update({name[0].lower().strip(): {"hours": round(meeting_length / 60, 2)}})
 
     column = find_empty_col(config.spreadsheet_id, sheets_service, meeting_title)
-    if column.get("error"):
-        return {"error": column.get("error")}
-    column = column.get("column")
-
     # find ranges and values and log
-    all_rows = fetch_sheet_data(document_id=config.spreadsheet_id,
-                                ranges=[config.spreadsheet_ranges[0],
-                                        config.spreadsheet_ranges[1]],
-                                sheets_service=sheets_service).get("data")
+    all_rows = fetch_sheet_data(
+        docs_url=config.spreadsheet_id,
+        ranges=[config.spreadsheet_ranges[0], config.spreadsheet_ranges[1]],
+        sheets_service=sheets_service
+    )
 
     nicknames = all_rows[1]  # nickname rows
     fullnames = all_rows[0]  # full name rows
@@ -364,38 +352,41 @@ def log_meeting(document_id, first_name_col, last_name_col, meeting_length, meet
     # ranges and values to log in the spreadsheet
     volunteer_ranges = [f"{column}1:{column}1"]
     volunteer_values = [meeting_title]
-    volunteer_logged = {}
-    volunteer_not_logged = {}
+    volunteers = []
 
     # preps ranges and values to write to for the hours spreadsheet
     for name in event_volunteers:
-        first, last = name.split(" ")
-        fullname = f"{last}, {first}"
+        try:
+            first, last = name.split(" ")
+            fullname = f"{last}, {first}"
+        except ValueError:
+            fullname = name
 
+        # if fullname is not in fullnames or nicknames, skip and add to unlogged
+        # add 2 to account for starting on 2nd row and Python starting lists on 0
         if fullname in fullnames:
-            row = fullnames.index(fullname)
+            row = fullnames.index(fullname) + 2
         elif fullname in nicknames:
-            row = nicknames.index(fullname)
+            row = nicknames.index(fullname) + 2
         else:
-            volunteer_not_logged.update({name: event_volunteers.get(name).get("hours")})
+            volunteers.append({
+                "name": fullname,
+                "hours": float(event_volunteers.get(name).get("hours")),
+                "logged": False
+            })
             continue
 
-        # saves the ranges and values to log for the volunteer, then saves them to volunteers logged
-        volunteer_ranges.append(f"{column}{row + 2}:{column}{row + 2}")
-        volunteer_values.append(event_volunteers.get(name).get("hours"))
-        volunteer_logged.update({name: event_volunteers.get(name).get("hours")})
-
+        volunteer_ranges.append(f"{column}{row}:{column}{row}")
+        volunteer_values.append(float(event_volunteers.get(name).get("hours")))
+        volunteers.append({
+            "name": fullname,
+            "hours": float(event_volunteers.get(name).get("hours")),
+            "logged": True
+        })
 
     # logs hours to hours spreadsheet
-    write_sheet_result = write_sheet_data(document_id=config.spreadsheet_id,
-                                          ranges=volunteer_ranges,
-                                          values=volunteer_values,
-                                          sheets_service=sheets_service)
-    if write_sheet_result.get("error"):
-        return {"error": write_sheet_result.get("error")}
-
-    # returns info on event automation attempt
-    return {"data": f"{meeting_title} has been logged successfully",
-            "logged": volunteer_logged,
-            "not_logged": volunteer_not_logged,
-            "event_title": meeting_title}
+    write_sheet_data(docs_url=config.spreadsheet_id,
+                     ranges=volunteer_ranges,
+                     values=volunteer_values,
+                     sheets_service=sheets_service)
+    return volunteers

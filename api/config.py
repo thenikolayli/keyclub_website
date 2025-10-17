@@ -4,7 +4,7 @@ from os import getenv
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-import cloudinary
+import cloudinary, logging
 
 load_dotenv()
 
@@ -55,11 +55,10 @@ db_string = getenv("DB_STRING")
 
 reminds_template = "api/assets/template.jpg"
 font_path = "centurygothic.ttf"
-
 reminds_logger_path = "api/data/reminds.log"
-reminds_current_events_path = "api/data/current_events.json"
 fb_token = getenv("FB_TOKEN")
 calendar_id = getenv("CALENDAR_ID")
+image_save_path = "api/data/post.jpg"
 
 cloudinary.config(
     cloud_name = getenv("CLOUD_NAME"),
@@ -67,3 +66,5 @@ cloudinary.config(
     api_secret = getenv("CLOUD_API_SECRET"),
     secure = True
 )
+
+logging.basicConfig(filename=reminds_logger_path, level=logging.INFO)

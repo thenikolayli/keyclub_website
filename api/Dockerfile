@@ -1,4 +1,4 @@
-FROM python:3.14-alpine
+FROM python:3.13-alpine
 
 # copies files and sets up environment
 COPY . /api

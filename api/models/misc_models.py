@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 
 class Message(SQLModel, table=False):
     first_name: str
@@ -6,6 +6,7 @@ class Message(SQLModel, table=False):
     email: str
     message: str
 
-class SetBanner(SQLModel, table=False):
+class Banner(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
     message: str
     show: bool

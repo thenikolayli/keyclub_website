@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/hours", tags=["hours"])
 
 @router.get("/update_hours")
 async def update_hours(session = Depends(database.get_session)):
-    if datetime.now(ZoneInfo("America/Los_Angeles")) - config.hours_last_updated >= config.hours_update_timeout:
+    if datetime.now(ZoneInfo("America/Los_Angeles")).timestamp() - config.hours_last_updated < config.hours_update_timeout:
         return JSONResponse("Please wait at least 5 minutes between hours update requests.", status_code=status.HTTP_400_BAD_REQUEST)
 
     await update_hours_list(session)

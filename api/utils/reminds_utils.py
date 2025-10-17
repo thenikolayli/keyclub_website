@@ -1,18 +1,18 @@
 # utility functions for main.py
 from PIL import Image, ImageFont
 from pilmoji import Pilmoji
-from zoneinfo import ZoneInfo
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from cloudinary import uploader as cloudinary_uploader
-import requests, json, logging, re
+from api.utils.event_logging_utils import url_to_id
+import requests, logging, re
 import api.config as config
 
 from googleapiclient.errors import HttpError
-from google.api_core.exceptions import PermissionDenied
-from api.utils.event_logging_utils import url_to_id
+from api.exceptions import DocumentFetchError, DocumentTableError, DocumentIncompleteTableError
 
-template = config.reminds_template
-font_path = config.font_path
+from sqlmodel import Session, select
+from api.database import engine
+from api.models.reminds_models import CurrentEvent
 
 middle = 1080 // 2
 left = 120
@@ -26,11 +26,6 @@ description_y_start = title_y_end + 30
 description_y_end = 900
 info_y_start = description_y_end
 info_y_end = 1100
-
-logging.basicConfig(filename=config.reminds_logger_path, level=logging.INFO)
-
-
-# ------------------- Utility Functions -------------------
 
 # breaks text into lines to fit max_width
 def break_text(text, font, max_width):
@@ -58,16 +53,13 @@ def break_text(text, font, max_width):
             line = temp_line
     # appends last line if there is one
     lines.append(line)
-
     for line in lines:
         broken_text += line + "\n"
-
     return broken_text
 
 # fits text into max_width and max_height to have biggest font size, returns text string and font size
 def fit_text(text, max_width, max_height, size = 2, max_size = 100):
-    global font_path
-    font = ImageFont.truetype(font_path, size)
+    font = ImageFont.truetype(config.font_path, size)
     temp_text = break_text(text, font, max_width)
     ascend, descent = font.getmetrics()
     temp_text_line_height = ascend + descent
@@ -76,15 +68,18 @@ def fit_text(text, max_width, max_height, size = 2, max_size = 100):
     # if the text is too tall or the size is beyond the limit, decrement it and return, otherwise increment and rerun
     if temp_text_height > max_height or size > max_size:
         size -= 2
-        font = ImageFont.truetype(font_path, size)
+        font = ImageFont.truetype(config.font_path, size)
         return break_text(text, font, max_width), size
     else:
         return fit_text(text, max_width, max_height, size + 2, max_size)
 
-# returns the fullness of an event, volunteers_signed_up/total_spots
+# returns the fullness of an event -> volunteers_signed_up / total_spots
 def get_event_fullness(docs_url):
-    docs_url = docs_url.split("id=")[1]
-    document = config.docs_service.documents().get(documentId=docs_url).execute()
+    docs_id = url_to_id(docs_url)
+    try:
+        document = config.docs_service.documents().get(documentId=docs_id).execute()
+    except HttpError:
+        raise DocumentFetchError(f"Error fetching document to check fullness: {docs_id}")
     body_content = document.get("body").get("content")
     tables = []
     rows = []
@@ -112,20 +107,8 @@ def get_event_fullness(docs_url):
                 empty += 1
             else:
                 volunteers += 1
-        except AttributeError:
-            pass
+        except AttributeError: pass
     return volunteers / (volunteers + empty)
-
-# returns whether or not an event has been posted before
-def in_current_events(event_title, event_date):
-    with open(config.reminds_current_events_path, "r") as file:
-        current_events = json.load(file)
-    for event in current_events:
-        # checks if an event with the same title and date is currently posted
-        # (some events have the same name but different dates and vice versa)
-        if event.get("event_title") == event_title and event.get("event_date") == event_date:
-            return True
-    return False
 
 # formats datetime to remove the seconds column and adds the period
 def format_time(datetime_param):
@@ -142,7 +125,6 @@ def format_time(datetime_param):
         minute = "0" + str(minute)
     minute = str(minute)
     datetime_param = f"{hour}:{minute} {period}"
-
     return datetime_param
 
 # returns title, date, time, location, and fullness via the sign up sheet url
@@ -152,7 +134,8 @@ def get_event_info(url):
     try:
         document = config.docs_service.documents().get(documentId=document_id).execute()
     except HttpError:
-        return
+        logging.error(f"Failed to fetch document to get event info: {document_id}.")
+        raise DocumentFetchError("Error fetching document.")
 
     # finds metadata table (always the first table)
     body_content = document.get("body").get("content")
@@ -162,7 +145,7 @@ def get_event_info(url):
             info_table_rows = item.get("table").get("tableRows")
             break
     if not info_table_rows:
-        return
+        raise DocumentTableError("Document has no tables.")
 
     try:
         event_title = info_table_rows[0].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[0].get(
@@ -173,63 +156,64 @@ def get_event_info(url):
             "textRun").get("content")
         event_location = info_table_rows[3].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[
             0].get("textRun").get("content")
+        event_fullness = get_event_fullness(url)
     except AttributeError:
-        return
+        raise DocumentIncompleteTableError("Metadata table is incomplete.")
+    return event_title, event_date, event_time, event_location, event_fullness
 
-    return event_title, event_date, event_time, event_location
-
-
-# ------------------- Main Functions -------------------
+# returns whether or not an event has been posted before
+def in_current_events(event_title, event_date):
+    with Session(engine) as session:
+        event_found = session.exec(select(CurrentEvent).where(CurrentEvent.title == event_title, CurrentEvent.date == event_date)).first()
+        if event_found:
+            return True
+    return False
 
 # updates the log and removes passed events
 def update_current_events():
-    today = datetime.now().date()
-    new_current_events = []
+    today = datetime.now(timezone.utc)
 
-    with open(config.reminds_current_events_path, "r") as file:
-        current_events = json.load(file)
-
-    # check if each event passed
-    for event in current_events:
-        # if yes, delete it. otherwise add it to the new_log
-        if datetime.strptime(event.get("event_date"), "%m/%d/%Y").date() < today:
-            cloudinary_uploader.destroy(event.get("public_id"))
-            logging.info(f"Removed {event.get('event_title')} from current events")
-        else:
-            new_current_events.append(event)
-
-    with open(config.reminds_current_events_path, "w") as file:
-        json.dump(new_current_events, file)
-
+    with Session(engine) as session:
+        current_events = session.exec(select(CurrentEvent).where(CurrentEvent.cloudinary_deleted == False)).all()
+        for event in current_events:
+            if event.delete_date < today:
+                cloudinary_uploader.destroy(event.cloudinary_public_id)
+                logging.info(f"Removed {event.title} from current events")
+                event.cloudinary_deleted = True
+                session.add(event)
+                session.commit()
     logging.info("Updated current events")
 
 # adds an event to the log
-def add_to_current_events(event_title, event_date, public_id):
-    with open(config.reminds_current_events_path, "r") as file:
-        current_events = json.load(file)
-    current_events.append({"event_title": event_title, "event_date": event_date, "public_id": public_id})
-    with open(config.reminds_current_events_path, "w") as file:
-        json.dump(current_events, file)
+def add_to_current_events(event_title, event_date, event_cloudinary_public_id):
+    with Session(engine) as session:
+        new_event = CurrentEvent(
+            title = event_title,
+            date = event_date,
+            cloudinary_public_id = event_cloudinary_public_id,
+        )
+        session.add(new_event)
+        session.commit()
     logging.info(f"Added {event_title} to current events")
 
 # generates a png with event info
-def fill_template(post_type, title, description, start_time, end_time, date, address, priority = None):
-    global template, font_path, middle, left, width, post_type_y_start, post_type_y_end, title_y_start, title_y_end, description_y_start, description_y_end, info_y_start, info_y_end
-    image = Image.open(template).convert("RGB")
-    # draw = ImageDraw.Draw(image)
-    info = f"📅 {date} ⌚ From {start_time} to {end_time} 📍 {address}"
+def fill_template(post_type, title, description, time, date, location, priority = None):
+    global middle, left, width, post_type_y_start, post_type_y_end, title_y_start, title_y_end, description_y_start, description_y_end, info_y_start, info_y_end
+    image = Image.open(config.reminds_template).convert("RGB")
+    start_time, end_time = time.split("-")
+    info = f"📅 {date} ⌚ From {start_time} to {end_time} 📍 {location}"
     if priority:
         post_type = f"{post_type}: {priority}"
 
     post_type, post_type_font_size = fit_text(post_type, width, post_type_y_end - post_type_y_start)
-    post_type_font = ImageFont.truetype(font_path, post_type_font_size)
+    post_type_font = ImageFont.truetype(config.font_path, post_type_font_size)
     title, title_font_size = fit_text(title, width, title_y_end - title_y_start)
-    title_font = ImageFont.truetype(font_path, title_font_size)
+    title_font = ImageFont.truetype(config.font_path, title_font_size)
     description_max_font_size = title_font_size if title_font_size - 15 <= 2 else title_font_size - 15
     description, description_font_size = fit_text(description, width, description_y_end - description_y_start, max_size=description_max_font_size)
-    description_font = ImageFont.truetype(font_path, description_font_size)
+    description_font = ImageFont.truetype(config.font_path, description_font_size)
     info, info_font_size = fit_text(info, width, title_y_end - title_y_start)
-    info_font = ImageFont.truetype(font_path, info_font_size)
+    info_font = ImageFont.truetype(config.font_path, info_font_size)
 
     with Pilmoji(image) as pilmoji:
         pilmoji.text((middle, post_type_y_start), post_type, font=post_type_font, fill="black", anchor="ma")
@@ -275,63 +259,76 @@ def post_to_instagram(caption, image_url, fb_token):
         return container_id
 
 # returns a list of upcoming events that should be posted in the next 7 days
-def get_events(calendar_service, docs_service, calendar_id):
-    tdy = (datetime.now(ZoneInfo("America/Los_Angeles"))).isoformat()
-    week = (datetime.now(ZoneInfo("America/Los_Angeles")) + timedelta(days=7)).isoformat()
-    all_events = calendar_service.events().list(calendarId=calendar_id, timeMin=tdy, timeMax=week).execute()
+def get_events(calendar_service, calendar_id):
+    today = datetime.now(timezone.utc).isoformat()
+    week = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
+    all_events = calendar_service.events().list(calendarId=calendar_id, timeMin=today, timeMax=week).execute()
     all_events = all_events.get("items", [])
     return_events = []
 
     for event in all_events:
-        try:
-            event_title = event.get("summary")
-            event_description = event.get("description")
-            if event_description:
-                clean = re.compile("<[^>]+>")
-                event_description = re.sub(clean, "", event_description)
-            else:
-                event_description = "No description, check the sign up Google Doc for info!"
+        # skip if no google doc attached to event
+        if not event.get("attachments"): continue
 
-            if not event.get("attachments"): # skip if no google doc attached to event
-                continue
-            event_url = event.get("attachments")[0].get("fileUrl")
-            event_address = event.get("location")
-            if not event_address:
-                event_address = get_event_address(event_url, docs_service)
+        event_url = event.get("attachments")[0].get("fileUrl")
+        event_description = event.get("description")
+        if event_description:
+            clean = re.compile("<[^>]+>")
+            event_description = re.sub(clean, "", event_description)
+        else:
+            event_description = "No description, check the sign up Google Doc for info!"
 
-            # skip if theres no start or end time
-            if not event.get("start").get("dateTime"):
-                logging.info(f"Skipped fetching {event_title}: no start/end time")
-                continue
-            event_start = format_time(event.get("start").get("dateTime"))
-            event_end = format_time(event.get("end").get("dateTime"))
-            event_year, event_month, event_day = str(datetime.fromisoformat(event.get("start").get("dateTime")).date()).split("-")
-            event_date = f"{event_month}/{event_day}/{event_year}" # month day year!
-
-            event_fullness = get_event_fullness(event_url, docs_service)
-            event_priority = ""
-            # if event is too full, is already in the log (has been posted)
-            if event_fullness > .75 or in_current_events(event_title, event_date):
-                logging.info(f"Skipped fetching {event_title}: too full or already in current events")
-                continue
-            elif event_fullness <= .25:
-                event_priority = "High Priority!!!"
-            elif event_fullness <= .5:
-                event_priority = "Medium Priority!!"
-            elif event_fullness <= .75:
-                event_priority = "Low Priority!"
-
-            return_events.append({
-                "event_title": event_title,
-                "event_description": event_description,
-                "event_url": event_url,
-                "event_address": event_address,
-                "event_date": event_date,
-                "event_start": event_start,
-                "event_end": event_end,
-                "event_priority": event_priority,
-            })
-            logging.info(f"Fetched {event_title} from get_events")
-        except KeyError: pass
+        return_events.append({
+            "event_description": event_description,
+            "event_url": event_url,
+        })
     logging.info(f"Fetched {len(return_events)} new events")
     return return_events
+
+# posts an event to instagram
+def post_event(docs_url, event_description, post_type="Volunteers Needed"):
+    event_title, event_date, event_time, event_location, event_fullness = get_event_info(docs_url)
+    event_priority = ""
+    if event_fullness > .75 or in_current_events(event_title, event_date):
+        logging.info(f"Skipped {event_title}, enough members or already posted")
+        return
+    elif event_fullness <= .25:
+        event_priority = "High Priority!!!"
+    elif event_fullness <= .5:
+        event_priority = "Medium Priority!!"
+    elif event_fullness <= .75:
+        event_priority = "Low Priority!"
+
+    image = fill_template(
+        post_type = post_type,
+        title = event_title,
+        description = event_description,
+        time = event_time,
+        date = event_date,
+        location = event_location,
+        priority = event_priority,
+    )
+    image.save(config.image_save_path)
+
+    upload_result = cloudinary_uploader.upload(file=config.image_save_path, return_delete_token=True)
+    public_id, secure_url = upload_result.get("public_id"), upload_result.get("secure_url")
+    post_to_instagram(
+        caption=f"{event_title}\n\n{event_description}\n\n{docs_url}",
+        image_url=secure_url,
+        fb_token=config.fb_token,
+    )
+    add_to_current_events(event_title, event_date, public_id)
+    logging.info(f"Successfully posted {event_title}")
+
+# main loop
+async def main():
+    update_current_events()
+    events = get_events(config.calendar_service, config.calendar_id)
+    for event in events:
+        try:
+            post_event(
+                docs_url=event.get("event_url"),
+                event_description=event.get("event_description"),
+            )
+        except Exception as e:
+            logging.error(e)

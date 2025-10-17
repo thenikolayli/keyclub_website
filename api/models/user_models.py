@@ -1,8 +1,7 @@
 from sqlmodel import SQLModel, Field, Session, select
 from pydantic import field_validator
 
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from datetime import datetime, timezone
 from passlib.hash import argon2
 
 import api.config as config
@@ -13,7 +12,7 @@ class User(SQLModel, table=True):
     username: str = Field(unique=True, nullable=False)
     password: str = Field(nullable=False)
     admin: bool = Field(default=False, nullable=False)
-    created: datetime = Field(default_factory=lambda: datetime.now(ZoneInfo("America/Los_Angeles")))
+    created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     # not class method because it needs to access self
     def hash_password(self):

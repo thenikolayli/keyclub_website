@@ -22,9 +22,8 @@ async def update_hours_list(session):
             grad_year = int(names_hours_data["valueRanges"][2]["values"][i][0])
             term_hours = float(names_hours_data["valueRanges"][3]["values"][i][0])
             all_hours = float(names_hours_data["valueRanges"][4]["values"][i][0])
-        except ValueError:
-            # if a person doesn't have any of these values besides the nickname, skip them
-            continue
+        # if a person doesn't have any of these values besides the nickname, skip them
+        except ValueError: continue
 
         # if an entry for this person exists, update it, otherwise make an entry for them
         hours_write = session.exec(select(Hours).where(Hours.name == name)).first()
@@ -64,14 +63,8 @@ def get_hours(session, name):
         # returns first_last hours or None if nothing is found
         return session.exec(select(Hours).where(Hours.name == first_last)).first()
     except ValueError:
-        # if only the first name or nickname was given
+        # if only the nickname was given
         name = name.capitalize()
-
-        # split "Last, First" into ["Last", "First"] and look for second index
-        hours = session.exec(select(Hours).where(Hours.name.split(",")[1] == name)).first()
-        if hours:
-            return hours
-        # returns nickname hours or None if nothing is found
         return session.exec(select(Hours).where(Hours.nickname == name)).first()
 
 
