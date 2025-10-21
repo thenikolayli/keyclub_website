@@ -13,7 +13,7 @@ def url_to_id(url):
         return url.split("d/")[1].split("/edit")[0]
     except IndexError:
         try:
-            return url.split("document_id=")[1]
+            return url.split("id=")[1]
         except IndexError:
             return url
 

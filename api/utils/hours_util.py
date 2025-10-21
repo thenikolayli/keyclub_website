@@ -1,8 +1,10 @@
 from api.models.hours_models import Hours
 from sqlmodel import select, Session
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import api.config as config
 import api.database as database
-import asyncio
+import asyncio, logging
 
 # updates the hours list by fetching hours from the spreadsheet
 async def update_hours_list():
@@ -46,6 +48,7 @@ async def update_hours_list():
                 )
             session.add(hours_write)
             session.commit()
+    config.hours_last_updated = datetime.now(ZoneInfo("America/Los_Angeles"))
 
 
 # gets the hours for a person based on their name
@@ -70,7 +73,10 @@ def get_hours(session, name):
     except ValueError:
         # if only the nickname was given
         name = name.capitalize()
-        return session.exec(select(Hours).where(Hours.nickname == name)).first()
+        hours = session.exec(select(Hours).where(Hours.nickname == name)).first()
+        if hours:
+            return hours
+        return session.exec(select(Hours).where(Hours.name.contains(name))).first()
 
 
 # i will add this later, maybe...

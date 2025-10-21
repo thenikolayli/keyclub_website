@@ -1,6 +1,7 @@
 .idea
 photos
 api/data
+api/.venv
 
 .env
 access.log

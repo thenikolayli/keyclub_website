@@ -26,7 +26,6 @@ async def lifespan(app: FastAPI):
     database.create_admin()
     await update_hours_list()
     await update_photos()
-    await reminds_main()
 
     scheduler = AsyncIOScheduler(timezone=ZoneInfo('America/Los_Angeles'))
     scheduler.add_job(update_hours_list, "cron", hour=12)

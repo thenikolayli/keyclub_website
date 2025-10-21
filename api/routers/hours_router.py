@@ -18,13 +18,12 @@ async def update_hours():
         return JSONResponse("Please wait at least 5 minutes between hours update requests.", status_code=status.HTTP_400_BAD_REQUEST)
 
     await update_hours_list()
-    config.hours_last_updated = datetime.now(ZoneInfo("America/Los_Angeles"))
-
     return JSONResponse("Hours updated!", status_code=status.HTTP_200_OK)
 
 @router.get("/hours_last_updated")
 async def update_hours_last_updated():
-    return JSONResponse(config.hours_last_updated.strftime("%c"), status_code=status.HTTP_200_OK)
+    hours_last_updated_dt = datetime.fromtimestamp(config.hours_last_updated)
+    return JSONResponse(hours_last_updated_dt.strftime("%c"), status_code=status.HTTP_200_OK)
 
 @router.get("/get_hours")
 async def get_hours(name: str, session = Depends(database.get_session)):

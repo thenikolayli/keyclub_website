@@ -133,9 +133,9 @@ def get_event_info(url):
     document_id = url_to_id(url)
     try:
         document = config.docs_service.documents().get(documentId=document_id).execute()
-    except HttpError:
+    except HttpError as e:
         logging.error(f"Failed to fetch document to get event info: {document_id}.")
-        raise DocumentFetchError("Error fetching document.")
+        raise DocumentFetchError(f"Error fetching document: {e}")
 
     # finds metadata table (always the first table)
     body_content = document.get("body").get("content")
@@ -159,6 +159,8 @@ def get_event_info(url):
         event_fullness = get_event_fullness(url)
     except AttributeError:
         raise DocumentIncompleteTableError("Metadata table is incomplete.")
+
+    event_title.replace("\n", "")
     return event_title, event_date, event_time, event_location, event_fullness
 
 # returns whether or not an event has been posted before
