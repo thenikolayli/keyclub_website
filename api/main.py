@@ -14,8 +14,8 @@ from api.routers.auth_router import router as auth_router
 from api.routers.admin_router import router as admin_router
 from api.routers.reminds_router import router as reminds_router
 
-from api.routers.hours_router import update_hours
 from api.routers.gallery_router import update_photos
+from api.utils.hours_util import update_hours_list
 from api.utils.reminds_utils import main as reminds_main
 
 import api.database as database
@@ -24,12 +24,12 @@ import api.database as database
 async def lifespan(app: FastAPI):
     database.update_tables()
     database.create_admin()
-    await update_hours()
+    await update_hours_list()
     await update_photos()
     await reminds_main()
 
     scheduler = AsyncIOScheduler(timezone=ZoneInfo('America/Los_Angeles'))
-    scheduler.add_job(update_hours, "cron", hour=12)
+    scheduler.add_job(update_hours_list, "cron", hour=12)
     scheduler.add_job(update_photos, "cron", hour=12)
     scheduler.add_job(reminds_main, "cron", hour=15)
     scheduler.start()
