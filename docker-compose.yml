@@ -9,7 +9,7 @@ services:
       - ./report.html:/api/data/report.html
       - ./photos:/api/data/photos
     env_file:
-      - .env
+      - api.env
     expose:
       - 8000
     networks:
