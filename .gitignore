@@ -13,4 +13,8 @@ api/.venv
 api/.env
 api/data
 
+web/.svelte-kit
+web/node_modules
+web/.npmrc
+
 .idea
