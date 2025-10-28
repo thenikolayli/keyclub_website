@@ -8,3 +8,9 @@ access.log
 db.sqlite3
 default_names.json
 photos
+
+api/.venv
+api/.env
+api/data
+
+.idea
