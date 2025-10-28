@@ -17,4 +17,4 @@ web/.svelte-kit
 web/node_modules
 web/.npmrc
 
-/.idea
+.idea/
