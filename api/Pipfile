@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+pydantic = "*"
+python-dotenv = "*"
+uvicorn = "*"
+google-api-python-client = "*"
+google-auth-httplib2 = "*"
+google-auth-oauthlib = "*"
+motor = "*"
+asyncio = "*"
+apscheduler = "*"
+sqlmodel = "*"
+passlib = "*"
+pyjwt = "*"
+argon2-cffi = "*"
+pillow = "*"
+cloudinary = "*"
+pilmoji = "*"
+emoji = "==1.7"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"

@@ -1,0 +1,68 @@
+services:
+  keyclub_api:
+    container_name: keyclub_api
+    image: nikolayli/keyclub_api:latest
+    volumes:
+      - ./reminds.log:/api/data/reminds.log
+      - ./db.sqlite3:/api/data/db.sqlite3
+      - ./key.json:/api/data/key.json
+      - ./report.html:/api/data/report.html
+      - ./photos:/api/data/photos
+    env_file:
+      - api.env
+    expose:
+      - 8000
+    networks:
+      - local
+    command: pipenv run uvicorn api.main:app --port 8000 --host 0.0.0.0
+  keyclub_web:
+    container_name: keyclub_web
+    image: nikolayli/keyclub_web:latest
+    expose:
+      - 3000
+    networks:
+      - local
+    command: node build
+  keyclub_proxy:
+    container_name: keyclub_proxy
+    image: nginx:latest
+    volumes:
+      - ./access.log:/var/log/nginx/access.log
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./photos:/gallery
+    depends_on:
+      - keyclub_api
+      - keyclub_web
+    expose:
+      - 80
+    networks:
+      - local
+      - proxy
+  keyclub_goaccess:
+    container_name: keyclub_goaccess
+    image: allinurl/goaccess:latest
+    volumes:
+      - ./access.log:/access.log
+      - ./report.html:/report.html
+    command: "access.log -o /report.html --log-format=COMBINED --real-time-html --ws-url=ws://localhost:80/goaccess"
+    expose:
+      - 7890
+    networks:
+      - local
+  keyclub_discord_bot:
+    container_name: keyclub_discord_bot
+    image: nikolayli/keyclub_discord_bot:latest
+    volumes:
+      - ./default_names.json:/default_names.json
+    env_file:
+      - discord_bot.env
+    expose:
+      - 8000
+    networks:
+      - local
+    command: "pipenv run python main.py"
+
+networks:
+  local:
+  proxy:
+    external: true

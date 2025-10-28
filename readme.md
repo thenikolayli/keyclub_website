@@ -1,0 +1,3 @@
+# Key Club Website
+
+DO NOT COMMIT ANY .ENV FILE EVER

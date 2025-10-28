@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+    --color-kcyellow: #fed450;
+    --color-kcblack: #231f20;
+}
+
+@font-face {
+    font-family: abril;
+    font-style: normal;
+    src: url("/fonts/abril-display-regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: century-gothic;
+    font-style: normal;
+    src: url("/fonts/centurygothic.ttf") format("opentype");
+}
+
+@font-face {
+    font-family: century-gothic-bold;
+    font-style: normal;
+    src: url("/fonts/centurygothic_bold.ttf") format("opentype");
+}
+
+button {
+    cursor: pointer;
+}
+
+body {
+    @apply font-[century-gothic] bg-kcblack text-stone-200;
+}
+
+header {
+    @apply font-semibold;
+}
+
+a {
+    @apply hover:underline;
+}
+
+/** {*/
+/*    border: 1px solid black;*/
+/*}*/
+
+.text-black-outline {
+    -webkit-text-stroke: 2px black;
+    paint-order: stroke fill;
+}
