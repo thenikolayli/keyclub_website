@@ -151,8 +151,8 @@
 
 <Header />
 <section class="w-full h-auto bg-stone-200">
+    <ImageHeader text="Hours" imageSrc="/faz.webp" dim={true}/>
     <div class="relative w-full lg:w-1/2 mx-auto h-screen min-h-screen flex flex-col items-center p-4 text-kcblack bg-stone-200">
-        <ImageHeader text="Hours" imageSrc="/faz.webp" dim={true}/>
         <div bind:this={wrapperElement} class="w-full py-8 text-xl mt-8">
             <h1 class="text-3xl text-center w-full">{header}</h1>
             <div class="container relative w-full mt-8">

@@ -58,12 +58,12 @@
         }
 
         // countdown to October 31st 11:59:59 PM PDT (dues close)
-        momentDurationFormatSetup(moment)
-        const duesClose = moment("2025-10-31T11:59:59").tz("America/Los_Angeles")
-        setInterval(() => {
-            const msLeft = moment.duration(duesClose - moment.tz("America/Los_Angeles"))
-            timeLeftString = msLeft.format("[Dues close in] M [months,] D [days,] h [hours,] m [minutes, and] s [seconds!]")
-        }, 1000)
+        // momentDurationFormatSetup(moment)
+        // const duesClose = moment("2025-10-31T11:59:59").tz("America/Los_Angeles")
+        // setInterval(() => {
+        //     const msLeft = moment.duration(duesClose - moment.tz("America/Los_Angeles"))
+        //     timeLeftString = msLeft.format("[Dues close in] M [months,] D [days,] h [hours,] m [minutes, and] s [seconds!]")
+        // }, 1000)
 
         const timeline = gsap.timeline({
             defaults: {
@@ -164,30 +164,30 @@
     </div>
 </section>
 
-<section class="relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">
-    <header class="relative top-12 mx-auto w-fit text-4xl md:text-7xl">🚨 IMPORTANT 🚨</header>
-    <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl p-4">{timeLeftString}</h1>
-    <div class="relative flex-1 flex items-center justify-center">
-        <div class="w-[80%] md:w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">
-            <p class="text-2xl md:text-4xl text-left">
-                In order to officially register for Key Club, you must pay <span class="underline">$41</span>.
-            </p>
-            <ul class="mt-8 text-2xl md:text-4xl list-disc">
-                <li>International: $10</li>
-                <li>District: $5.50</li>
-                <li>Club: $2.50</li>
-                <li>Hoodie: $23</li>
-            </ul>
-            <hr class="border-2 w-[60%] my-4">
-            <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>
+<!--<section class="relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">-->
+<!--    <header class="relative top-12 mx-auto w-fit text-4xl md:text-7xl">🚨 IMPORTANT 🚨</header>-->
+<!--    <h1 class="mt-16 mx-auto w-fit text-3xl md:text-5xl p-4">{timeLeftString}</h1>-->
+<!--    <div class="relative flex-1 flex items-center justify-center">-->
+<!--        <div class="w-[80%] md:w-fit flex flex-col items-center justify-items-center p-8" style="background-color: oklch(0.931 0.1524 91.02);">-->
+<!--            <p class="text-2xl md:text-4xl text-left">-->
+<!--                In order to officially register for Key Club, you must pay <span class="underline">$41</span>.-->
+<!--            </p>-->
+<!--            <ul class="mt-8 text-2xl md:text-4xl list-disc">-->
+<!--                <li>International: $10</li>-->
+<!--                <li>District: $5.50</li>-->
+<!--                <li>Club: $2.50</li>-->
+<!--                <li>Hoodie: $23</li>-->
+<!--            </ul>-->
+<!--            <hr class="border-2 w-[60%] my-4">-->
+<!--            <h1 class="text-3xl md:text-6xl font-semibold">$41</h1>-->
 
-            <p class="mt-8 text-xl md:text-3xl">
-                You can pay online by following <a class="underline" target="_blank" href="https://www.everettsd.org/payments">this link</a>
-                or in person at the ASB office.
-            </p>
-        </div>
-    </div>
-</section>
+<!--            <p class="mt-8 text-xl md:text-3xl">-->
+<!--                You can pay online by following <a class="underline" target="_blank" href="https://www.everettsd.org/payments">this link</a>-->
+<!--                or in person at the ASB office.-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</section>-->
 
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
     <img class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>

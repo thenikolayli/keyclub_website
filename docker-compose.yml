@@ -1,7 +1,7 @@
 services:
   keyclub_api:
     container_name: keyclub_api
-    image: nikolayli/keyclub_api:latest
+    build: ./api
     volumes:
       - ./reminds.log:/api/data/reminds.log
       - ./db.sqlite3:/api/data/db.sqlite3
@@ -14,14 +14,16 @@ services:
       - 8000
     networks:
       - local
+    restart: unless-stopped
     command: pipenv run uvicorn api.main:app --port 8000 --host 0.0.0.0
   keyclub_web:
     container_name: keyclub_web
-    image: nikolayli/keyclub_web:latest
+    build: ./web
     expose:
       - 3000
     networks:
       - local
+    restart: unless-stopped
     command: node build
   keyclub_proxy:
     container_name: keyclub_proxy
@@ -33,11 +35,11 @@ services:
     depends_on:
       - keyclub_api
       - keyclub_web
-    expose:
-      - 80
+    ports:
+      - 80:80
     networks:
       - local
-      - proxy
+    restart: unless-stopped
   keyclub_goaccess:
     container_name: keyclub_goaccess
     image: allinurl/goaccess:latest
@@ -49,9 +51,10 @@ services:
       - 7890
     networks:
       - local
+    restart: unless-stopped
   keyclub_discord_bot:
     container_name: keyclub_discord_bot
-    image: nikolayli/keyclub_discord_bot:latest
+    build: ./discord_bot
     volumes:
       - ./default_names.json:/default_names.json
     env_file:
@@ -60,9 +63,8 @@ services:
       - 8000
     networks:
       - local
+    restart: unless-stopped
     command: "pipenv run python main.py"
 
 networks:
   local:
-  proxy:
-    external: true

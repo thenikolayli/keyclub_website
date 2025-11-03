@@ -11,7 +11,7 @@
 
 <Header/>
 
-<section class="w-full h-screen min-h-screen flex flex-col items-center bg-stone-200">
+<section class="w-full h-fit min-h-screen flex flex-col items-center bg-stone-200">
     <ImageHeader text="Events" imageSrc="/events.jpeg" dim={true}/>
 
     <div class="h-[100vh] lg:w-[70%] flex flex-col items-center justify-center p-4">
