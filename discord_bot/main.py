@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from os import getenv
 from typing import Optional
 from utils import get_default_name, set_default_name
-import aiohttp
+import aiohttp, threading
 
 
 load_dotenv()
@@ -117,5 +117,8 @@ async def help(interaction: Interaction):
         color=Color.gold()
     )
     await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+
 
 client.run(token)
