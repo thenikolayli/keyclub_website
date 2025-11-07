@@ -17,4 +17,7 @@ web/.svelte-kit
 web/node_modules
 web/.npmrc
 
+discord_bot/.env
+discord_bot/.venv
+
 .idea/

@@ -72,7 +72,7 @@ def create_jti():
 
 # returns user if admin, otherwise httpexception
 def require_admin(access: Annotated[str | None, Cookie()] = None):
-    # return True # override
+    if config.override_admin: return True # override admin
     if not access:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "No access token")
 

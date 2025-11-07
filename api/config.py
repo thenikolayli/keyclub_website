@@ -44,7 +44,7 @@ admin_username = getenv("ADMIN_USERNAME")
 admin_password = getenv("ADMIN_PASSWORD")
 
 jwt_secret = getenv("JWT_SECRET")
-cookie_secure = True if getenv("COOKIE_SECURE") == "True" else False
+cookie_secure = getenv("COOKIE_SECURE") == "True"
 cookie_domain = getenv("COOKIE_DOMAIN")
 cookie_samesite = "Lax"
 cookie_httponly = True
@@ -54,11 +54,13 @@ refresh_maxage = 30 * 24 * 60 * 60  # 30 days
 db_string = getenv("DB_STRING")
 
 reminds_template = "api/assets/template.jpg"
-font_path = "centurygothic.ttf"
+font_path = "api/assets/centurygothic.ttf"
 reminds_logger_path = "api/data/reminds.log"
 fb_token = getenv("FB_TOKEN")
 calendar_id = getenv("CALENDAR_ID")
 image_save_path = "api/data/post.jpg"
+
+override_admin = getenv("OVERRIDE_ADMIN") == "True"
 
 cloudinary.config(
     cloud_name = getenv("CLOUD_NAME"),
@@ -67,4 +69,4 @@ cloudinary.config(
     secure = True
 )
 
-logging.basicConfig(filename=reminds_logger_path, level=logging.INFO)
+logging.basicConfig(filename=reminds_logger_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

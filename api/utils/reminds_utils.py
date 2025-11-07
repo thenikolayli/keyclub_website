@@ -12,7 +12,7 @@ from api.exceptions import DocumentFetchError, DocumentTableError, DocumentIncom
 
 from sqlmodel import Session, select
 from api.database import engine
-from api.models.reminds_models import CurrentEvent
+from api.models.reminds_models import CurrentEvent, EventInfo, PostEvent
 
 middle = 1080 // 2
 left = 120
@@ -73,8 +73,8 @@ def fit_text(text, max_width, max_height, size = 2, max_size = 100):
     else:
         return fit_text(text, max_width, max_height, size + 2, max_size)
 
-# returns the fullness of an event -> volunteers_signed_up / total_spots
-def get_event_fullness(docs_url):
+# returns the event priority based on fullness of sign up sheet
+def get_event_priority(docs_url):
     docs_id = url_to_id(docs_url)
     try:
         document = config.docs_service.documents().get(documentId=docs_id).execute()
@@ -108,7 +108,16 @@ def get_event_fullness(docs_url):
             else:
                 volunteers += 1
         except AttributeError: pass
-    return volunteers / (volunteers + empty)
+    fullness = volunteers / (volunteers + empty)
+
+    if fullness > .75:
+        return
+    elif fullness <= .25:
+        return "High Priority!!!"
+    elif fullness <= .5:
+        return "Medium Priority!!"
+    elif fullness <= .75:
+        return "Low Priority!!"
 
 # formats datetime to remove the seconds column and adds the period
 def format_time(datetime_param):
@@ -128,13 +137,13 @@ def format_time(datetime_param):
     return datetime_param
 
 # returns title, date, time, location, and fullness via the sign up sheet url
-def get_event_info(url):
+def get_event_info(url, description, post_type):
     # gets document
     document_id = url_to_id(url)
     try:
         document = config.docs_service.documents().get(documentId=document_id).execute()
     except HttpError as e:
-        logging.error(f"Failed to fetch document to get event info: {document_id}.")
+        logging.info(f"Failed to fetch document to get event info: {document_id}.")
         raise DocumentFetchError(f"Error fetching document: {e}")
 
     # finds metadata table (always the first table)
@@ -156,12 +165,21 @@ def get_event_info(url):
             "textRun").get("content")
         event_location = info_table_rows[3].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[
             0].get("textRun").get("content")
-        event_fullness = get_event_fullness(url)
+        event_priority = get_event_priority(url)
     except AttributeError:
         raise DocumentIncompleteTableError("Metadata table is incomplete.")
 
     event_title.replace("\n", "")
-    return event_title, event_date, event_time, event_location, event_fullness
+    return EventInfo(
+        post_type=post_type,
+        title=event_title,
+        description=description,
+        time=event_time,
+        date=event_date,
+        location=event_location,
+        priority=event_priority,
+        url=url
+    )
 
 # returns whether or not an event has been posted before
 def in_current_events(event_title, event_date):
@@ -280,47 +298,46 @@ def get_events(calendar_service, calendar_id):
         else:
             event_description = "No description, check the sign up Google Doc for info!"
 
-        return_events.append({
-            "event_description": event_description,
-            "event_url": event_url,
-        })
+        return_events.append(PostEvent(
+            description=event_description,
+            url=event_url,
+            post_type=None,
+        ))
     logging.info(f"Fetched {len(return_events)} new events")
     return return_events
 
 # posts an event to instagram
-def post_event(docs_url, event_description, post_type="Volunteers Needed"):
-    event_title, event_date, event_time, event_location, event_fullness = get_event_info(docs_url)
-    event_priority = ""
-    if event_fullness > .75 or in_current_events(event_title, event_date):
-        logging.info(f"Skipped {event_title}, enough members or already posted")
+def post_event(event: PostEvent):
+    event_info: EventInfo = get_event_info(event.url, event.description, event.post_type)
+
+    # event_info returns None if event is more than 75% full
+    if not event_info.priority or in_current_events(event_info.title, event_info.date):
+        logging.info(f"Skipped {event_info.title}, enough members or already posted")
         return
-    elif event_fullness <= .25:
-        event_priority = "High Priority!!!"
-    elif event_fullness <= .5:
-        event_priority = "Medium Priority!!"
-    elif event_fullness <= .75:
-        event_priority = "Low Priority!"
 
     image = fill_template(
-        post_type = post_type,
-        title = event_title,
-        description = event_description,
-        time = event_time,
-        date = event_date,
-        location = event_location,
-        priority = event_priority,
+        post_type = event_info.post_type,
+        title = event_info.title,
+        description = event_info.description,
+        time = event_info.time,
+        date = event_info.date,
+        location = event_info.location,
+        priority = event_info.priority,
     )
     image.save(config.image_save_path)
 
     upload_result = cloudinary_uploader.upload(file=config.image_save_path, return_delete_token=True)
     public_id, secure_url = upload_result.get("public_id"), upload_result.get("secure_url")
     post_to_instagram(
-        caption=f"{event_title}\n\n{event_description}\n\n{docs_url}",
+        caption=f"{event_info.title}\n\n{event_info.description}\n\n{event_info.url}",
         image_url=secure_url,
         fb_token=config.fb_token,
     )
-    add_to_current_events(event_title, event_date, public_id)
-    logging.info(f"Successfully posted {event_title}")
+    add_to_current_events(event_info.title, event_info.date, public_id)
+
+    requests.post("http://keyclub_discord_bot:8000/post_event", json=event_info.model_dump())
+
+    logging.info(f"Successfully posted {event_info.title}")
 
 # main loop
 async def main():
@@ -328,9 +345,6 @@ async def main():
     events = get_events(config.calendar_service, config.calendar_id)
     for event in events:
         try:
-            post_event(
-                docs_url=event.get("event_url"),
-                event_description=event.get("event_description"),
-            )
+            post_event(event)
         except Exception as e:
-            logging.error(e)
+            logging.info(e)
