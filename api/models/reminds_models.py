@@ -8,7 +8,7 @@ from typing import Optional, Any
 class PostEvent(BaseModel):
     url: str
     description: str
-    post_type: str = Field(default=None)
+    post_type: Optional[str] = None
 
 class CurrentEvent(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
