@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
     database.create_admin()
     await update_hours_list()
     await update_photos()
+    await reminds_main()
 
     scheduler = AsyncIOScheduler(timezone=ZoneInfo('America/Los_Angeles'))
     scheduler.add_job(update_hours_list, "cron", hour=12)
@@ -35,7 +36,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", host="0.0.0.0", port=8000, lifespan=lifespan)
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", lifespan=lifespan)
 app.include_router(email_router)
 app.include_router(gallery_router)
 app.include_router(event_router)

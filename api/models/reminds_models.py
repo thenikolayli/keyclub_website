@@ -1,7 +1,8 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime, timezone, timedelta
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, field_validator
+from typing import Optional, Any
+
 
 # request body information that's needed to post an event
 class PostEvent(BaseModel):
@@ -28,3 +29,14 @@ class EventInfo(BaseModel):
     location: str
     priority: Optional[str] = None
     url: str
+
+    @field_validator("post_type")
+    @classmethod
+    def validate_post_type(cls, value):
+        return value or "Volunteers Needed"
+
+    # removes newline characters
+    def model_post_init(self, __context):
+        self.title = self.title.strip(" \t\r\n")
+        self.url = self.url.strip(" \t\r\n")
+        self.description = self.description.strip(" \t\r\n")

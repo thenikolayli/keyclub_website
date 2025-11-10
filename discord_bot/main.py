@@ -2,16 +2,16 @@ from discord import Intents, Activity, ActivityType, Embed, Color, Interaction, 
 from discord.ext import commands
 from contextlib import asynccontextmanager
 
-from discord.ext.commands import bot
 from dotenv import load_dotenv
 from os import getenv
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, status
+from fastapi.responses import JSONResponse
 
 from utils import get_default_name, set_default_name
 from models import EventInfo
-import aiohttp, asyncio, contextlib
+import aiohttp, asyncio
 
 
 load_dotenv()
@@ -35,18 +35,19 @@ async def lifespan(app: FastAPI):
     except asyncio.CancelledError:
         pass
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", host="0.0.0.0", port=8000, lifespan=lifespan)
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", lifespan=lifespan)
 
 
 @app.post("/post_event")
 async def post_event(event_info: EventInfo):
-    channel = client.get_channel(events_channel_id)
+    channel = client.get_channel(events_channel_id) or await client.fetch_channel(events_channel_id)
     embed = Embed(
         title=f"{event_info.post_type}: {event_info.priority}",
-        description=f"**{event_info.title}**\n{event_info.description}\n\n⏰: {event_info.time}\n📅: {event_info.date}\n📍: {event_info.location}\n🔗: {event_info.docs_url}",
+        description=f"**{event_info.title}**\n{event_info.description}\n\n⏰: {event_info.time}\n📅: {event_info.date}\n📍: {event_info.location}\n🔗: {event_info.url}",
         color=Color.gold(),
     )
     await channel.send(embed=embed)
+    return JSONResponse("Posted", status_code=status.HTTP_200_OK)
 
 
 @client.event

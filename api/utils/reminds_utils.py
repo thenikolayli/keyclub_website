@@ -8,7 +8,7 @@ import requests, logging, re
 import api.config as config
 
 from googleapiclient.errors import HttpError
-from api.exceptions import DocumentFetchError, DocumentTableError, DocumentIncompleteTableError
+from api.exceptions import DocumentFetchError, DocumentTableError, DocumentIncompleteTableError, InstagramPostError
 
 from sqlmodel import Session, select
 from api.database import engine
@@ -163,13 +163,16 @@ def get_event_info(url, description, post_type):
             "textRun").get("content")
         event_time = info_table_rows[2].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[0].get(
             "textRun").get("content")
-        event_location = info_table_rows[3].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")[
-            0].get("textRun").get("content")
+
+        # gets ALL the text including hyperlinks, no link addresses though
+        event_location_elements = info_table_rows[3].get("tableCells")[1].get("content")[0].get("paragraph").get("elements")
+        event_location = "".join(
+            element.get("textRun").get("content") for element in event_location_elements if "textRun" in element and "content" in element.get("textRun")
+        )
         event_priority = get_event_priority(url)
     except AttributeError:
         raise DocumentIncompleteTableError("Metadata table is incomplete.")
 
-    event_title.replace("\n", "")
     return EventInfo(
         post_type=post_type,
         title=event_title,
@@ -257,7 +260,7 @@ def post_to_instagram(caption, image_url, fb_token):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {fb_token}",
         },
-        data={
+        json={
             "image_url": image_url,
             "caption": caption
         }
@@ -272,11 +275,12 @@ def post_to_instagram(caption, image_url, fb_token):
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {fb_token}",
             },
-            data={
+            json={
                 "creation_id": container_id,
             }
         )
         return container_id
+    raise InstagramPostError("Couldn't post to Instagram.")
 
 # returns a list of upcoming events that should be posted in the next 7 days
 def get_events(calendar_service, calendar_id):
@@ -328,14 +332,19 @@ def post_event(event: PostEvent):
 
     upload_result = cloudinary_uploader.upload(file=config.image_save_path, return_delete_token=True)
     public_id, secure_url = upload_result.get("public_id"), upload_result.get("secure_url")
-    post_to_instagram(
-        caption=f"{event_info.title}\n\n{event_info.description}\n\n{event_info.url}",
-        image_url=secure_url,
-        fb_token=config.fb_token,
-    )
+    try:
+        post_to_instagram(
+            caption=f"{event_info.title}\n\n{event_info.description}\n\n{event_info.url}",
+            image_url=secure_url,
+            fb_token=config.fb_token,
+        )
+    except InstagramPostError:
+        logging.info(f"Failed to post {event_info.title} to Instagram.")
     add_to_current_events(event_info.title, event_info.date, public_id)
 
-    requests.post("http://keyclub_discord_bot:8000/post_event", json=event_info.model_dump())
+    response = requests.post("http://keyclub_discord_bot:8000/post_event", json=event_info.model_dump())
+    if response.status_code != 200:
+        logging.info(f"Failed to post {event_info.title} to discord.")
 
     logging.info(f"Successfully posted {event_info.title}")
 
@@ -347,4 +356,4 @@ async def main():
         try:
             post_event(event)
         except Exception as e:
-            logging.info(e)
+            logging.info(str(e))
