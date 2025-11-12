@@ -1,5 +1,5 @@
 from sqlmodel import create_engine, SQLModel, Session, select
-import api.config as config
+import config
 
 engine = create_engine(config.db_string)
 
@@ -9,8 +9,8 @@ def update_tables():
 
 # adds a default admin account if its not already there
 def create_admin():
-    from api.models.user_models import User # avoids circular imports
-    from api.models.misc_models import Banner
+    from models.user_models import User # avoids circular imports
+    from models.misc_models import Banner
     with Session(engine) as session:
         admin = session.exec(select(User).where(User.username == config.admin_username)).first()
         if not admin:

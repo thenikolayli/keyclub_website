@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlmodel import select
 
-from api.models.user_models import User, UserCreate, UserUpdate
-from api.utils.auth_utils import require_admin
-import api.database as database
+from models.user_models import User, UserCreate, UserUpdate
+from utils.auth_utils import require_admin
+import database
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 

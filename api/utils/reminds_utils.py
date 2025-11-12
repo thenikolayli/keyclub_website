@@ -3,16 +3,15 @@ from PIL import Image, ImageFont
 from pilmoji import Pilmoji
 from datetime import datetime, timedelta, timezone
 from cloudinary import uploader as cloudinary_uploader
-from api.utils.event_logging_utils import url_to_id
-import requests, logging, re
-import api.config as config
+from utils.event_logging_utils import url_to_id
+import requests, logging, re, config
 
 from googleapiclient.errors import HttpError
-from api.exceptions import DocumentFetchError, DocumentTableError, DocumentIncompleteTableError, InstagramPostError
+from exceptions import DocumentFetchError, DocumentTableError, DocumentIncompleteTableError, InstagramPostError
 
 from sqlmodel import Session, select
-from api.database import engine
-from api.models.reminds_models import CurrentEvent, EventInfo, PostEvent
+from database import engine
+from models.reminds_models import CurrentEvent, EventInfo, PostEvent
 
 middle = 1080 // 2
 left = 120
@@ -199,7 +198,7 @@ def update_current_events():
     with Session(engine) as session:
         current_events = session.exec(select(CurrentEvent).where(CurrentEvent.cloudinary_deleted == False)).all()
         for event in current_events:
-            if event.delete_date < today:
+            if event.delete_date.replace(tzinfo=timezone.utc) < today:
                 cloudinary_uploader.destroy(event.cloudinary_public_id)
                 logging.info(f"Removed {event.title} from current events")
                 event.cloudinary_deleted = True

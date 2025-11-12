@@ -2,11 +2,10 @@ from fastapi.responses import JSONResponse
 from fastapi import APIRouter, status, Depends
 from sqlmodel import select
 
-from api.utils.event_logging_utils import log_event, log_meeting, save_event_to_db
-from api.models.event_models import EventCreate, MeetingCreate, Event
-from api.utils.auth_utils import require_admin
-import api.config as config
-import api.database as database
+from utils.event_logging_utils import log_event, log_meeting, save_event_to_db
+from models.event_models import EventCreate, MeetingCreate, Event
+from utils.auth_utils import require_admin
+import database, config
 
 router = APIRouter(prefix="/api/event", tags=["event"])
 

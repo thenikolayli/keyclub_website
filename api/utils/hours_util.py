@@ -1,9 +1,7 @@
-from api.models.hours_models import Hours
+from models.hours_models import Hours
 from sqlmodel import select, Session
 from datetime import datetime
-import api.config as config
-import api.database as database
-import asyncio, logging
+import asyncio, logging, database, config
 
 # updates the hours list by fetching hours from the spreadsheet
 async def update_hours_list():
@@ -77,20 +75,3 @@ def get_hours(session, name):
             return hours
         return session.exec(select(Hours).where(Hours.name.contains(name))).first()
 
-
-# i will add this later, maybe...
-
-# returns top five people for a year in terms of hours, ex: sophomore
-# def get_year_ranking(names_hours_list, year):
-#     if len(names_hours_list) == 0:
-#         return None
-#
-#     year = year.lower()
-#     year_ranking = [each for each in names_hours_list if each["year"] == year]
-#
-#     for i in range(len(year_ranking)):
-#         for j in range(i + 1, len(year_ranking)):
-#             if year_ranking[i]["all_hours"] < year_ranking[j]["all_hours"]:
-#                 year_ranking[i], year_ranking[j] = year_ranking[j], year_ranking[i]
-#
-#     return year_ranking[0:5]

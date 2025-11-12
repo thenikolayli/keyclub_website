@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlmodel import select
-from api.utils.auth_utils import require_admin
-from api.utils.reminds_utils import post_event, main
-from api.models.reminds_models import PostEvent, CurrentEvent
-import api.database as database
-import traceback, logging
+
+from utils.auth_utils import require_admin
+from utils.reminds_utils import post_event, main
+from models.reminds_models import PostEvent, CurrentEvent
+import traceback, logging, database
 
 router = APIRouter(prefix="/api/reminds", tags=["reminds"])
 

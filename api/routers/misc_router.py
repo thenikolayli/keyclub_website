@@ -3,12 +3,10 @@ from fastapi.responses import JSONResponse
 
 from sqlmodel import select
 from email.message import EmailMessage
-from api.models.misc_models import Message, Banner
-from api.utils.auth_utils import require_admin
-import api.config as config
-import api.database as database
+from models.misc_models import Message, Banner
+from utils.auth_utils import require_admin
 
-import smtplib, json
+import smtplib, database, config
 
 router = APIRouter(prefix="/api/misc", tags=["misc"])
 

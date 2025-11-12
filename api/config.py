@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from os import getenv
 
 from google.oauth2.service_account import Credentials
@@ -6,16 +5,14 @@ from googleapiclient.discovery import build
 
 import cloudinary, logging, json
 
-load_dotenv()
 
+goaccess_path = "data/report.html"
 
-goaccess_path = "api/data/report.html"
-
-banner_json_path = "api/data/banner.json"
+banner_json_path = "data/banner.json"
 keyclub_email = "jhskeyclub21@gmail.com"
 app_password = getenv("APP_PASSWORD")
 
-keyjson_path = "api/data/key.json"
+keyjson_path = "data/key.json"
 scopes = ["https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/documents", "https://www.googleapis.com/auth/calendar.readonly"]
 
 credentials = Credentials.from_service_account_file(keyjson_path, scopes=scopes)
@@ -26,7 +23,7 @@ calendar_service = build("calendar", "v3", credentials=credentials)
 
 image_mimeTypes = ["image/jpeg", "image/png", "image/webp", "image/heif"]
 folder_mimeType = 'application/vnd.google-apps.folder'
-photos_path = "api/data/photos" # because of absolute imports, you're supposed to run this from the parent directory
+photos_path = "data/photos" # because of absolute imports, you're supposed to run this from the parent directory
 photos_folder_id = getenv("PHOTOS_FOLDER_ID")
 
 hours_last_updated = 0
@@ -54,12 +51,12 @@ refresh_maxage = 30 * 24 * 60 * 60  # 30 days
 
 db_string = getenv("DB_STRING")
 
-reminds_template = "api/assets/template.jpg"
-font_path = "api/assets/centurygothic.ttf"
-reminds_logger_path = "api/data/reminds.log"
+reminds_template = "assets/template.jpg"
+font_path = "assets/centurygothic.ttf"
+reminds_logger_path = "data/reminds.log"
 fb_token = getenv("FB_TOKEN")
 calendar_id = getenv("CALENDAR_ID")
-image_save_path = "api/data/post.jpg"
+image_save_path = "data/post.jpg"
 
 override_admin = getenv("OVERRIDE_ADMIN") == "True"
 

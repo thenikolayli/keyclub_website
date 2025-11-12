@@ -2,10 +2,10 @@
 
 from googleapiclient.errors import HttpError
 
-from api.exceptions import SheetFetchError, SheetUpdateError, DocumentFetchError, DocumentTableError, EmptyEventError, \
+from exceptions import SheetFetchError, SheetUpdateError, DocumentFetchError, DocumentTableError, EmptyEventError, \
     DuplicateEventError
-from api.models.event_models import Event
-import api.config as config
+from models.event_models import Event
+import config
 
 # function that takes in a Google Docs/Sheets url and returns the document_id
 def url_to_id(url):

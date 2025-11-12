@@ -1,13 +1,13 @@
 services:
-  keyclub_api:
+  api:
     container_name: keyclub_api
     build: ./api
     volumes:
-      - ./reminds.log:/api/data/reminds.log
-      - ./db.sqlite3:/api/data/db.sqlite3
-      - ./key.json:/api/data/key.json
-      - ./report.html:/api/data/report.html
-      - ./photos:/api/data/photos
+      - ./reminds.log:/app/data/reminds.log
+      - ./db.sqlite3:/app/data/db.sqlite3
+      - ./key.json:/app/data/key.json
+      - ./report.html:/app/data/report.html
+      - ./photos:/app/data/photos
     env_file:
       - api.env
     expose:
@@ -15,8 +15,8 @@ services:
     networks:
       - local
     restart: unless-stopped
-    command: pipenv run uvicorn api.main:app --port 8000 --host 0.0.0.0
-  keyclub_web:
+    command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
+  web:
     container_name: keyclub_web
     build: ./web
     expose:
@@ -25,7 +25,7 @@ services:
       - local
     restart: unless-stopped
     command: node build
-  keyclub_proxy:
+  proxy:
     container_name: keyclub_proxy
     image: nginx:latest
     volumes:
@@ -33,14 +33,14 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./photos:/gallery
     depends_on:
-      - keyclub_api
-      - keyclub_web
+      - api
+      - web
     ports:
       - 80:80
     networks:
       - local
     restart: unless-stopped
-  keyclub_goaccess:
+  goaccess:
     container_name: keyclub_goaccess
     image: allinurl/goaccess:latest
     volumes:
@@ -52,7 +52,7 @@ services:
     networks:
       - local
     restart: unless-stopped
-  keyclub_discord_bot:
+  discord_bot:
     container_name: keyclub_discord_bot
     build: ./discord_bot
     volumes:
@@ -64,7 +64,7 @@ services:
     networks:
       - local
     restart: unless-stopped
-    command: pipenv run uvicorn main:app --port 8000 --host 0.0.0.0
+    command: python -m uvicorn main:app --port 8000 --host 0.0.0.0
 
 networks:
   local:

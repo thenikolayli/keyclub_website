@@ -5,20 +5,20 @@ from contextlib import asynccontextmanager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from zoneinfo import ZoneInfo
 
-from api.routers.misc_router import router as email_router
-from api.routers.gallery_router import router as gallery_router
-from api.routers.event_router import router as event_router
-from api.routers.hours_router import router as hours_router
-from api.routers.users_router import router as users_router
-from api.routers.auth_router import router as auth_router
-from api.routers.admin_router import router as admin_router
-from api.routers.reminds_router import router as reminds_router
+from routers.misc_router import router as email_router
+from routers.gallery_router import router as gallery_router
+from routers.event_router import router as event_router
+from routers.hours_router import router as hours_router
+from routers.users_router import router as users_router
+from routers.auth_router import router as auth_router
+from routers.admin_router import router as admin_router
+from routers.reminds_router import router as reminds_router
 
-from api.routers.gallery_router import update_photos
-from api.utils.hours_util import update_hours_list
-from api.utils.reminds_utils import main as reminds_main
+from routers.gallery_router import update_photos
+from utils.hours_util import update_hours_list
+from utils.reminds_utils import main as reminds_main
 
-import api.database as database
+import database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

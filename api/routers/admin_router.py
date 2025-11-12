@@ -2,8 +2,8 @@ from fastapi import APIRouter, status, Depends
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import FileResponse
 
-from api.utils.auth_utils import require_admin
-import api.config as config
+from utils.auth_utils import require_admin
+import config
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 

@@ -4,11 +4,10 @@ from sqlmodel import select
 
 from datetime import datetime
 
-from api.utils.hours_util import update_hours_list
-from api.utils.hours_util import get_hours as get_hours_util
-from api.models.hours_models import Hours
-import api.config as config
-import api.database as database
+from utils.hours_util import update_hours_list
+from utils.hours_util import get_hours as get_hours_util
+from models.hours_models import Hours
+import database, config
 
 router = APIRouter(prefix="/api/hours", tags=["hours"])
 
@@ -35,9 +34,11 @@ async def get_hours(name: str, session = Depends(database.get_session)):
 
 @router.get("/ranks")
 async def get_ranks(year: int, session = Depends(database.get_session)):
-    ranks = exec(select(Hours).where(Hours.grad_year == year).order_by(Hours.all_hours)).all()
+    ranks = session.exec(select(Hours).where(Hours.grad_year == year).order_by(Hours.all_hours)).all()
 
     for i in range(len(ranks) - 1, 0, -1):
         if ranks[i].name in config.rank_blacklist:
             ranks.pop(i)
+        else:
+            ranks[i] = ranks[i].model_dump(mode="json")
     return JSONResponse(ranks[:5], status_code=status.HTTP_200_OK)

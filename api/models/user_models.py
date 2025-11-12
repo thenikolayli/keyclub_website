@@ -4,8 +4,8 @@ from pydantic import field_validator
 from datetime import datetime, timezone
 from passlib.hash import argon2
 
-import api.config as config
-from api.database import engine
+import config
+from database import engine
 
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)

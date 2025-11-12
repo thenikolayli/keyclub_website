@@ -14,7 +14,6 @@ google-auth-oauthlib = "*"
 motor = "*"
 asyncio = "*"
 apscheduler = "*"
-sqlmodel = "*"
 passlib = "*"
 pyjwt = "*"
 argon2-cffi = "*"
@@ -22,6 +21,9 @@ pillow = "*"
 cloudinary = "*"
 pilmoji = "*"
 emoji = "==1.7"
+sqlalchemy = "*"
+alembic = "*"
+sqlmodel = "*"
 
 [dev-packages]
 

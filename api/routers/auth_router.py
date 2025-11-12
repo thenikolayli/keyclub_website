@@ -3,11 +3,10 @@ from fastapi.responses import JSONResponse
 from typing import Annotated
 
 from sqlmodel import select, Session
-from api.models.user_models import UserLogin, User, RefreshJTI
-from api.config import jwt_secret, cookie_secure, cookie_domain, cookie_samesite, cookie_httponly, access_maxage, refresh_maxage
-from api.utils.auth_utils import generate_token_pair, delete_cookies
-from api.database import get_session
-import time, jwt
+from models.user_models import UserLogin, User, RefreshJTI
+from utils.auth_utils import generate_token_pair, delete_cookies
+from database import get_session
+import time, jwt, config
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -25,18 +24,18 @@ async def login(candidate: UserLogin, session = Depends(get_session)):
     access_token, refresh_token = generate_token_pair(user.id, session)
     response = JSONResponse("Logged in", status_code=status.HTTP_200_OK)
     response.set_cookie("access", access_token,
-                        domain=cookie_domain,
-                        max_age=access_maxage,
-                        httponly=cookie_httponly,
-                        samesite=cookie_samesite,
-                        secure=cookie_secure
+                        domain=config.cookie_domain,
+                        max_age=config.access_maxage,
+                        httponly=config.cookie_httponly,
+                        samesite=config.cookie_samesite,
+                        secure=config.cookie_secure
                         )
     response.set_cookie("refresh", refresh_token,
-                        domain=cookie_domain,
-                        max_age=access_maxage,
-                        httponly=cookie_httponly,
-                        samesite=cookie_samesite,
-                        secure=cookie_secure
+                        domain=config.cookie_domain,
+                        max_age=config.access_maxage,
+                        httponly=config.cookie_httponly,
+                        samesite=config.cookie_samesite,
+                        secure=config.cookie_secure
                         )
     return response
 
@@ -46,7 +45,7 @@ async def logout(refresh: Annotated[str | None, Cookie()] = None, session = Depe
     # if there's a refresh token it needs to be invalidated
     if refresh:
         try:
-            payload = jwt.decode(refresh, jwt_secret, algorithms=["HS256"])
+            payload = jwt.decode(refresh, config.jwt_secret, algorithms=["HS256"])
         except jwt.InvalidTokenError:
             payload = None
 
@@ -67,7 +66,7 @@ async def refresh_tokens(refresh: Annotated[str | None, Cookie()] = None, sessio
 
     # invalidates the old refresh jti
     try:
-        payload = jwt.decode(refresh, jwt_secret, algorithms=["HS256"])
+        payload = jwt.decode(refresh, config.jwt_secret, algorithms=["HS256"])
     except jwt.InvalidTokenError:
         return delete_cookies("Token is invalid", status.HTTP_403_FORBIDDEN)
     if payload:
@@ -88,18 +87,18 @@ async def refresh_tokens(refresh: Annotated[str | None, Cookie()] = None, sessio
     access_token, refresh_token = generate_token_pair(user_id, session)
     response = JSONResponse("Refreshed token pair", status_code=status.HTTP_200_OK)
     response.set_cookie("access", access_token,
-                        domain=cookie_domain,
-                        max_age=access_maxage,
-                        httponly=cookie_httponly,
-                        samesite=cookie_samesite,
-                        secure=cookie_secure
+                        domain=config.cookie_domain,
+                        max_age=config.access_maxage,
+                        httponly=config.cookie_httponly,
+                        samesite=config.cookie_samesite,
+                        secure=config.cookie_secure
                         )
     response.set_cookie("refresh", refresh_token,
-                        domain=cookie_domain,
-                        max_age=refresh_maxage,
-                        httponly=cookie_httponly,
-                        samesite=cookie_samesite,
-                        secure=cookie_secure
+                        domain=config.cookie_domain,
+                        max_age=config.refresh_maxage,
+                        httponly=config.cookie_httponly,
+                        samesite=config.cookie_samesite,
+                        secure=config.cookie_secure
                         )
     return response
 
@@ -110,7 +109,7 @@ async def me(access: Annotated[str | None, Cookie()] = None, session: Session = 
         return JSONResponse("No access token", status.HTTP_404_NOT_FOUND)
 
     try:
-        payload = jwt.decode(access, jwt_secret, algorithms=["HS256"])
+        payload = jwt.decode(access, config.jwt_secret, algorithms=["HS256"])
     except jwt.InvalidTokenError:
         return delete_cookies("Token is invalid", status.HTTP_403_FORBIDDEN)
 

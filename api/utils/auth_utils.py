@@ -3,10 +3,9 @@ from fastapi.responses import JSONResponse
 from typing import Annotated
 
 from sqlmodel import select, Session
-from api.models.user_models import User, RefreshJTI
-from api.database import engine
-import time, uuid, jwt
-import api.config as config
+from models.user_models import User, RefreshJTI
+from database import engine
+import time, uuid, jwt, config
 
 def delete_cookies(reason, code):
     response = JSONResponse(reason, status_code=code)

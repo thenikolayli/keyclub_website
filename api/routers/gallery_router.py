@@ -4,8 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
-import api.config as config
-import os, random
+import os, random, config
 
 router = APIRouter(prefix="/api/gallery", tags=["gallery"])
 
