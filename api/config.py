@@ -4,7 +4,7 @@ from os import getenv
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-import cloudinary, logging
+import cloudinary, logging, json
 
 load_dotenv()
 
@@ -38,6 +38,7 @@ year_col = "C2:C"
 term_hours_col = "I2:I"
 all_hours_col = "H2:H"
 spreadsheet_ranges = [names_col, nicknames_col]
+rank_blacklist = json.loads(getenv("RANK_BLACKLIST"))
 
 banned_usernamechars = " /\\"
 admin_username = getenv("ADMIN_USERNAME")
