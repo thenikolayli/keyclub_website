@@ -1,34 +1,34 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from zoneinfo import ZoneInfo
 
-from routers.misc_router import router as email_router
-from routers.gallery_router import router as gallery_router
-from routers.event_router import router as event_router
-from routers.hours_router import router as hours_router
-from routers.users_router import router as users_router
-from routers.auth_router import router as auth_router
+import config
+import database
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers.admin_router import router as admin_router
-from routers.reminds_router import router as reminds_router
-
+from routers.auth_router import router as auth_router
+from routers.event_router import router as event_router
+from routers.gallery_router import router as gallery_router
 from routers.gallery_router import update_photos
+from routers.hours_router import router as hours_router
+from routers.misc_router import router as email_router
+from routers.reminds_router import router as reminds_router
+from routers.users_router import router as users_router
 from utils.hours_util import update_hours_list
 from utils.reminds_utils import main as reminds_main
 
-import database
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     database.update_tables()
     database.create_admin()
-    await update_hours_list()
-    await update_photos()
-    await reminds_main()
+    if config.run_loop_functions:
+        await update_hours_list()
+        await update_photos()
+        await reminds_main()
 
-    scheduler = AsyncIOScheduler(timezone=ZoneInfo('America/Los_Angeles'))
+    scheduler = AsyncIOScheduler(timezone=ZoneInfo("America/Los_Angeles"))
     scheduler.add_job(update_hours_list, "cron", hour=12)
     scheduler.add_job(update_photos, "cron", hour=12)
     scheduler.add_job(reminds_main, "cron", hour=15)
@@ -36,7 +36,14 @@ async def lifespan(app: FastAPI):
 
     yield
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_url="/openapi.json", root_path="", lifespan=lifespan)
+
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    openapi_url="/openapi.json",
+    root_path="",
+    lifespan=lifespan,
+)
 app.include_router(email_router)
 app.include_router(gallery_router)
 app.include_router(event_router)
