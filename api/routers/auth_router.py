@@ -1,97 +1,105 @@
-from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 import config
 from database import get_session
 from fastapi import APIRouter, Cookie, Depends, status
 from fastapi.responses import JSONResponse
-from models.auth_models import Session as Auth_Session
+from models.auth_models import AuthSession, RememberMe
 from models.user_models import User, UserLogin
 from sqlmodel import Session, select
-from utils.auth_utils import delete_cookies, generate_token_pair
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 # logs user in, creates cookies
 @router.post("/login")
-async def login(candidate: UserLogin, session=Depends(get_session)):
-    user = session.exec(select(User).where(User.username == candidate.username)).first()
+async def login(credentials: UserLogin, db_session=Depends(get_session)):
+    user = db_session.exec(
+        select(User).where(User.username == credentials.username)
+    ).first()
 
     if not user:
         return JSONResponse("User not found", status.HTTP_404_NOT_FOUND)
-    if not user.verify_password(candidate.password):
+    if not user.verify_password(credentials.password):
         return JSONResponse("Incorrect password", status.HTTP_403_FORBIDDEN)
 
     response = JSONResponse("Logged in", status_code=status.HTTP_200_OK)
-    if candidate.remember_me:
-        new_session = Auth_Session(
-            user=user, expires=datetime.now(timezone.utc) + timedelta(days=30)
-        )
+    auth_session = AuthSession(user_id=user.id)
+    db_session.add(auth_session)
+    db_session.commit()
+    response.set_cookie(
+        "authsession",
+        str(
+            auth_session.id
+        ),  # pass in the id so server can perform a lookup for authorization
+        domain=config.cookie_domain,
+        httponly=config.cookie_httponly,
+        samesite=config.cookie_samesite,
+        secure=config.cookie_secure,
+    )
+
+    if credentials.remember_me:
+        remember_me = RememberMe(user_id=user.id)
+        db_session.add(remember_me)
+        db_session.commit()
         response.set_cookie(
-            "session",
-            str(new_session.id),
+            "rememberme",
+            str(remember_me.id),
+            max_age=int(config.remember_me_expiry.total_seconds()),
             domain=config.cookie_domain,
-            max_age=int(timedelta(days=30).total_seconds()),
             httponly=config.cookie_httponly,
             samesite=config.cookie_samesite,
             secure=config.cookie_secure,
         )
-        session.add(new_session)
-    else:
-        new_session = Auth_Session(
-            user=user, expires=datetime.now(timezone.utc) + timedelta(days=2)
-        )
-        response.set_cookie(
-            "session",
-            str(new_session.id),
-            domain=config.cookie_domain,
-            max_age=int(timedelta(days=2).total_seconds()),
-            httponly=config.cookie_httponly,
-            samesite=config.cookie_samesite,
-            secure=config.cookie_secure,
-        )
-        session.add(new_session)
-    session.commit()
     return response
 
 
-# logs the user out. deletes cookie and removes session row
+# logs the user out. deletes cookie and removes sessions
 @router.get("/logout")
 async def logout(
-    session: Annotated[str | None, Cookie()] = None, db_session=Depends(get_session)
+    authsession: Annotated[str | None, Cookie()] = None,
+    rememberme: Annotated[str | None, Cookie()] = None,
+    db_session=Depends(get_session),
 ):
-    # if there's a session row, remove it
-    if session:
-        session_instance = db_session.exec(select(Auth_Session).where(id == session))
+    if authsession:
+        session_instance = db_session.exec(
+            select(AuthSession).where(AuthSession.id == authsession)
+        ).first()
         if session_instance:
             db_session.delete(session_instance)
             db_session.commit()
+    if rememberme:
+        rememberme_instance = db_session.exec(
+            select(RememberMe).where(RememberMe.hash == rememberme)
+        ).first()
+        if rememberme_instance:
+            db_session.delete(rememberme_instance)
+            db_session.commit()
 
     response = JSONResponse("Logged out", status_code=status.HTTP_200_OK)
-    response.delete_cookie("session", path="/", domain=config.cookie_domain)
+    response.delete_cookie("authsession", path="/", domain=config.cookie_domain)
+    response.delete_cookie("rememberme", path="/", domain=config.cookie_domain)
     return response
 
 
-# returns user info based on access token
+# returns user based on access token
 @router.get("/me")
 async def me(
-    session: Annotated[str | None, Cookie()] = None,
+    authsession: Annotated[str | None, Cookie()] = None,
     db_session: Session = Depends(get_session),
 ):
-    if not session:
+    if not authsession:
         return JSONResponse("Not logged in", status.HTTP_404_NOT_FOUND)
-
-    user = session.exec(select(User).where(User.id == int(payload.get("sub")))).first()
+    authsession_row = db_session.exec(
+        select(AuthSession).where(AuthSession.id == authsession)
+    ).first()
+    if not authsession_row:
+        return JSONResponse("Not logged in", status.HTTP_404_NOT_FOUND)
+    user = db_session.exec(
+        select(User).where(User.id == authsession_row.user_id)
+    ).first()
     if not user:
-        return delete_cookies("User not found", status.HTTP_404_NOT_FOUND)
-
-    return JSONResponse(
-        {
-            "user_id": user.id,
-            "username": user.username,
-            "admin": user.admin,
-            "created": str(user.created),
-        },
-        status.HTTP_200_OK,
-    )
+        return JSONResponse("Not logged in", status.HTTP_404_NOT_FOUND)
+    user_data = user.model_dump(mode="json")
+    user_data.pop("password")
+    return JSONResponse(user_data, status.HTTP_200_OK)

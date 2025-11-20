@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import timedelta
 from os import getenv
 
 import cloudinary
@@ -51,6 +52,8 @@ cookie_secure = getenv("COOKIE_SECURE") == "True"
 cookie_domain = getenv("COOKIE_DOMAIN")
 cookie_samesite = "Lax"
 cookie_httponly = True
+auth_session_expiry = timedelta(minutes=60)
+remember_me_expiry = timedelta(days=30)
 
 db_string = getenv("DB_STRING")
 
