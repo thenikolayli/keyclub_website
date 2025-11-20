@@ -1,11 +1,11 @@
-from sqlmodel import SQLModel, Field, Session, select
-from pydantic import field_validator
-
 from datetime import datetime, timezone
-from passlib.hash import argon2
 
 import config
-from database import engine
+from database import session_scope
+from passlib.hash import argon2
+from pydantic import BaseModel, Optional, field_serializer, field_validator
+from sqlmodel import Field, Relationship, Session, SQLModel, select
+
 
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -13,53 +13,52 @@ class User(SQLModel, table=True):
     password: str = Field(nullable=False)
     admin: bool = Field(default=False, nullable=False)
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-    # not class method because it needs to access self
-    def hash_password(self):
-        self.password = argon2.hash(self.password)
+    active_sessions: list["Session"] = Relationship(back_populates="user")
 
     def verify_password(self, password):
         return argon2.verify(password, self.password)
 
-class UserLogin(SQLModel, table=False):
-    username: str
-    password: str
+    # automatically hashes password on instance creation
+    def __post_init__(self):
+        self.password = argon2.hash(self.password)
 
-class UserCreate(SQLModel, table=False):
-    username: str
-    password: str
-    # all validation logic is in the request schema to catch all issues before db constraints
+    @field_serializer("created", when_used="json")
+    def to_str(self, value):
+        return str(value)
+
     @field_validator("username")
-    @classmethod
-    def validate_username(cls, value):
+    def validate_username(self, value):
         if value.strip() == "" or not value:
             raise ValueError("Username cannot be an empty string")
         for char in config.banned_usernamechars:
             print(char)
             if char in value:
                 raise ValueError(f"Character `{char}` is not allowed")
-        with Session(engine) as session:
+        with session_scope() as session:
             result = session.exec(select(User).where(User.username == value)).first()
             if result:
-                raise ValueError(f"Username taken")
+                raise ValueError("Username taken")
         return value
 
     @field_validator("password")
-    @classmethod
-    def validate_password(cls, value):
+    def validate_password(self, value):
         if value.strip() == "" or not value:
             raise ValueError("Password cannot be an empty string")
         return value
 
-class UserUpdate(SQLModel, table=False):
-    username: str | None = None
-    password: str | None = None
-    admin: bool | None = None
 
-class RefreshJTI(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    jti: str
-    user_id: int
-    iat: int
-    exp: int
-    valid: bool
+class UserLogin(BaseModel):
+    username: str
+    password: str
+    remember_me: bool
+
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str]
+    password: Optional[str]
+    admin: Optional[bool]
