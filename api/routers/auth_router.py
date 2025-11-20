@@ -1,19 +1,21 @@
-from fastapi import APIRouter, Depends, status, Cookie
-from fastapi.responses import JSONResponse
+from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
-from sqlmodel import select, Session
-from models.user_models import UserLogin, User, RefreshJTI
-from utils.auth_utils import generate_token_pair, delete_cookies
+import config
 from database import get_session
-import time, jwt, config
+from fastapi import APIRouter, Cookie, Depends, status
+from fastapi.responses import JSONResponse
+from models.auth_models import Session as Auth_Session
+from models.user_models import User, UserLogin
+from sqlmodel import Session, select
+from utils.auth_utils import delete_cookies, generate_token_pair
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 # logs user in, creates cookies
 @router.post("/login")
-async def login(candidate: UserLogin, session = Depends(get_session)):
+async def login(candidate: UserLogin, session=Depends(get_session)):
     user = session.exec(select(User).where(User.username == candidate.username)).first()
 
     if not user:
@@ -21,108 +23,75 @@ async def login(candidate: UserLogin, session = Depends(get_session)):
     if not user.verify_password(candidate.password):
         return JSONResponse("Incorrect password", status.HTTP_403_FORBIDDEN)
 
-    access_token, refresh_token = generate_token_pair(user.id, session)
     response = JSONResponse("Logged in", status_code=status.HTTP_200_OK)
-    response.set_cookie("access", access_token,
-                        domain=config.cookie_domain,
-                        max_age=config.access_maxage,
-                        httponly=config.cookie_httponly,
-                        samesite=config.cookie_samesite,
-                        secure=config.cookie_secure
-                        )
-    response.set_cookie("refresh", refresh_token,
-                        domain=config.cookie_domain,
-                        max_age=config.access_maxage,
-                        httponly=config.cookie_httponly,
-                        samesite=config.cookie_samesite,
-                        secure=config.cookie_secure
-                        )
+    if candidate.remember_me:
+        new_session = Auth_Session(
+            user=user, expires=datetime.now(timezone.utc) + timedelta(days=30)
+        )
+        response.set_cookie(
+            "session",
+            str(new_session.id),
+            domain=config.cookie_domain,
+            max_age=int(timedelta(days=30).total_seconds()),
+            httponly=config.cookie_httponly,
+            samesite=config.cookie_samesite,
+            secure=config.cookie_secure,
+        )
+        session.add(new_session)
+    else:
+        new_session = Auth_Session(
+            user=user, expires=datetime.now(timezone.utc) + timedelta(days=2)
+        )
+        response.set_cookie(
+            "session",
+            str(new_session.id),
+            domain=config.cookie_domain,
+            max_age=int(timedelta(days=2).total_seconds()),
+            httponly=config.cookie_httponly,
+            samesite=config.cookie_samesite,
+            secure=config.cookie_secure,
+        )
+        session.add(new_session)
+    session.commit()
     return response
 
-# logs the user out. validates their refresh jti, deletes cookies
+
+# logs the user out. deletes cookie and removes session row
 @router.get("/logout")
-async def logout(refresh: Annotated[str | None, Cookie()] = None, session = Depends(get_session)):
-    # if there's a refresh token it needs to be invalidated
-    if refresh:
-        try:
-            payload = jwt.decode(refresh, config.jwt_secret, algorithms=["HS256"])
-        except jwt.InvalidTokenError:
-            payload = None
+async def logout(
+    session: Annotated[str | None, Cookie()] = None, db_session=Depends(get_session)
+):
+    # if there's a session row, remove it
+    if session:
+        session_instance = db_session.exec(select(Auth_Session).where(id == session))
+        if session_instance:
+            db_session.delete(session_instance)
+            db_session.commit()
 
-        if payload:
-            old_jti = session.exec(select(RefreshJTI).where(RefreshJTI.jti == payload.get("jti"))).first()
-            if old_jti:
-                old_jti.valid = False
-                session.add(old_jti)
-                session.commit()
-
-    return delete_cookies("Logged out", status.HTTP_200_OK)
-
-# verifies refresh token, rotates it and returns new cookies, logs user out on error
-@router.get("/refresh")
-async def refresh_tokens(refresh: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)):
-    if not refresh:
-        return JSONResponse("No refresh token", status.HTTP_404_NOT_FOUND)
-
-    # invalidates the old refresh jti
-    try:
-        payload = jwt.decode(refresh, config.jwt_secret, algorithms=["HS256"])
-    except jwt.InvalidTokenError:
-        return delete_cookies("Token is invalid", status.HTTP_403_FORBIDDEN)
-    if payload:
-        old_jti = session.exec(select(RefreshJTI).where(RefreshJTI.jti == payload.get("jti"))).first()
-
-        if not old_jti:
-            return delete_cookies("Token not found", status.HTTP_404_NOT_FOUND)
-        if not old_jti.valid:
-            return delete_cookies("Token is invalid", status.HTTP_403_FORBIDDEN)
-        if old_jti.exp < int(time.time()):
-            old_jti.valid = False
-            session.add(old_jti)
-            session.commit()
-
-            return delete_cookies("Token is expired", status.HTTP_403_FORBIDDEN)
-
-    user_id = payload.get("sub")
-    access_token, refresh_token = generate_token_pair(user_id, session)
-    response = JSONResponse("Refreshed token pair", status_code=status.HTTP_200_OK)
-    response.set_cookie("access", access_token,
-                        domain=config.cookie_domain,
-                        max_age=config.access_maxage,
-                        httponly=config.cookie_httponly,
-                        samesite=config.cookie_samesite,
-                        secure=config.cookie_secure
-                        )
-    response.set_cookie("refresh", refresh_token,
-                        domain=config.cookie_domain,
-                        max_age=config.refresh_maxage,
-                        httponly=config.cookie_httponly,
-                        samesite=config.cookie_samesite,
-                        secure=config.cookie_secure
-                        )
+    response = JSONResponse("Logged out", status_code=status.HTTP_200_OK)
+    response.delete_cookie("session", path="/", domain=config.cookie_domain)
     return response
+
 
 # returns user info based on access token
 @router.get("/me")
-async def me(access: Annotated[str | None, Cookie()] = None, session: Session = Depends(get_session)):
-    if not access:
-        return JSONResponse("No access token", status.HTTP_404_NOT_FOUND)
-
-    try:
-        payload = jwt.decode(access, config.jwt_secret, algorithms=["HS256"])
-    except jwt.InvalidTokenError:
-        return delete_cookies("Token is invalid", status.HTTP_403_FORBIDDEN)
+async def me(
+    session: Annotated[str | None, Cookie()] = None,
+    db_session: Session = Depends(get_session),
+):
+    if not session:
+        return JSONResponse("Not logged in", status.HTTP_404_NOT_FOUND)
 
     user = session.exec(select(User).where(User.id == int(payload.get("sub")))).first()
     if not user:
         return delete_cookies("User not found", status.HTTP_404_NOT_FOUND)
 
-    return JSONResponse({
-        "user_id": user.id,
-        "username": user.username,
-        "admin": user.admin,
-        "created": str(user.created)
-    }, status.HTTP_200_OK)
-
-
-
+    return JSONResponse(
+        {
+            "user_id": user.id,
+            "username": user.username,
+            "admin": user.admin,
+            "created": str(user.created),
+        },
+        status.HTTP_200_OK,
+    )

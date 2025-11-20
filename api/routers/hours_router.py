@@ -45,18 +45,13 @@ async def get_hours(name: str, session=Depends(database.get_session)):
 
 @router.get("/ranks")
 async def get_ranks(year: int, session=Depends(database.get_session)):
-    # gets the ranks in ascending order by all hours
     ranks = session.exec(
         select(Hours).where(Hours.grad_year == year).order_by(Hours.all_hours)
     ).all()
-    if len(ranks) <= 5:
-        return JSONResponse([], status_code=status.HTTP_404_NOT_FOUND)
-    cleaned = []
 
-    for rank in ranks:
-        if rank.name not in config.rank_blacklist:
-            to_append = rank.model_dump(mode="json")
-            to_append.pop("id")
-            cleaned.append(to_append)
-    # returns the last 5 elements and reverses them so it's top 5 people by all hours in ascending order
-    return JSONResponse(cleaned[-5:][::-1], status_code=status.HTTP_200_OK)
+    for i in range(len(ranks) - 1, 0, -1):
+        if ranks[i].name in config.rank_blacklist:
+            ranks.pop(i)
+        else:
+            ranks[i] = ranks[i].model_dump(mode="json")
+    return JSONResponse(ranks[:5], status_code=status.HTTP_200_OK)

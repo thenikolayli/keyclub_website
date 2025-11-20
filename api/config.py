@@ -51,8 +51,6 @@ cookie_secure = getenv("COOKIE_SECURE") == "True"
 cookie_domain = getenv("COOKIE_DOMAIN")
 cookie_samesite = "Lax"
 cookie_httponly = True
-access_maxage = 5 * 60  # 5 minutes
-refresh_maxage = 30 * 24 * 60 * 60  # 30 days
 
 db_string = getenv("DB_STRING")
 
