@@ -10,9 +10,9 @@ from sqlmodel import Field, SQLModel, select
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    username: str = Field(unique=True, nullable=False)
-    password: str = Field(nullable=False)
-    admin: bool = Field(default=False, nullable=False)
+    username: str = Field(unique=True)
+    password: str
+    admin: bool = Field(default=False)
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     def verify_password(self, password):
@@ -26,12 +26,13 @@ class User(SQLModel, table=True):
     def to_str(self, value):
         return str(value)
 
-    @field_serializer("id", "password", when_used="json")
-    def exclude_fields(self):
+    @field_serializer("password", when_used="json")
+    def exclude_fields(self, value):
         return None
 
     @field_validator("username")
-    def validate_username(self, value):
+    @classmethod
+    def validate_username(cls, value):
         if value.strip() == "" or not value:
             raise ValueError("Username cannot be an empty string")
         for char in config.banned_usernamechars:
@@ -45,7 +46,8 @@ class User(SQLModel, table=True):
         return value
 
     @field_validator("password")
-    def validate_password(self, value):
+    @classmethod
+    def validate_password(cls, value):
         if value.strip() == "" or not value:
             raise ValueError("Password cannot be an empty string")
         return value

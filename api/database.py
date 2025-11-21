@@ -26,7 +26,6 @@ def create_admin():
                 password=config.admin_password,
                 admin=True,
             )
-            admin.hash_password()
             session.add(admin)
             session.commit()
 

@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from models.user_models import User, UserCreate, UserUpdate
 from passlib.hash import argon2
 from sqlmodel import select
+from utils.auth_utils import require_admin
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
