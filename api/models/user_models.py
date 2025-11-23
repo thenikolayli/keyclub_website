@@ -15,20 +15,15 @@ class User(SQLModel, table=True):
     admin: bool = Field(default=False)
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+    def hash_password(self):
+        self.password = argon2.hash(self.password)
+
     def verify_password(self, password):
         return argon2.verify(password, self.password)
-
-    # automatically hashes password on instance creation
-    def __post_init__(self):
-        self.password = argon2.hash(self.password)
 
     @field_serializer("created", when_used="json")
     def to_str(self, value):
         return str(value)
-
-    @field_serializer("password", when_used="json")
-    def exclude_fields(self, value):
-        return None
 
     @field_validator("username")
     @classmethod
@@ -50,6 +45,8 @@ class User(SQLModel, table=True):
     def validate_password(cls, value):
         if value.strip() == "" or not value:
             raise ValueError("Password cannot be an empty string")
+        if not value.startswith("$argon2"):
+            return argon2.hash(value)
         return value
 
 

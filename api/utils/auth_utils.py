@@ -8,6 +8,7 @@ from fastapi.exceptions import HTTPException
 from models.auth_models import AuthSession, RememberMe
 from models.user_models import User
 from passlib.hash import argon2
+from sqlalchemy.sql.expression import delete
 from sqlmodel import select
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -19,6 +20,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         rememberme = request.cookies.get("rememberme")
         new_authsession = authsession
         new_rememberme = rememberme
+        delete_authsession = False
+        delete_rememberme = False
 
         if authsession:
             with session_scope() as db_session:
@@ -26,10 +29,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     select(AuthSession).where(AuthSession.id == UUID(authsession))
                 ).first()
                 # if authsession row exists and is not expired
-                if (
-                    authsession_row is not None
-                    and authsession_row.expires > datetime.now(timezone.utc)
-                ):
+                if authsession_row is not None and authsession_row.expires.replace(
+                    tzinfo=timezone.utc
+                ) > datetime.now(timezone.utc):
                     user = db_session.exec(
                         select(User).where(User.id == authsession_row.user_id)
                     ).first()
@@ -38,13 +40,15 @@ class AuthMiddleware(BaseHTTPMiddleware):
                             authsession_row.expires + config.auth_session_expiry
                         )
                         db_session.add(authsession_row)
-                        request.state.user = user.model_dump(mode="json")
+                        request.state.user = user.model_dump(
+                            mode="json", exclude={"password", "id"}
+                        )
                     else:  # otherwise, delete authsession
                         db_session.delete(authsession_row)
-                        new_authsession = None
-                        new_rememberme = None
+                        delete_authsession = True
+                        delete_rememberme = True
                 else:
-                    new_authsession = None
+                    delete_authsession = True
             db_session.commit()
         if (not authsession or not new_authsession) and rememberme is not None:
             with session_scope() as db_session:
@@ -52,9 +56,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     select(RememberMe).where(RememberMe.hash == argon2.hash(rememberme))
                 ).first()
                 # if remember me row exists and hasn't expired
-                if rememberme_row is not None and rememberme_row.expires > datetime.now(
-                    timezone.utc
-                ):
+                if rememberme_row is not None and rememberme_row.expires.replace(
+                    tzinfo=timezone.utc
+                ) > datetime.now(timezone.utc):
                     user = db_session.exec(
                         select(User).where(User.id == rememberme_row.user_id)
                     ).first()
@@ -68,14 +72,16 @@ class AuthMiddleware(BaseHTTPMiddleware):
                         db_session.delete(rememberme_row)
                         new_authsession = authsession_row.id
                         new_rememberme = new_rememberme_row.id
-                        request.state.user = user.model_dump(mode="json")
+                        request.state.user = user.model_dump(
+                            mode="json", exclude={"password", "id"}
+                        )
                     else:  # otherwise, delete rememberme
                         db_session.delete(rememberme_row)
-                        new_authsession = None
-                        new_rememberme = None
+                        delete_authsession = True
+                        delete_rememberme = True
                 else:
-                    new_authsession = None
-                    new_rememberme = None
+                    delete_authsession = True
+                    delete_rememberme = True
                 db_session.commit()
 
         response = await call_next(request)
@@ -88,8 +94,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 samesite=config.cookie_samesite,
                 secure=config.cookie_secure,
             )
-        else:
-            response.delete_cookie("authsession", path="/", domain=config.cookie_domain)
         if new_rememberme is not None:
             response.set_cookie(
                 "rememberme",
@@ -100,7 +104,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 samesite=config.cookie_samesite,
                 secure=config.cookie_secure,
             )
-        else:
+        if delete_authsession:
+            response.delete_cookie("authsession", path="/", domain=config.cookie_domain)
+        if delete_rememberme:
             response.delete_cookie("rememberme", path="/", domain=config.cookie_domain)
         return response
 

@@ -40,6 +40,7 @@ async def login(credentials: UserLogin, db_session=Depends(get_session)):
     if credentials.remember_me:
         rememberme = RememberMe(user_id=user.id)
         db_session.add(rememberme)
+        db_session.flush()
         response.set_cookie(
             "rememberme",
             str(rememberme.id),
@@ -91,3 +92,4 @@ async def me(request: Request):
 # to do: add read and delete for sessions
 # read all sessions, it should be count and skip
 # delete session should be username
+# create uuid id and hash and pass it on creation

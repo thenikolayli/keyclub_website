@@ -15,6 +15,7 @@ from routers.hours_router import router as hours_router
 from routers.misc_router import router as email_router
 from routers.reminds_router import router as reminds_router
 from routers.users_router import router as users_router
+from utils.auth_utils import AuthMiddleware
 from utils.hours_util import update_hours_list
 from utils.reminds_utils import main as reminds_main
 
@@ -60,3 +61,4 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(AuthMiddleware)
