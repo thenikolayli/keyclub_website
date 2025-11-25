@@ -22,7 +22,7 @@ class AuthSession(SQLModel, table=True):
 
 
 class RememberMe(SQLModel, table=True):
-    id: Optional[UUID] = Field(default=None, primary_key=True)
+    id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
     hash: Optional[str] = None
     created: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     expires: datetime = Field(
@@ -30,10 +30,8 @@ class RememberMe(SQLModel, table=True):
     )
     user_id: int = Field(foreign_key="user.id")
 
-    # generates a random UUID for itself and saves a hash of it, if there isn't one
-    def model_post_init(self, __context):
-        if self.id is None:
-            self.id = uuid4()
+    def generate_hash(self):
+        if self.hash is None:
             self.hash = argon2.hash(str(self.id))
 
     @field_serializer("created", "expires", "id", when_used="json")

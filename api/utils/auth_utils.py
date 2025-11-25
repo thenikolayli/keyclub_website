@@ -8,7 +8,6 @@ from fastapi.exceptions import HTTPException
 from models.auth_models import AuthSession, RememberMe
 from models.user_models import User
 from passlib.hash import argon2
-from sqlalchemy.sql.expression import delete
 from sqlmodel import select
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -69,9 +68,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
                         new_rememberme_row = RememberMe(user_id=rememberme_row.user_id)
                         db_session.add(authsession_row)
                         db_session.add(new_rememberme_row)
+                        db_session.flush()  # assigns id
+                        new_rememberme_row.generate_hash()
                         db_session.delete(rememberme_row)
-                        new_authsession = authsession_row.id
-                        new_rememberme = new_rememberme_row.id
+                        new_authsession = str(authsession_row.id)
+                        new_rememberme = str(new_rememberme_row.id)
                         request.state.user = user.model_dump(
                             mode="json", exclude={"password", "id"}
                         )
@@ -88,7 +89,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if new_authsession is not None:
             response.set_cookie(
                 "authsession",
-                str(new_authsession),
+                new_authsession,
                 domain=config.cookie_domain,
                 httponly=config.cookie_httponly,
                 samesite=config.cookie_samesite,
@@ -97,7 +98,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if new_rememberme is not None:
             response.set_cookie(
                 "rememberme",
-                str(new_rememberme),
+                new_rememberme,
                 max_age=int(config.remember_me_expiry.total_seconds()),
                 domain=config.cookie_domain,
                 httponly=config.cookie_httponly,
