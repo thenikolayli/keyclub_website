@@ -62,17 +62,17 @@ async def logout(
     rememberme: Annotated[str | None, Cookie()] = None,
     db_session=Depends(get_session),
 ):
-    if authsession:
+    if authsession is not None:
         session_row = db_session.exec(
             select(AuthSession).where(AuthSession.id == UUID(authsession))
         ).first()
-        if session_row:
+        if session_row is not None:
             db_session.delete(session_row)
-    if rememberme:
+    if rememberme is not None:
         rememberme_row = db_session.exec(
             select(RememberMe).where(RememberMe.hash == argon2.hash(rememberme))
         ).first()
-        if rememberme_row:
+        if rememberme_row is not None:
             db_session.delete(rememberme_row)
     db_session.commit()
     response = JSONResponse("Logged out", status_code=status.HTTP_200_OK)

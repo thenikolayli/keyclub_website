@@ -17,12 +17,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         authsession = request.cookies.get("authsession")
         rememberme = request.cookies.get("rememberme")
-        new_authsession = authsession
-        new_rememberme = rememberme
-        delete_authsession = False
-        delete_rememberme = False
+        new_authsession = None
+        new_rememberme = None
 
-        if authsession:
+        # the only time when the user isn't logged out is if they have a valid (in db and linked to a real user), unexpired authsession
+        if authsession is not None:
             with session_scope() as db_session:
                 authsession_row = db_session.exec(
                     select(AuthSession).where(AuthSession.id == UUID(authsession))
@@ -42,14 +41,13 @@ class AuthMiddleware(BaseHTTPMiddleware):
                         request.state.user = user.model_dump(
                             mode="json", exclude={"password", "id"}
                         )
+                        new_authsession = authsession
+                        new_rememberme = rememberme
                     else:  # otherwise, delete authsession
                         db_session.delete(authsession_row)
-                        delete_authsession = True
-                        delete_rememberme = True
-                else:
-                    delete_authsession = True
             db_session.commit()
-        if (not authsession or not new_authsession) and rememberme is not None:
+        # the only time when the user isn't logged out is if they have a valid (correct id, in db, and linked to a real user), unexpired rememberme
+        elif authsession is None and rememberme is not None:
             with session_scope() as db_session:
                 rememberme_row = db_session.exec(
                     select(RememberMe).where(RememberMe.hash == argon2.hash(rememberme))
@@ -64,28 +62,28 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     if (
                         user is not None
                     ):  # if user exists, issue new authsession and rotate rememberme
-                        authsession_row = AuthSession(user_id=rememberme_row.user_id)
+                        new_authsession_row = AuthSession(
+                            user_id=rememberme_row.user_id
+                        )
                         new_rememberme_row = RememberMe(user_id=rememberme_row.user_id)
-                        db_session.add(authsession_row)
-                        db_session.add(new_rememberme_row)
-                        db_session.flush()  # assigns id
-                        new_rememberme_row.generate_hash()
                         db_session.delete(rememberme_row)
-                        new_authsession = str(authsession_row.id)
+                        db_session.add(new_authsession_row)
+                        db_session.add(new_rememberme_row)
+                        db_session.flush()  # assigns ids
+                        new_rememberme_row.generate_hash()
+                        new_authsession = str(new_authsession_row.id)
                         new_rememberme = str(new_rememberme_row.id)
                         request.state.user = user.model_dump(
                             mode="json", exclude={"password", "id"}
                         )
                     else:  # otherwise, delete rememberme
                         db_session.delete(rememberme_row)
-                        delete_authsession = True
-                        delete_rememberme = True
-                else:
-                    delete_authsession = True
-                    delete_rememberme = True
                 db_session.commit()
 
         response = await call_next(request)
+        # if there's a new authsession or rememberme, set them
+        # if there aren't and old ones exist, delete them
+        # if there aren't but old ones don't exist, don't delete them (user may be logging in)
         if new_authsession is not None:
             response.set_cookie(
                 "authsession",
@@ -95,6 +93,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 samesite=config.cookie_samesite,
                 secure=config.cookie_secure,
             )
+        elif new_authsession is None and authsession is not None:
+            response.delete_cookie("authsession", path="/", domain=config.cookie_domain)
         if new_rememberme is not None:
             response.set_cookie(
                 "rememberme",
@@ -105,9 +105,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 samesite=config.cookie_samesite,
                 secure=config.cookie_secure,
             )
-        if delete_authsession:
-            response.delete_cookie("authsession", path="/", domain=config.cookie_domain)
-        if delete_rememberme:
+        elif new_rememberme is None and rememberme is not None:
             response.delete_cookie("rememberme", path="/", domain=config.cookie_domain)
         return response
 
