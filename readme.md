@@ -1,3 +1,3 @@
 # Key Club Website
 
-DO NOT COMMIT ANY .ENV FILE EVER
+The website for the Henry M. Jackson High School Key Club
