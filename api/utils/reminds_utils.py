@@ -1,8 +1,5 @@
 # utility functions for main.py
-from PIL import Image, ImageFont
-from pilmoji import Pilmoji
 from datetime import datetime, timedelta, timezone
-from cloudinary import uploader as cloudinary_uploader
 from utils.event_logging_utils import url_to_id
 import requests, logging, re, config
 
@@ -12,65 +9,6 @@ from exceptions import DocumentFetchError, DocumentTableError, DocumentIncomplet
 from sqlmodel import Session, select
 from database import engine
 from models.reminds_models import CurrentEvent, EventInfo, PostEvent
-
-middle = 1080 // 2
-left = 120
-width = 1080 - (left * 2)
-
-post_type_y_start = 100
-post_type_y_end = 220
-title_y_start = post_type_y_end
-title_y_end = 400
-description_y_start = title_y_end + 30
-description_y_end = 900
-info_y_start = description_y_end
-info_y_end = 1100
-
-# breaks text into lines to fit max_width
-def break_text(text, font, max_width):
-    words = text.split()
-    lines = []
-    line = ""
-    broken_text = ""
-
-    for index in range(len(words)):
-        word = words[index]
-        # if line isn't blank, add on to it, otherwise start it with the current word
-        if line:
-            temp_line = line + " " + word
-        else:
-            temp_line = word
-
-        # check if the line fits within the width
-        temp_bbox = font.getbbox(temp_line)
-        temp_line_width = temp_bbox[2] - temp_bbox[0]
-        # if new line is too wide or has a special emoji, start a new line, otherwise continue
-        if temp_line_width > max_width or words[index] in ["📅", "⌚", "📍"]:
-            lines.append(line)
-            line = word
-        else:
-            line = temp_line
-    # appends last line if there is one
-    lines.append(line)
-    for line in lines:
-        broken_text += line + "\n"
-    return broken_text
-
-# fits text into max_width and max_height to have biggest font size, returns text string and font size
-def fit_text(text, max_width, max_height, size = 2, max_size = 100):
-    font = ImageFont.truetype(config.font_path, size)
-    temp_text = break_text(text, font, max_width)
-    ascend, descent = font.getmetrics()
-    temp_text_line_height = ascend + descent
-    temp_text_height = temp_text_line_height * temp_text.count("\n")
-
-    # if the text is too tall or the size is beyond the limit, decrement it and return, otherwise increment and rerun
-    if temp_text_height > max_height or size > max_size:
-        size -= 2
-        font = ImageFont.truetype(config.font_path, size)
-        return break_text(text, font, max_width), size
-    else:
-        return fit_text(text, max_width, max_height, size + 2, max_size)
 
 # returns the event priority based on fullness of sign up sheet
 def get_event_priority(docs_url):
@@ -218,69 +156,6 @@ def add_to_current_events(event_title, event_date, event_cloudinary_public_id):
         session.commit()
     logging.info(f"Added {event_title} to current events")
 
-# generates a png with event info
-def fill_template(post_type, title, description, time, date, location, priority = None):
-    global middle, left, width, post_type_y_start, post_type_y_end, title_y_start, title_y_end, description_y_start, description_y_end, info_y_start, info_y_end
-    image = Image.open(config.reminds_template).convert("RGB")
-    start_time, end_time = time.split("-")
-    info = f"📅 {date} ⌚ From {start_time} to {end_time} 📍 {location}"
-    if priority:
-        post_type = f"{post_type}: {priority}"
-
-    post_type, post_type_font_size = fit_text(post_type, width, post_type_y_end - post_type_y_start)
-    post_type_font = ImageFont.truetype(config.font_path, post_type_font_size)
-    title, title_font_size = fit_text(title, width, title_y_end - title_y_start)
-    title_font = ImageFont.truetype(config.font_path, title_font_size)
-    description_max_font_size = title_font_size if title_font_size - 15 <= 2 else title_font_size - 15
-    description, description_font_size = fit_text(description, width, description_y_end - description_y_start, max_size=description_max_font_size)
-    description_font = ImageFont.truetype(config.font_path, description_font_size)
-    info, info_font_size = fit_text(info, width, title_y_end - title_y_start)
-    info_font = ImageFont.truetype(config.font_path, info_font_size)
-
-    with Pilmoji(image) as pilmoji:
-        pilmoji.text((middle, post_type_y_start), post_type, font=post_type_font, fill="black", anchor="ma")
-        pilmoji.text((middle, title_y_start), title, font=title_font, fill="black", anchor="ma")
-        pilmoji.text((left, description_y_start), description, font=description_font, fill="black", anchor="la")
-        pilmoji.text((left, info_y_start), info, font=info_font, fill="black", anchor="la")
-
-    # lines for deciding starting and ending y positions
-    # draw.rectangle((left, post_type_y_start, left + width, post_type_y_end), None, "red", width=1)
-    # draw.rectangle((left, title_y_start, left + width, title_y_end), None, "blue", width=1)
-    # draw.rectangle((left, description_y_start, left + width, description_y_end), None, "orange", width=1)
-    # draw.rectangle((left, info_y_start, left + width, info_y_end), None, "black", width=1)
-
-    return image
-
-# creates a container and posts it to instagram
-def post_to_instagram(caption, image_url, fb_token):
-    response = requests.post(
-        f"https://graph.instagram.com/v23.0/me/media",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {fb_token}",
-        },
-        json={
-            "image_url": image_url,
-            "caption": caption
-        }
-    )
-
-    if response.status_code == 200:
-        container_id = response.json()["id"]
-
-        requests.post(
-            f"https://graph.instagram.com/v23.0/me/media_publish",
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {fb_token}",
-            },
-            json={
-                "creation_id": container_id,
-            }
-        )
-        return container_id
-    raise InstagramPostError("Couldn't post to Instagram.")
-
 # returns a list of upcoming events that should be posted in the next 7 days
 def get_events(calendar_service, calendar_id):
     today = datetime.now(timezone.utc).isoformat()
@@ -317,31 +192,10 @@ def post_event(event: PostEvent):
     if not event_info.priority or in_current_events(event_info.title, event_info.date):
         logging.info(f"Skipped {event_info.title}, enough members or already posted")
         return
-
-    image = fill_template(
-        post_type = event_info.post_type,
-        title = event_info.title,
-        description = event_info.description,
-        time = event_info.time,
-        date = event_info.date,
-        location = event_info.location,
-        priority = event_info.priority,
-    )
-    image.save(config.image_save_path)
-
-    upload_result = cloudinary_uploader.upload(file=config.image_save_path, return_delete_token=True)
-    public_id, secure_url = upload_result.get("public_id"), upload_result.get("secure_url")
-    try:
-        post_to_instagram(
-            caption=f"{event_info.title}\n\n{event_info.description}\n\n{event_info.url}",
-            image_url=secure_url,
-            fb_token=config.fb_token,
-        )
-    except InstagramPostError:
-        logging.info(f"Failed to post {event_info.title} to Instagram.")
     add_to_current_events(event_info.title, event_info.date, public_id)
 
-    response = requests.post("http://keyclub_discord_bot:8000/post_event", json=event_info.model_dump())
+    # note to self: add a config variable for this...
+    response = requests.post("http://localhost:8000/post_event", json=event_info.model_dump())
     if response.status_code != 200:
         logging.info(f"Failed to post {event_info.title} to discord.")
 

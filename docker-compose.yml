@@ -10,19 +10,13 @@ services:
       - ./photos:/app/data/photos
     env_file:
       - api.env
-    expose:
-      - 8000
-    networks:
-      - local
+    network_mode: host
     restart: unless-stopped
     command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
   web:
     container_name: keyclub_web
     build: ./web
-    expose:
-      - 3000
-    networks:
-      - local
+    network_mode: host
     restart: unless-stopped
     command: node build
   proxy:
@@ -35,10 +29,7 @@ services:
     depends_on:
       - api
       - web
-    ports:
-      - 80:80
-    networks:
-      - local
+    network_mode: host
     restart: unless-stopped
   goaccess:
     container_name: keyclub_goaccess
@@ -47,10 +38,7 @@ services:
       - ./access.log:/access.log
       - ./report.html:/report.html
     command: "access.log -o /report.html --log-format=COMBINED --real-time-html --ws-url=ws://localhost:80/goaccess"
-    expose:
-      - 7890
-    networks:
-      - local
+    network_mode: host
     restart: unless-stopped
   discord_bot:
     container_name: keyclub_discord_bot
@@ -59,12 +47,6 @@ services:
       - ./default_names.json:/default_names.json
     env_file:
       - discord_bot.env
-    expose:
-      - 8000
-    networks:
-      - local
+    network_mode: host
     restart: unless-stopped
     command: python -m uvicorn main:app --port 8000 --host 0.0.0.0
-
-networks:
-  local:
