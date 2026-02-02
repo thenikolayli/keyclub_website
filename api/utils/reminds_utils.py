@@ -129,28 +129,12 @@ def in_current_events(event_title, event_date):
             return True
     return False
 
-# updates the log and removes passed events
-def update_current_events():
-    today = datetime.now(timezone.utc)
-
-    with Session(engine) as session:
-        current_events = session.exec(select(CurrentEvent).where(CurrentEvent.cloudinary_deleted == False)).all()
-        for event in current_events:
-            if event.delete_date.replace(tzinfo=timezone.utc) < today:
-                cloudinary_uploader.destroy(event.cloudinary_public_id)
-                logging.info(f"Removed {event.title} from current events")
-                event.cloudinary_deleted = True
-                session.add(event)
-                session.commit()
-    logging.info("Updated current events")
-
 # adds an event to the log
-def add_to_current_events(event_title, event_date, event_cloudinary_public_id):
+def add_to_current_events(event_title, event_date):
     with Session(engine) as session:
         new_event = CurrentEvent(
             title = event_title,
-            date = event_date,
-            cloudinary_public_id = event_cloudinary_public_id,
+            date = event_date
         )
         session.add(new_event)
         session.commit()
@@ -192,10 +176,10 @@ def post_event(event: PostEvent):
     if not event_info.priority or in_current_events(event_info.title, event_info.date):
         logging.info(f"Skipped {event_info.title}, enough members or already posted")
         return
-    add_to_current_events(event_info.title, event_info.date, public_id)
+    add_to_current_events(event_info.title, event_info.date)
 
     # note to self: add a config variable for this...
-    response = requests.post("http://localhost:8000/post_event", json=event_info.model_dump())
+    response = requests.post(config.discord_bot_url + "/post_event", json=event_info.model_dump())
     if response.status_code != 200:
         logging.info(f"Failed to post {event_info.title} to discord.")
 
@@ -203,7 +187,6 @@ def post_event(event: PostEvent):
 
 # main loop
 async def main():
-    update_current_events()
     events = get_events(config.calendar_service, config.calendar_id)
     for event in events:
         try:

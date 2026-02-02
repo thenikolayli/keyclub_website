@@ -15,12 +15,11 @@ class CurrentEvent(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str
     date: str # leaders may format event dates differently, making it hard to convert str to datetime object
+    # delete date is when events are deleted from CurrentEvents
     delete_date: datetime = Field(
         sa_column=Column(DateTime(timezone=True), nullable=False),
-        default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=7) # cloudinary photos are deleted a year later
+        default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=7)
     )
-    cloudinary_deleted: bool = Field(default=False)
-    cloudinary_public_id: str
 
 # class representing an event that is yet to be posted
 # different from PostEvent in that this is used to easily pass info between functions

@@ -189,7 +189,7 @@
 
 <Header />
 <section class="w-full h-auto bg-stone-200">
-    <ImageHeader text="Hours" imageSrc="/faz.webp" dim={true} />
+    <ImageHeader text="Hours" imageSrc="/hours.png" dim={true} />
     <div
         class="relative w-full lg:w-1/2 mx-auto h-screen min-h-screen flex flex-col items-center p-4 text-kcblack bg-stone-200"
     >

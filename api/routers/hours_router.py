@@ -48,10 +48,9 @@ async def get_ranks(year: int, session=Depends(database.get_session)):
     ranks = session.exec(
         select(Hours).where(Hours.grad_year == year).order_by(Hours.all_hours)
     ).all()
+    filtered_ranks = []
 
-    for i in range(len(ranks) - 1, 0, -1):
-        if ranks[i].name in config.rank_blacklist:
-            ranks.pop(i)
-        else:
-            ranks[i] = ranks[i].model_dump(mode="json")
-    return JSONResponse(ranks[:5], status_code=status.HTTP_200_OK)
+    for rank in ranks:
+        if rank.name not in config.rank_blacklist:
+            filtered_ranks.append(rank.model_dump(mode="json"))
+    return JSONResponse(filtered_ranks[:5], status_code=status.HTTP_200_OK)

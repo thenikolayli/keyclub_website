@@ -1,5 +1,6 @@
 services:
   api:
+    container_name: keyclub_api
     build: ./api
     volumes:
       - ./reminds.log:/app/data/reminds.log
@@ -9,17 +10,17 @@ services:
       - ./photos:/app/data/photos
     env_file:
       - api.env
-    ports:
-      - 8000:8000
+    network_mode: host
     restart: unless-stopped
     command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
   web:
+    container_name: keyclub_web
     build: ./web
-    ports:
-      - 3000:3000
+    network_mode: host
     restart: unless-stopped
     command: node build
   proxy:
+    container_name: keyclub_proxy
     image: nginx:latest
     volumes:
       - ./access.log:/var/log/nginx/access.log
@@ -28,24 +29,24 @@ services:
     depends_on:
       - api
       - web
-    ports:
-      - 80:80
+    network_mode: host
     restart: unless-stopped
-  # goaccess:
-  #   image: allinurl/goaccess:latest
-  #   volumes:
-  #     - ./access.log:/access.log
-  #     - ./report.html:/report.html
-  #   command: "access.log -o /report.html --log-format=COMBINED --real-time-html --ws-url=ws://localhost:80/goaccess --invalid-requests"
-  #   ports:
-  #     - 7890:7890
-  #   restart: unless-stopped
+  goaccess:
+    container_name: keyclub_goaccess
+    image: allinurl/goaccess:latest
+    volumes:
+      - ./access.log:/access.log
+      - ./report.html:/report.html
+    command: "access.log -o /report.html --log-format=COMBINED --real-time-html --ws-url=ws://localhost:80/goaccess"
+    network_mode: host
+    restart: unless-stopped
   discord_bot:
+    container_name: keyclub_discord_bot
     build: ./discord_bot
     volumes:
       - ./default_names.json:/default_names.json
     env_file:
       - discord_bot.env
-    ports:
-      - 8001:8001
-    command: python -m uvicorn main:app --port 8001 --host 0.0.0.0
+    network_mode: host
+    restart: unless-stopped
+    command: python -m uvicorn main:app --port 8000 --host 0.0.0.0

@@ -3,7 +3,6 @@ import logging
 from datetime import timedelta
 from os import getenv
 
-import cloudinary
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
@@ -60,20 +59,12 @@ db_string = getenv("DB_STRING")
 reminds_template = "assets/template.jpg"
 font_path = "assets/centurygothic.ttf"
 reminds_logger_path = "data/reminds.log"
-fb_token = getenv("FB_TOKEN")
 calendar_id = getenv("CALENDAR_ID")
 image_save_path = "data/post.jpg"
+discord_bot_url = getenv("DISCORD_BOT_URL")
 
 override_admin = getenv("OVERRIDE_ADMIN") == "True"
 run_loop_functions = getenv("RUN_LOOP_FUNCTIONS") == "True"
-
-cloudinary.config(
-    cloud_name=getenv("CLOUD_NAME"),
-    api_key=getenv("CLOUD_API_KEY"),
-    api_secret=getenv("CLOUD_API_SECRET"),
-    secure=True,
-)
-
 logging.basicConfig(
     filename=reminds_logger_path,
     level=logging.INFO,

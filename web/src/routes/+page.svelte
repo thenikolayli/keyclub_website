@@ -3,8 +3,8 @@
     import Footer from "$lib/components/Footer.svelte";
     import Icon from "@iconify/svelte"
     import gsap from "gsap";
-    import SplitText from "gsap/SplitText";
-    import ScrollTrigger from "gsap/ScrollTrigger";
+    import {SplitText} from "gsap/SplitText";
+    import {ScrollTrigger} from "gsap/ScrollTrigger";
     import {onMount} from "svelte";
     import axios from "axios";
     import textFit from "textfit";
@@ -72,8 +72,8 @@
             }
         })
 
-        const intro1 = SplitText.create(".intro1").words
-        const intro2 = SplitText.create(".intro2").words
+        const intro1 = new SplitText(".intro1", {type: "words"}).words;
+        const intro2 = new SplitText(".intro2", {type: "words"}).words;
 
         timeline.fromTo(intro1, {
             opacity: 0,
@@ -141,7 +141,7 @@
 <Header />
 
 <section class="relative w-full h-screen flex flex-col overflow-hidden">
-    <img class="h-full w-full object-cover brightness-50" src="/home/cover.webp" alt="Cover image"/>
+    <image class="h-full w-full object-cover brightness-50" src="/home/cover.webp" alt="Cover image"/>
 
     <div class="absolute inset-x-0 mx-auto top-[25%] z-10 text-stone-200 text-center px-8">
         <h2 class="intro1 text-3xl">
@@ -158,7 +158,7 @@
         </h1>
     </div>
 
-    <div bind:this={banner} class="absolute right-0 top-8 p-4 bg-stone-200 h-[6rem] w-[24rem] flex items-center text-kcblack">
+    <div bind:this={banner} class="absolute right-0 top-8 p-4 bg-stone-200 h-24 w-[24rem] flex items-center text-kcblack translate-x-full">
         <img class="h-full mr-4" src="/bee.webp" alt="Wolfbee">
         <span class="w-[60%] h-full" bind:this={bannerText}>{bannerMessage}</span>
     </div>
@@ -190,7 +190,7 @@
 <!--</section>-->
 
 <section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 bg-stone-200">
-    <img class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>
+    <image class="w-full h-full object-cover overflow-hidden" src="/home/whoRwe.jpg" alt="WhoRwe image"/>
 
     <div class="w-full h-full flex flex-col items-center justify-center p-8 text-kcblack">
         <header class="text-4xl md:text-7xl">WHO ARE WE?</header>
@@ -205,7 +205,7 @@
 
 <section class="relative slides min-h-screen md:h-screen text-stone-200 bg-kcblack">
 
-    <section class="relative top-0 w-full md:w-1/2 mx-auto h-[100vh] bg-kcblack border-3 border-kcyellow z-[11]">
+    <section class="relative top-0 w-full md:w-1/2 mx-auto h-screen bg-kcblack border-3 border-kcyellow z-11">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">COMMITTEES</header>
 
@@ -223,7 +223,7 @@
              src="/home/committees_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-3rem)] bg-kcblack border-3 border-kcyellow z-[12]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-3rem)] bg-kcblack border-3 border-kcyellow z-12">
         <div class="absolute top-0 left-0 w-full h-full z-20 p-2 text-3xl">
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
@@ -238,7 +238,7 @@
              src="/home/spirit_cover.webp" alt="cover"/>
     </section>
 
-    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-6rem)] bg-kcblack border-3 border-kcyellow z-[13]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-6rem)] bg-kcblack border-3 border-kcyellow z-13">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2 text-3xl">
             <header class="h-[5vh]">SERVICE</header>
 
@@ -255,7 +255,7 @@
              src="/home/service_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-9rem)] bg-kcblack border-3 border-kcyellow z-[14]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-9rem)] bg-kcblack border-3 border-kcyellow z-14">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2 text-3xl">
             <header class="h-[5vh]">DECORATION</header>
 
@@ -278,7 +278,7 @@
              src="/home/deco_cover.jpg" alt="cover"/>
     </section>
 
-    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-12rem)] bg-kcblack border-3 border-kcyellow z-[15]">
+    <section class="slide relative w-full md:w-1/2 h-[calc(100vh-12rem)] bg-kcblack border-3 border-kcyellow z-15">
         <div class="absolute top-0 left-0 w-full h-full z-10 p-2">
             <header class="text-3xl h-[5vh]">LEADERSHIP</header>
 
@@ -296,8 +296,8 @@
 
 </section>
 
-<section class="w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-    <img class="w-full h-full object-cover overflow-hidden" src="/home/remind.jpg" alt="Remind image"/>
+<section class="relative w-full h-screen grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+    <image class="w-full h-full object-cover overflow-hidden" src="/home/remind.jpg" alt="Remind image"/>
 
     <div class="w-full h-full p-8 flex items-center justify-center overflow-hidden bg-stone-200 text-kcblack">
         <div class="text-center flex flex-col items-center justify-center">

@@ -15,15 +15,15 @@
     setContext("username", username)
     setContext("admin", admin)
 
-    onMount(async () => {
-        await refreshToken()
-        await getMe()
-        // refreshes token every 4.5 minutes automatically
-        setInterval(async () => {
-            await refreshToken()
-            await getMe()
-        }, 4.5 * 60 * 1000)
-    })
+    // onMount(async () => {
+    //     await refreshToken()
+    //     await getMe()
+    //     // refreshes token every 4.5 minutes automatically
+    //     setInterval(async () => {
+    //         await refreshToken()
+    //         await getMe()
+    //     }, 4.5 * 60 * 1000)
+    // })
 
     const refreshToken = async () => {
         try {

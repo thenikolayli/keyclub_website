@@ -4,7 +4,6 @@ from os import getenv
 from typing import Optional
 
 import aiohttp
-from attr import s
 from discord import (
     Activity,
     ActivityType,
@@ -29,13 +28,21 @@ intents = Intents.default()
 intents.message_content = True
 client = commands.Bot(command_prefix="/", intents=intents)
 events_channel_id = int(getenv("EVENTS_CHANNEL_ID") or 0)
+api_url = getenv("API_URL")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    bot_task = asyncio.create_task(client.start(token))
+    async def start_bot():
+        try:
+            await client.start(token)
+        except Exception as e:
+            print(f"Bot failed to start: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    bot_task = asyncio.create_task(start_bot())
     yield
-
     await client.close()
     bot_task.cancel()
     try:
@@ -51,7 +58,6 @@ app = FastAPI(
     root_path="",
     lifespan=lifespan,
 )
-
 
 @app.post("/post_event")
 async def post_event(event_info: EventInfo):
@@ -70,7 +76,8 @@ async def post_event(event_info: EventInfo):
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user}")
-    await client.tree.sync()
+    synced = await client.tree.sync()
+    print(f"synced {synced} commands")
     await client.change_presence(
         activity=Activity(type=ActivityType.playing, name="Watching your messages")
     )
@@ -99,7 +106,7 @@ async def hours(interaction: Interaction, name: Optional[str] = None):
 
     async with aiohttp.ClientSession() as session:
         result = await session.get(
-            "http://keyclub_api:8000/api/hours/get_hours", params={"name": name}
+            api_url + "/api/hours/get_hours", params={"name": name}
         )
         data = await result.json()
 
@@ -156,7 +163,7 @@ async def setname(interaction: Interaction, name: str):
 @client.tree.command(name="updatehours", description="Updates the /hours command")
 async def updatehours(interaction: Interaction):
     async with aiohttp.ClientSession() as session:
-        result = await session.get("http://keyclub_api:8000/api/hours/update_hours")
+        result = await session.get(api_url + "/api/hours/update_hours")
         if result.status == 400:
             await interaction.response.send_message(
                 "Please wait at least 5 minutes before requesting an hours update again.",
@@ -191,7 +198,7 @@ async def help(interaction: Interaction):
 async def ranks(interaction: Interaction, year: int):
     async with aiohttp.ClientSession() as session:
         result = await session.get(
-            "http://keyclub_api:8000/api/hours/ranks", params={"year": year}
+            api_url + "/api/hours/ranks", params={"year": year}
         )
         if result.status == 404:
             await interaction.response.send_message(

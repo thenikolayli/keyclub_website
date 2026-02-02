@@ -31,7 +31,7 @@
     }
 </script>
 
-<section class="relative flex flex-col w-full h-[110px] md:h-[180px] z-30 text-kcblack bg-stone-200 p-4 flex items-center"
+<section class="relative flex flex-col w-full h-27.5 md:h-45 z-30 text-kcblack bg-stone-200 p-4 items-center"
          style="box-shadow: 0px 5px 5px 5px hsl(0 1% 30% / .1)">
     <a class="w-[80%] md:w-auto max-h-full md:h-[80%] self-start md:self-auto" href="/"><img class="h-full object-contain" src="/keyclub_horizontal_black.png" alt="Key Club Logo"/></a>
     <button class="block md:hidden" bind:this={menuButton} onclick={() => menuOpen = !menuOpen} aria-label="Menu button">
@@ -50,8 +50,8 @@
     </ul>
 </section>
 
-<section bind:this={menu} class="fixed flex flex-col right-0 top-0 z-20 w-[70%] h-screen bg-stone-200 p-4">
-    <div class="spacer w-full h-[110px]"></div>
+<section bind:this={menu} class="fixed flex flex-col right-0 top-0 z-20 w-[70%] h-screen bg-stone-200 p-4 translate-x-full">
+    <div class="spacer w-full h-27.5"></div>
     <ul class="text-kcblack text-3xl space-y-2">
         <li><a href="/">Home</a></li>
         <li><a href="/about">About</a></li>
