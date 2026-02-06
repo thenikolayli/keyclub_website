@@ -195,8 +195,8 @@
     <div class="w-full h-full flex flex-col items-center justify-center p-8 text-kcblack">
         <header class="text-4xl md:text-7xl">WHO ARE WE?</header>
         <p class="text-xl md:text-3xl mt-8 text-left">
-            Key Club is a student-led volunteering organization. Jackson High School is one of 13
-            schools in Division 21, currently standing as the club with the most members. Key Club
+            Key Club is a student-led volunteering organization. Henry M. Jackson High School is one of 14
+            schools in PNW Division 21, currently standing as the club with the most members. Key Club
             is a great opportunity for students to volunteer for their community and simultaneously
             make new friends within the division with students from other schools.
         </p>
