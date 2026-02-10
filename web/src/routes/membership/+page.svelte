@@ -11,7 +11,7 @@
 
 <Header/>
 <section class="w-full min-h-screen text-center text-2xl text-kcblack bg-stone-200">
-    <ImageHeader text="Registration is Open" imageSrc="/membership/membership_cover.jpg"/>
+    <ImageHeader text="Registration is Closed" imageSrc="/membership/membership_cover.jpg"/>
 
     <section class="p-4 space-y-8 md:space-y-16 w-full my-8 md:text-3xl">
 
@@ -23,26 +23,10 @@
                 <header class="text-4xl mb-8">Be a Keyutie</header>
                 <p class="text-left w-fit mx-auto">
                     <span class="font-semibold">
-                        Fill out
-                        <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScOw-IMurvmc-Y09TA6kibg4yGE6OvMkGgZLRevgMJiOHgOeA/viewform?usp=sharing&ouid=111551984194695570978">
-                            THIS
-                        </a>
-                        form!
+                        Registration is closed.
                     </span>
                     <br><br>
-                    <span class="font-semibold">Attend our general meetings!</span>
-                    <br>
-                    We meet in the annex every <span class="underline">second Wednesday of each month</span>,
-                    excluding summer of course.
-                    <br><br>
-                    <span class="font-semibold">Get an ASB card!</span>
-                    <br>
-                    If you don't already have one, go to the ASB office for assistance.
-                    <br/><br>
-                    <span class="font-semibold">Start your service!</span>
-                    <br/>
-                    Volunteer in club events/socials, go to DCMs (Division Council Meetings), and attend club
-                    meetings.
+                    It will reopen next school year in October of 2026.
                 </p>
             </div>
         </div>
@@ -56,8 +40,7 @@
                 <div class="text-left w-fit mx-auto">
                     <p>
                         The Key Club dues are <span class="underline">$41</span>.
-                        You can pay online by following <a class="underline" target="_blank" href="https://www.everettsd.org/payments">this link</a>
-                        or in person at the ASB office.
+                        The dues payments are currently closed.
                     </p>
                     <ul class="mx-auto w-fit mt-8 list-disc">
                         <li>International: $10</li>

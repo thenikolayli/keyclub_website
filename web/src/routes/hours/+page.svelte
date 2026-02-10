@@ -9,8 +9,8 @@
     import gsap from "gsap";
     import moment from "moment-timezone";
 
-    const atGoals = [0, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600];
-    const yrGoals = [0, 10, 25, 50, 70, 100, 150, 200, 250, 300];
+    const atGoals = [0, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000];
+    const yrGoals = [0, 10, 25, 50, 70, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
     let atStart = $state(atGoals[0]);
     let atEnd = $state(atGoals[1]);

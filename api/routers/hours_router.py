@@ -53,4 +53,4 @@ async def get_ranks(year: int, session=Depends(database.get_session)):
     for rank in ranks:
         if rank.name not in config.rank_blacklist:
             filtered_ranks.append(rank.model_dump(mode="json"))
-    return JSONResponse(filtered_ranks[-5:], status_code=status.HTTP_200_OK)
+    return JSONResponse(filtered_ranks[-5:][::-1], status_code=status.HTTP_200_OK)

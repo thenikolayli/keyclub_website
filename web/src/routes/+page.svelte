@@ -228,10 +228,6 @@
             <header class="text-3xl h-[5vh]">SPIRIT</header>
 
             <p class="mt-4">As one of the LARGEST committees in Key Club, we work to create fun energizers, take part in spirited events, and overall build a fun atmosphere!</p>
-
-            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
-                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSf4dZ5ygdjPqQGGIC_ze8NH9NADRONzOkhUQWo_ysNC29WDzg/viewform">Apply here!</a>
-            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -245,10 +241,6 @@
             <p class="mt-4">
                 Brainstorm fun events to contribute to the <a class="underline" href="/districtproject">District Project</a>!
             </p>
-
-            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
-                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLScB4Fk9qVfBD0knPGxAktgDyY458q32Zzou0AXQStlKPxIJbw/viewform">Apply here!</a>
-            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -268,10 +260,6 @@
                 <li>Laid back</li>
                 <li>After school</li>
             </ul>
-
-            <div class="mt-12 w-fit mx-auto text-center p-4 bg-kcyellow text-kcblack">
-                <a class="underline" target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSfbib7QF9pWxsiXYIqTz9T3RyAO4xLYLGhcTRLLqUkifTPiqg/viewform">Apply here!</a>
-            </div>
         </div>
 
         <img class="absolute top-0 left-0 z-0 w-full h-full object-cover brightness-50"
@@ -283,7 +271,7 @@
             <header class="text-3xl h-[5vh]">LEADERSHIP</header>
 
             <p class="text-3xl mt-4">
-                Create and lead events for Key Club! Registration opens at the end of the first semester, so stay tuned for more info!!
+                Create and lead events for Key Club! Registration is closed and will reopen in the Winter of 2027.
                 <br/> <br/>
                 <span class="w-full text-center">🚨 NOTE: </span>
                 This committee is only for Sophomores and above. 🚨
@@ -309,11 +297,6 @@
                                      aria-label="Instagram"
                                      target="_blank"><Icon icon="fa7-brands:instagram" /><span
                         class="ml-2">jhskeyclub21</span></a></li>
-                <li class="w-fit"><a class="flex items-center"
-                                     href="https://instagram.com/jhskeyclubreminds"
-                                     aria-label="Reminds Instagram"
-                                     target="_blank"><Icon icon="fa7-brands:instagram" /><span
-                        class="ml-2">jhskeyclubreminds</span></a></li>
                 <li class="w-fit"><a class="flex items-center"
                                      href="https://www.tiktok.com/@jhskeyclub21"
                                      aria-label="Tiktok"
