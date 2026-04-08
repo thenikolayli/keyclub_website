@@ -452,7 +452,13 @@
             community and the lives of the children around it.
         </p>
 
-        <ResponsiveButton init_text="Kiwanis Website" clicked_text="..." on_click={() => window.open("https://k19352.site.kiwanis.org/", "_blank")} can_send={canSend}/>
+        <ResponsiveButton
+            text="Kiwanis Website"
+            busyText="..."
+            onClick={() => window.open("https://k19352.site.kiwanis.org/", "_blank")}
+            canSend={canSend}
+            color="#fed450"
+        />
     </div>
     <img class="w-full h-full object-contain" src="/about/kiwanis.jpg" alt="Mill Creek Kiwanis"/>
 </section>
@@ -464,8 +470,20 @@
     </p>
 
     <div class="flex flex-col md:flex-row mx-auto text-4xl space-x-8">
-        <ResponsiveButton init_text="Key Club" clicked_text="..." on_click={() => window.open("https://keyclub.org/", "_blank")} can_send={canSend}/>
-        <ResponsiveButton init_text="PNW Key Club" clicked_text="..." on_click={() => window.open("https://pnwkeyclub.org/", "_blank")} can_send={canSend}/>
+        <ResponsiveButton
+            text="Key Club"
+            busyText="..."
+            onClick={() => window.open("https://keyclub.org/", "_blank")}
+            canSend={canSend}
+            color="#fed450"
+        />
+        <ResponsiveButton
+            text="PNW Key Club"
+            busyText="..."
+            onClick={() => window.open("https://pnwkeyclub.org/", "_blank")}
+            canSend={canSend}
+            color="#fed450"
+        />
     </div>
 </section>
 <Footer/>

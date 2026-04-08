@@ -5,9 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
     plugins: [sveltekit(), tailwindcss()],
     server: {
-        port: 3000,
-        proxy: {
-            "/api": "http://localhost:8000" // this only applies when vite is running
-        }
+        port: 3000
     }
 });

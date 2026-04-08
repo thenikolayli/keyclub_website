@@ -6,64 +6,11 @@
     import {SplitText} from "gsap/SplitText";
     import {ScrollTrigger} from "gsap/ScrollTrigger";
     import {onMount} from "svelte";
-    import axios from "axios";
-    import textFit from "textfit";
-    import moment from "moment-timezone";
-    import momentDurationFormatSetup from "moment-duration-format"
-
-    let bannerMessage = $state("")
-    let bannerShow = $state(false)
-    let bannerText
-    let banner
-
-    let timeLeftString = $state("")
-
-    $effect(() => {
-        if (bannerMessage) {
-            textFit(bannerText)
-        }
-    })
 
     onMount(async () => {
         document.title = "JHS Key Club"
         gsap.registerPlugin(SplitText)
         gsap.registerPlugin(ScrollTrigger)
-
-        // gets banner info
-        try {
-            const response = await axios({
-                method: "get",
-                url: "/api/misc/get_banner"
-            })
-
-            if (response.status === 200) {
-                bannerMessage = response.data.message
-                bannerShow = response.data.show
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-        gsap.set(banner, {
-            xPercent: 100
-        })
-
-        if (bannerShow) {
-            gsap.to(banner, {
-                xPercent: 0,
-                duration: .7,
-                ease: "power2.out",
-                delay: 1
-            })
-        }
-
-        // countdown to October 31st 11:59:59 PM PDT (dues close)
-        // momentDurationFormatSetup(moment)
-        // const duesClose = moment("2025-10-31T11:59:59").tz("America/Los_Angeles")
-        // setInterval(() => {
-        //     const msLeft = moment.duration(duesClose - moment.tz("America/Los_Angeles"))
-        //     timeLeftString = msLeft.format("[Dues close in] M [months,] D [days,] h [hours,] m [minutes, and] s [seconds!]")
-        // }, 1000)
 
         const timeline = gsap.timeline({
             defaults: {
@@ -158,10 +105,6 @@
         </h1>
     </div>
 
-    <div bind:this={banner} class="absolute right-0 top-8 p-4 bg-stone-200 h-24 w-[24rem] flex items-center text-kcblack translate-x-full">
-        <img class="h-full mr-4" src="/bee.webp" alt="Wolfbee">
-        <span class="w-[60%] h-full" bind:this={bannerText}>{bannerMessage}</span>
-    </div>
 </section>
 
 <!--<section class="relative w-full h-screen text-kcblack bg-kcyellow flex flex-col">-->

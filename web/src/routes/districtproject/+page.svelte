@@ -28,7 +28,13 @@
         RMHC's mission is to strengthen families,
         promote healing, and ensure the best health outcomes for children by removing barriers to healthcare.
 
-        <ResponsiveButton init_text="Visit their website" clicked_text="..." on_click={() => window.open("https://rmhc.org/", "_blank")} can_send={canSend} />
+        <ResponsiveButton
+            text="Visit their website"
+            busyText="..."
+            onClick={() => window.open("https://rmhc.org/", "_blank")}
+            canSend={canSend}
+            color="#fed450"
+        />
     </p>
 </section>
 <Footer/>

@@ -5,14 +5,16 @@
     let menu
     let menuButton
     let menuOpen = $state(false)
+    let windowClickHandler
 
     onMount(() => {
         gsap.set(menu, {
             transformOrigin: "top left",
             xPercent: 100
         })
-        addEventListener("click", (event) => handleClickOutside(event))
-        return () => removeEventListener("click", (event) => handleClickOutside(event))
+        windowClickHandler = (event) => handleClickOutside(event)
+        addEventListener("click", windowClickHandler)
+        return () => removeEventListener("click", windowClickHandler)
     })
 
     $effect(() => {
@@ -42,26 +44,24 @@
         <li><a href="/">Home</a></li>
         <li><a href="/about">About</a></li>
         <li><a href="/events">Events</a></li>
-        <li><a href="/hours">Hours</a></li>
         <li><a href="/membership">Membership</a></li>
-        <li><a href="/gallery">Gallery</a></li>
         <li><a href="/districtproject">District Project</a></li>
-        <li><a href="/contact">Contact</a></li>
     </ul>
 </section>
 
-<section bind:this={menu} class="fixed flex flex-col right-0 top-0 z-20 w-[70%] h-screen bg-stone-200 p-4 translate-x-full">
+<section
+    bind:this={menu}
+    class="fixed flex flex-col right-0 top-0 z-20 w-[70%] h-screen bg-stone-200 p-4"
+    style="transform: translateX(100%);"
+>
     <div class="spacer w-full h-27.5"></div>
     <ul class="text-kcblack text-3xl space-y-2">
         <li><a href="/">Home</a></li>
         <li><a href="/about">About</a></li>
         <li><a href="/events">Events</a></li>
-        <li><a href="/hours">Hours</a></li>
         <li><a href="/membership">Membership</a></li>
-        <li><a href="/gallery">Gallery</a></li>
         <li><a href="/districtproject">District Project</a></li>
-        <li><a href="/contact">Contact</a></li>
     </ul>
     <div class="spacer flex-1"></div>
-    <img class="object-contain" src="/bee.webp" alt="">
+    <img class="object-contain w-32 h-32 mx-auto" src="/bee.webp" alt="Wolfbee">
 </section>

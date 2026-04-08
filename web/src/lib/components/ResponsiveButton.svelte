@@ -1,59 +1,103 @@
 <script>
-    import gsap from "gsap";
-    import {onMount} from "svelte";
+    const props = $props()
 
-    let {init_text, clicked_text, on_click, can_send} = $props()
+    const text = $derived(props.text ?? props.init_text ?? "")
+    const busyText = $derived(props.busyText ?? props.clicked_text ?? "...")
+    const onClick = $derived(props.onClick ?? props.on_click)
+    const canSend = $derived(props.canSend ?? props.can_send ?? true)
 
-    let init_text_element
-    let clicked_text_element
-    let bg_element
+    const color = $derived(props.color ?? "#fed450")
+    const textColor = $derived(props.textColor ?? "#231f20")
+    const className = $derived(props.className ?? "")
 
-    let timeline
-
-    onMount(() => {
-        gsap.set(init_text_element, {yPercent: 0})
-        gsap.set(clicked_text_element, {yPercent: 120})
-
-        timeline = gsap.timeline({paused: true})
-        timeline.to(init_text_element, {
-            yPercent: -120,
-            duration: .2,
-            ease: "power2.out",
-        }, 0)
-        timeline.to(clicked_text_element, {
-            yPercent: 0,
-            duration: .2,
-            ease: "power2.out",
-        }, 0)
-    })
-
-    // hover animation
-    const button_animation = (start) => {
-        gsap.to(bg_element, {
-            transformOrigin: "top center",
-            scaleY: start ? 0 : 1,
-            ease: "power2.out",
-            duration: .1
-        })
-    }
-
-    // animation
-    $effect(() => {
-        if (can_send) { // if switched to can send, then replay the animation
-            timeline.reverse()
-        } else {
-            timeline.play()
-        }
-    })
+    let isHover = $state(false)
+    let isFocus = $state(false)
 </script>
 
-<button onclick={on_click}
-        class="relative w-full p-2 px-8 mt-8 border-3 border-kcyellow overflow-hidden text-2xl text-kcblack"
-        onmouseover={() => button_animation(true)} onfocus={() => button_animation(true)}
-        onmouseout={() => button_animation(false)} onblur={() => button_animation(false)}
+<button
+    disabled={!canSend}
+    class={"rb relative w-full mt-8 overflow-hidden border-3 text-2xl " + className}
+    style={"--rb-accent:" + color + "; --rb-text:" + textColor}
+    onclick={(event) => {
+        if (!canSend) return
+        onClick?.(event)
+
+        // On mobile (and some desktop browsers), click can leave the element focused,
+        // which effectively "sticks" the hover/focus styling. Clear it so we return
+        // to the regular state immediately after clicking.
+        isHover = false
+        isFocus = false
+        event.currentTarget?.blur?.()
+    }}
+    onpointerenter={() => (isHover = true)}
+    onpointerleave={() => (isHover = false)}
+    onfocus={() => (isFocus = true)}
+    onblur={() => (isFocus = false)}
+    data-active={(canSend && (isHover || isFocus)) ? "true" : "false"}
+    data-busy={!canSend ? "true" : "false"}
 >
-    <span bind:this={init_text_element} class="absolute z-10">{init_text}</span>
-    <span bind:this={clicked_text_element} class="z-10 absolute inset-x-0 mx-auto">{clicked_text}</span>
-    <span class="text-transparent">{init_text}</span>
-    <span bind:this={bg_element} class="absolute top-0 left-0 z-0 w-full h-full bg-kcyellow"></span>
+    <span class="rb_label">
+        <span class="rb_labelInner" style={"transform: translateY(" + (canSend ? "0%" : "-50%") + ");"}>
+            <span class="rb_line">{text}</span>
+            <span class="rb_line">{busyText}</span>
+        </span>
+    </span>
 </button>
+
+<style>
+    .rb {
+        color: var(--rb-text);
+        border-color: var(--rb-accent);
+        background: var(--rb-accent);
+        padding: 0.5rem 2rem;
+        cursor: pointer;
+        transform: translateZ(0);
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transition:
+            transform 120ms ease,
+            opacity 120ms ease,
+            background-color 180ms ease,
+            border-color 180ms ease,
+            color 180ms ease,
+            box-shadow 180ms ease,
+            filter 180ms ease;
+    }
+
+    .rb:active {
+        transform: scale(0.98);
+    }
+
+    .rb:disabled {
+        cursor: not-allowed;
+        opacity: 0.85;
+    }
+
+    .rb[data-active="true"] {
+        background-color: color-mix(in oklab, var(--rb-accent), black 18%);
+        border-color: color-mix(in oklab, var(--rb-accent), black 22%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .rb_label {
+        position: relative;
+        z-index: 2;
+        display: block;
+        line-height: 1.2;
+        height: 1.2em;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .rb_labelInner {
+        display: block;
+        transition: transform 180ms ease;
+    }
+
+    .rb_line {
+        display: block;
+        height: 1.2em;
+        white-space: nowrap;
+    }
+</style>
