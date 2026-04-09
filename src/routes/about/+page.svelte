@@ -142,68 +142,57 @@
 
         <div class="relative cards h-fit w-full md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/lex.png"
-                 alt="Lex Padua"/>
+                 src="/about/annabelle.jpeg"
+                 alt="Annabelle Ho"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class={"h-4 w-full"}></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Lex Padua</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Annabelle Ho</h1>
                 <h3 class="cards-info text-3xl mt-2">President</h3>
                 <h3 class="cards-info text-lg flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">alexmariepadua19@gmail.com</span></h3>
+                        class="ml-2">annabelle.zt.ho@gmail.com</span></h3>
             </div>
         </div>
 
         <div class="relative cards h-fit w-full md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/clarrise.png" alt="Clarrise Song"/>
+                 src="/about/eldana.jpeg"
+                 alt="Eldana Woldegiorgis"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Clarisse Song</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Eldana Woldegiorgis</h1>
                 <h2 class="cards-info text-3xl mt-2">Vice President</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">clarissesong18@gmail.com</span></h3>
+                        class="ml-2">eldanaaw.38@gmail.com</span></h3>
             </div>
         </div>
 
         <div class="relative cards h-fit w-full md:w-fit md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/annabelle.png" alt="Annabelle Ho"/>
+                 src="/about/kaitlyn.jpg" alt="Kaitlyn Luu"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Annabelle Ho</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Kaitlyn Luu</h1>
                 <h2 class="cards-info text-3xl mt-2">Treasurer</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">annabelle.zt.ho@gmail.com</span></h3>
+                        class="ml-2">kaitlynluu579@gmail.com</span></h3>
             </div>
         </div>
 
         <div class="relative cards h-fit w-full md:w-fit md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/ravindu.png" alt="Ravindu Marasinghe"/>
+                 src="/about/nadia.jpeg" alt="Nadia Villareal-Carriedo"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Ravindu Marasinghe</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Nadia Villareal-Carriedo</h1>
                 <h2 class="cards-info text-3xl mt-2">Secretary</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">ravindu2008@icloud.com</span></h3>
+                        class="ml-2">nvillarrealcarriedo@gmail.com</span></h3>
             </div>
         </div>
 
         <div class="relative cards h-fit w-full md:w-fit md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/allyson.png" alt="Allyson Chun"/>
-            <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
-                <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Allyson Chun</h1>
-                <h2 class="cards-info text-3xl mt-2">Editor</h2>
-                <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">allysonhw96@gmail.com</span></h3>
-            </div>
-        </div>
-
-        <div class="relative cards h-fit w-full md:w-fit md:flex">
-            <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/ellie.png" alt="Ellie Nguyen"/>
+                 src="/about/ellie.jpeg" alt="Ellie Nguyen"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
                 <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Ellie Nguyen</h1>
@@ -212,9 +201,21 @@
                         class="ml-2">ellienguyen882@gmail.com</span></h3>
             </div>
         </div>
+
         <div class="relative cards h-fit w-full md:w-fit md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/nikolay.png" alt="Nikolay Li"/>
+                 src="/about/nana.jpg" alt="Nana endo"/>
+            <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
+                <div class="h-4 w-full"></div>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Nana endo</h1>
+                <h2 class="cards-info text-3xl mt-2">Editor</h2>
+                <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
+                        class="ml-2">shibewanco49@gmail.com	</span></h3>
+            </div>
+        </div>
+        <div class="relative cards h-fit w-full md:w-fit md:flex">
+            <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
+                 src="/about/nikolay.jpg" alt="Nikolay Li"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
                 <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold] pr-1">Nikolay Li</h1>
@@ -225,13 +226,13 @@
         </div>
         <div class="relative cards h-fit w-full md:w-fit md:flex">
             <img class="relative w-full md:size-[20rem] aspect-square border-kcyellow border-16 z-10"
-                 src="/about/killian.png" alt="Killian Bates"/>
+                 src="/about/daya.jpeg" alt="Daya Putheth"/>
             <div class="cards-info-stack absolute left-0 md:relative w-fit ml-4 overflow-hidden">
                 <div class="h-4 w-full"></div>
-                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Killian Bates</h1>
+                <h1 class="cards-info text-5xl text-kcyellow font-[century-gothic-bold]">Daya Putheth</h1>
                 <h2 class="cards-info text-3xl mt-2">Historian</h2>
                 <h3 class="cards-info text-xl flex items-center text-gray-400"><Icon icon="fe:mail" /><span
-                        class="ml-2">killianj1010@outlook.com</span></h3>
+                        class="ml-2">puthethdaya@gmail.com</span></h3>
             </div>
         </div>
 
@@ -295,9 +296,9 @@
     <div
             class="w-[90%] sm:w-[50%] lg:w-[35%] xl:w-[30%] flex-1 flex flex-col items-center justify-center">
         <img class="object-cover border-kcyellow border-16 h-[90%] aspect-[3/4] w-full"
-             src="/about/maeve.jpg"
-             alt="Maeve"/>
-        <h1 class="font-[century-gothic-bold] text-5xl mt-4">Maeve Hershlip</h1>
+             src="/about/ryan.png"
+             alt="Ryan Tran"/>
+        <h1 class="font-[century-gothic-bold] text-5xl mt-4">Ryan Tran</h1>
         <h2 class="text-2xl flex items-center text-gray-600"><Icon icon="fe:mail" /><span class="ml-2">
                             ltg21@pnwkeyclub.org</span></h2>
     </div>

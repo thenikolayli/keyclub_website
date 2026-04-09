@@ -18,8 +18,9 @@
     })
 
     $effect(() => {
+        console.log("open/close")
         gsap.to(menu, {
-            xPercent: menuOpen ? 0 : 100,
+            xPercent: menuOpen ? -100 : 0,
             duration: .3,
             ease: "power2.out"
         })
